@@ -50,5 +50,14 @@ function addToken(cell, size, image) {
     token.classList.add('token');
     token.classList.add(size);
 
-    giveTokenEvents(token, cell);
+    giveTokenEvents(token);
+}
+
+// Will find and return a cell with the parameters given
+function findCell(x, y) {
+    for (const cell of cells) {
+        if (cell.getAttribute('x') === x.toString() && cell.getAttribute('y') === y.toString()) {
+            return cell;
+        }
+    }
 }
