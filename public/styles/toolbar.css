@@ -1,0 +1,7 @@
+.toolbar {
+    width: 98%;
+    background-color: var(--toolbar-background-color);
+    display: flex;
+    padding: 10px;
+    box-shadow: 0 1px 6px 1px rgb(172 172 172 / 50%);
+}

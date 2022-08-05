@@ -1,22 +1,27 @@
 .grid-container {
-    overflow-y: auto;
-    width: 80%;
-    height: 90vh;
-}
-
-.grid-container--no-scroll {
     overflow: hidden;
+    width: 100%;
+    height: 90vh;
+    margin-right: 0.8rem;
+    margin-top: 0.8rem;
+    border: 2px solid var(--grid-border-color);
+    background-color: rgb(237 237 237 / 52%);
 }
 
 #grid {
     border-collapse: collapse;
+    background-color: var(--grid-color);
 }
 
 .grid__cell {
-    border: 1px solid black;
+    border: 1px solid var(--cell-border-color);
     text-align: center;
     position: relative;
-    padding: 2.4rem;
+    padding: var(--zoom);
     text-align: center;
     vertical-align: middle;
+}
+
+.panning {
+    cursor: move;
 }

@@ -1,40 +1,17 @@
 let tokenDeltaX, tokenDeltaY;
-let canScale = false;
 
-
-document.addEventListener('keydown', (e) => {
-    switch (true) {
-        case e.which === 91 || e.which === 17:
-            document.querySelector('.grid-container').classList.add('grid-container--no-scroll');
-            canScale = true;
-            break;
-        case e.which === 46:
-            for (const _token of document.getElementsByClassName('token')) {
-                if (_token.classList.contains('token--selected')) _token.remove();
-            }
-        default:
-            break;
-    }
-});
-document.addEventListener('keyup', (e) => {
-    switch (true) {
-        case e.which === 91 || e.which === 17:
-            document.querySelector('.grid-container').classList.remove('grid-container--no-scroll');
-            canScale = false;
-            break;
-        default:
-            break;
-    }
-});
 
 // Add event listeners for the token
 function giveTokenEvents(token) {
+    // Fires when user begins dragging
     token.addEventListener("dragstart", (e) => {
         e.target.classList.add('token--dragging');
     });
+    // Fires when user stops dragging
     token.addEventListener("dragend", (e) => {
         e.target.classList.remove('token--dragging');
     });
+    // Fires when user clicks on token
     token.addEventListener('mousedown',(e) => {
         switch (e.which) {
             case 3:
@@ -44,6 +21,7 @@ function giveTokenEvents(token) {
                 break;
         }
     });
+    // Fires when user releases click on token
     token.addEventListener('mouseup',(e) => {
         switch (e.which) {
             case 1:
@@ -53,6 +31,7 @@ function giveTokenEvents(token) {
                 break;
         }
     });
+    // Fires when user uses scroll wheel
     token.addEventListener('wheel', (e) => {
         if (canScale) {
             if (e.wheelDeltaY < 0) {
@@ -64,6 +43,7 @@ function giveTokenEvents(token) {
     });
 }
 
+// Highlights and selects token
 function selectToken(token) {
     if (token.classList.contains('token--selected')) {
         token.classList.remove('token--selected');
