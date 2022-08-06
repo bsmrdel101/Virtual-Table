@@ -1,13 +1,25 @@
 .sidebar {
     background-color: var(--sidebar-background-color);
-    padding: 0.3rem 4rem;
+    padding: 10px;
     box-shadow: 0 1px 6px 1px rgba(0, 0, 0, 0.404);
+    max-width: 10rem;
+    min-width: 8rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.sidebar__btn {
+    padding: 10px;
 }
 
 @media screen and (max-width: 748px) {
     .sidebar {
-        width: 100%;
+        min-width: 100%;
         min-height: 12vh;
+        flex-direction: row;
+        flex-wrap: wrap;
     }
 
     .game-page-container {
