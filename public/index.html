@@ -5,20 +5,35 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>VTT Prototype</title>
+    <title>Virtual Table</title>
     <!-- Stylesheets -->
     <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/grid.css">
     <link rel="stylesheet" href="styles/token.css">
+    <link rel="stylesheet" href="styles/sidebar.css">
+    <link rel="stylesheet" href="styles/toolbar.css">
     <!-- Scripts -->
     <script src="scripts/grid.js"></script>
     <script src="scripts/token.js"></script>
+    <script src="scripts/input.js"></script>
+    <script src="scripts/utils.js"></script>
     <!-- Classes -->
     <script src="classes/token.class.js"></script>
 </head>
 <body>
-    <div class="grid-container">
-        <table id="grid"></table>
-    </div>
+    <section class="game-page-container">
+        <div class="sidebar">
+
+        </div>
+        <div class="game-content">
+            <div class="toolbar">
+                <button>+</button>
+                <button>-</button>
+            </div>
+            <div class="grid-container">
+                <table id="grid"></table>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
