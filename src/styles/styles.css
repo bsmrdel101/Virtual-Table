@@ -1,0 +1,36 @@
+:root {
+    /* Main */
+    --background-color: #b59696;
+    /* Grid */
+    --zoom: 2rem;
+    --grid-color: #d9c6c6;
+    --grid-border-color: black;
+    --cell-border-color: black;
+    --background-image: '';
+    /* Toolbar */
+    --toolbar-background-color: #e8dcdc;
+    /* Sidebar */
+    --sidebar-background-color: #e8dcdc;
+    /* Tokens */
+    --token-radius: 50%;
+    --token-selected-color: #6767fd;
+}
+
+body {
+    margin: 0px;
+    height: 100%;
+    background-color: var(--background-color);
+    font-size: 100%;
+}
+
+.game-page-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.game-content {
+    max-width: 80vw;
+    height: 100vh;
+    margin-right: 0.8rem;
+    position: relative;
+}

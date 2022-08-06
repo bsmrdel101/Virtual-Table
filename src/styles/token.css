@@ -1,0 +1,59 @@
+.token {
+    position: absolute;
+    border: 3px solid rgba(255, 255, 255, 0);
+    box-shadow: 0 0 0.5rem 1px rgba(0,0,0,0.2);
+    border-radius: 50%;
+}
+
+.token:hover {
+    cursor: grab;
+}
+
+.token--tiny {
+    width: 45%;
+    right: 23%;
+    bottom: 23%;
+}
+
+.token--small {
+    width: 80%;
+    right: 6%;
+    bottom: 6%;
+}
+
+.token--medium {
+    width: 90%;
+    right: 1%;
+    bottom: 1%;
+}
+
+.token--large {
+    width: 190%;
+    right: 1%;
+    bottom: 1%;
+}
+
+.token--huge {
+    width: 290%;
+    right: 1%;
+    bottom: 1%;
+}
+
+.token--gargantuan {
+    width: 390%;
+    right: 1%;
+    bottom: 1%;
+}
+
+.token--dragging {
+    opacity: 60%;
+}
+
+.token--dragging-cursor {
+    cursor: grabbing;
+}
+
+.token--selected {
+    border: 3px solid var(--token-selected-color);
+    border-radius: 50%;
+}
