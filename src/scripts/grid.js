@@ -82,5 +82,7 @@ function zoomOut() {
 }
 
 function clearMap() {
+    x = 0;
+    y = 0;
     document.getElementById('grid').innerHTML = '';
 }

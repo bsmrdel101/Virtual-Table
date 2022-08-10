@@ -35,16 +35,3 @@ function closeMenu(menuName) {
         }
     }
 }
-
-async function getUsersTest(url = '') {
-    const response = await fetch(url, {
-        method: 'GET'
-    });
-    return response.json();
-}
-
-getUsersTest('/api/user')
-    .then((data) => {
-        console.log(data);
-    }
-);
