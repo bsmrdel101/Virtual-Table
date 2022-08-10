@@ -1,5 +1,4 @@
 let tokenSelected = false;
-
 let tokens = [
     {image: 'https://i.pinimg.com/236x/88/4a/05/884a056ba7a5a004becacbfd1bfd78fe.jpg', size: 'token--medium'},
     {image: 'https://i.imgur.com/5cibmUw.png', size: 'token--large'},
@@ -25,7 +24,8 @@ function toggleTokenMenu(menuName) {
     }
 }
 
-function getTokenBodyData() {
+async function getTokenBodyData() {
+    await getTokens();
     for (let token of tokens) {
         document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
             <img src=${token.image} class="menu__item menu__item--token" ondragstart="placeToken(event, '${token.size}')">

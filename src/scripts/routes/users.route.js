@@ -1,26 +1,12 @@
 // === GET routes === //
 
-// async function getAllUsers() {
-//     try {
-//         await axios.get('/api/user')
-//         .then((res) => {
-//             console.log(res.data);
-//         });
-//     } catch(err) {
-//         console.log(err);
-//     }
-// }
-
-async function getAllUsers() {
+async function getUser() {
     try {
         const config = {
             headers: { 'Content-Type': 'application/json' },
             withCredentials: true,
         };
         await axios.get('/api/user', config)
-        .then((res) => {
-            console.log(res.data);
-        });
     } catch(err) {
         console.log(err);
     }

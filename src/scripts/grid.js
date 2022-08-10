@@ -8,6 +8,7 @@ let zoomMax = 10;
 // Waits until the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     setupGrid(25, 25, false);
+    getUser();
 });
 
 function setupGrid(width, height, clear) {
