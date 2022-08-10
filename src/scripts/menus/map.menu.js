@@ -1,6 +1,6 @@
 let maps = [
-    new Map('Default Map', 'https://images.squarespace-cdn.com/content/v1/5511fc7ce4b0a3782aa9418b/1429139759127-KFHWAFFFVXJWZNWTITKK/learning-the-grid-method.jpg'),
-    new Map('Test Map', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwUhS4RzGYSNBN6rAgSzwcdpzoUkYYIg_Cvg&usqp=CAU'),
+    new Map(1, 'Default Map', 'https://images.squarespace-cdn.com/content/v1/5511fc7ce4b0a3782aa9418b/1429139759127-KFHWAFFFVXJWZNWTITKK/learning-the-grid-method.jpg'),
+    new Map(2, 'Test Map', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwUhS4RzGYSNBN6rAgSzwcdpzoUkYYIg_Cvg&usqp=CAU'),
 ];
 
 
@@ -27,7 +27,7 @@ function getMapBodyData() {
     for (let map of maps) {
         document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
             <div>
-                <img src=${map.image} class="menu__item menu__item--map" ondblclick="selectMap()">
+                <img src=${map.image} class="menu__item menu__item--map" ondblclick="selectMap(event)" id=${map.id}>
                 <p class="menu__item--name">${map.name}</p>
             </div>
         `);
@@ -41,10 +41,22 @@ function getMapBodyData() {
     `);
 }
 
-function selectMap() {
-
+function selectMap(e) {
+    for (let map of maps) {
+        if (map.id === parseInt(e.target.getAttribute('id'))) {
+            if (map.name === 'Default Map') {
+                // Set image to nothing
+                root.style.setProperty('--background-image', `url('')`);
+                setupGrid(25, 25, true);
+            } else {
+                // Set new map image
+                root.style.setProperty('--background-image', `url(${map.image})`);
+                setupGrid(e.target.clientWidth / 2, e.target.clientHeight / 2, true);
+            }
+        }
+    }
 }
 
-function createMap() {
+function createMap(e) {
 
 }

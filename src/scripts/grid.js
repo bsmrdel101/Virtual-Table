@@ -1,28 +1,28 @@
-let gridSize = 25;
 let x = 0; 
 let y = 0;
 let root = document.documentElement;
-let zoomMin = 1;
+let zoomMin = 0.5;
 let zoomMax = 10;
 
 
 // Waits until the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    setupGrid();
-    // root.style.setProperty('--background-image', `url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwUhS4RzGYSNBN6rAgSzwcdpzoUkYYIg_Cvg&usqp=CAU')`);
+    setupGrid(25, 25, false);
 });
 
-function setupGrid() {
+function setupGrid(width, height, clear) {
     document.getElementById('grid').addEventListener("contextmenu", e => e.preventDefault());
-    for (let a = 0; a < gridSize; a++) {
+    clear && clearMap();
+
+    for (let a = 0; a < height - 2; a++) {
         // Create row
         let newRow = document.getElementById('grid').appendChild(document.createElement('tr'));
 
         // Create cell
-        for (let b = 0; b < gridSize; b++) {
+        for (let b = 0; b < width; b++) {
             let newCell = newRow.appendChild(document.createElement('td'));
             newCell.classList.add('grid__cell');
-            if (x > gridSize - 1) x = 0
+            if (x > width - 1) x = 0
 
             newCell.setAttribute('x', x);
             newCell.setAttribute('y', y);
@@ -79,4 +79,8 @@ function zoomOut() {
     let rs = getComputedStyle(root);
     let zoomValue = parseInt(rs.getPropertyValue('--zoom'));
     root.style.setProperty('--zoom', `${clamp(zoomValue - 1, zoomMin, zoomMax)}rem`);
+}
+
+function clearMap() {
+    document.getElementById('grid').innerHTML = '';
 }

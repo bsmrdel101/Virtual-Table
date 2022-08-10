@@ -21,6 +21,8 @@
     background-repeat: no-repeat;
     background-size: contain;
     background-image: var(--background-image);
+    /* width: 100%;
+    height: auto; */
 }
 
 .grid__cell {

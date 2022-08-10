@@ -2,7 +2,7 @@
     /* Main */
     --background-color: #b59696;
     /* Grid */
-    --zoom: 2rem;
+    --zoom: 1rem;
     --grid-color: #d9c6c6;
     --grid-border-color: black;
     --cell-border-color: black;
@@ -14,6 +14,10 @@
     /* Tokens */
     --token-radius: 50%;
     --token-selected-color: #6767fd;
+}
+
+* {
+    content: border-box;
 }
 
 body {
