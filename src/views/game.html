@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Virtual Table</title>
+    <!-- Classes -->
+    <script src="../classes/token.class.js"></script>
+    <script src="../classes/map.class.js"></script>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../styles/styles.css">
+    <link rel="stylesheet" href="../styles/grid.css">
+    <link rel="stylesheet" href="../styles/token.css">
+    <link rel="stylesheet" href="../styles/sidebar.css">
+    <link rel="stylesheet" href="../styles/toolbar.css">
+    <link rel="stylesheet" href="../styles/menus.css">
+    <!-- Scripts -->
+    <script src="../scripts/grid.js"></script>
+    <script src="../scripts/token.js"></script>
+    <script src="../scripts/input.js"></script>
+    <script src="../scripts/sidebar.js"></script>
+    <script src="../scripts/menus/token.menu.js"></script>
+    <script src="../scripts/menus/map.menu.js"></script>
+    <script src="../scripts/utils.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- Routes -->
+    <script src="../scripts/routes/users.route.js"></script>
+    <script src="../scripts/routes/tokens.route.js"></script>
+</head>
+<body>
+    <section class="game-page-container">
+        <div class="sidebar">
+            <button class="sidebar__btn sidebar__tokens" onclick="toggleTokenMenu('tokens')">Tokens</button>
+            <button class="sidebar__btn sidebar__maps" onclick="toggleMapMenu('maps')">Maps</button>
+        </div>
+        <div class="game-content">
+            <div class="toolbar">
+                <button onclick="zoomIn()">+</button>
+                <button onclick="zoomOut()">-</button>
+            </div>
+            <div class="grid-container">
+                <table id="grid"></table>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

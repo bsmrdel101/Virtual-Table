@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Routes -->
+    <script src="../scripts/routes/users.route.js"></script>
+    <!-- Scripts -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+        let username, password;
+        const usernameChange = (e) => username = e.target.value;
+        const passwordChange = (e) => password = e.target.value;
+    </script>
+</head>
+<body>
+    <h1>Register</h1>
+    <form onsubmit="registerUser(event, {username: username, password: password})">
+        <input placeholder="username" onchange="usernameChange(event)" required>
+        <input placeholder="password" type="password" onchange="passwordChange(event)" required>
+        <button type="submit">Register</button>
+    </form>
+    <a href="/login">Login</a>
+    <button onclick="getAllUsers()">Test</button>
+</body>
+</html>

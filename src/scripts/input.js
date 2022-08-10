@@ -2,6 +2,8 @@ let canScale = false;
 let targetPosX, targetPosY;
 let dragging = false;
 
+// === EVENT HANDLERS === //
+
 // Fires when user presses key
 document.addEventListener('keydown', (e) => {
     switch (true) {
@@ -69,3 +71,4 @@ document.addEventListener('mousemove', (e) => {
         document.querySelector('.game-page-container').classList.add('panning');
     }
 });
+
