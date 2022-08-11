@@ -48,10 +48,11 @@ app.get('/game', (req, res) => {
   res.sendFile(path.join(__dirname, '../', 'src', 'views', 'game.html'));
 });
 
-io.on('connection', (socket) => {
+io.on('connection', async (socket) => {
   console.log('a user connected');
-  socket.on('placedToken', (token) => {
-    console.log(token);
+  // const sockets = await io.fetchSockets();
+  socket.on('placedToken', (cell, token) => {
+    io.emit('placedToken', cell, token);
   });
 });
 

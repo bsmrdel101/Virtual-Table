@@ -11,5 +11,5 @@ CREATE TABLE "tokens" (
     "id" SERIAL PRIMARY KEY,
     "user_id" INTEGER REFERENCES "user",
     "image" TEXT,
-    "size" INTEGER
+    "size" TEXT
 );

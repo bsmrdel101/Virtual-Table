@@ -4,7 +4,7 @@ let root = document.documentElement;
 let zoomMin = 0.5;
 let zoomMax = 10;
 let user;
-
+let cells = [];
 
 // Waits until the DOM is loaded
 document.addEventListener('DOMContentLoaded', async () => {
@@ -42,7 +42,7 @@ function setupGrid(width, height, clear) {
                 token.classList.add('token');
                 token.classList.remove('menu__item');
                 token.classList.remove('menu__item--token');
-                // if (token.getAttribute('size')) token.classList.add(token.getAttribute('size'));
+                if (token.getAttribute('size')) token.classList.add(token.getAttribute('size'));
             });
             newCell.addEventListener("dragend", () => {
                 const token = document.querySelector('.token--dragging');
@@ -55,13 +55,15 @@ function setupGrid(width, height, clear) {
                     token.remove();
 
                     // Place token
-                    const newToken = createToken(newCell, new Token(image, size));
-                    socket.emit('placedToken', newToken);
+                    const newToken = new Token(image, size);
+                    socket.emit('placedToken', {x: parseInt(newCell.getAttribute('x')), y: parseInt(newCell.getAttribute('y'))}, newToken);
 
                     // Refresh token menu
                     resetTokenBodyData();
                 }
             });
+
+            cells.push(newCell);
         }
         y++;
     }
@@ -72,9 +74,7 @@ function createToken(cell, newToken) {
     const token = cell.appendChild(document.createElement('img'));
     token.setAttribute('src', newToken.image);
     token.classList.add('token');
-    // token.classList.add(newToken.size);
-    token.setAttribute('size', newToken.size);
-    token.setAttribute('width', `${newToken.size}%`);
+    token.classList.add(newToken.size);
 
     giveTokenEvents(token);
 }
@@ -101,3 +101,8 @@ async function fetchUser() {
     const user = await getUser();
     return user;
 }
+
+socket.on('placedToken', ((cell, token) => {
+    const newCell = findCell(cell.x, cell.y);
+    createToken(newCell, token);
+}));

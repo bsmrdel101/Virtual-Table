@@ -3,7 +3,6 @@
 async function getTokens() {
     try {
         const res = await axios.get('/api/tokens')
-        console.log(res.data);
         tokens = res.data;
     } catch (err) {
         console.log(err);
