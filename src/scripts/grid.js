@@ -49,7 +49,8 @@ function setupGrid(width, height, clear) {
                     token.remove();
 
                     // Place token
-                    addToken(newCell, new Token(image, size));
+                    const newToken = addToken(newCell, new Token(image, size));
+                    // socket.emit('placedToken', newToken);
 
                     // Refresh token menu
                     resetTokenBodyData();

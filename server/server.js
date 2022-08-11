@@ -1,8 +1,13 @@
 const express = require("express");
 const app = express();
+const http = require('http');
 const path = require('path');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+
+const server = http.createServer(app);
+const { Server } = require("socket.io");
+const io = new Server(server);
 
 const sessionMiddleware = require('./modules/session-middleware');
 const passport = require('./strategies/user.strategy');
@@ -43,8 +48,15 @@ app.get('/game', (req, res) => {
   res.sendFile(path.join(__dirname, '../', 'src', 'views', 'game.html'));
 });
 
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('placedToken', (token) => {
+    console.log(token);
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

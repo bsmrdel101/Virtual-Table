@@ -25,7 +25,7 @@ function toggleTokenMenu(menuName) {
 }
 
 async function getTokenBodyData() {
-    await getTokens();
+    // await getTokens();
     for (let token of tokens) {
         document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
             <img src=${token.image} class="menu__item menu__item--token" ondragstart="placeToken(event, '${token.size}')">
