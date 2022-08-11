@@ -35,3 +35,8 @@ function closeMenu(menuName) {
         }
     }
 }
+
+function changeRoute(route) {
+    const wl = window.location;
+    window.location.replace(`${wl.protocol}//${wl.host}/${route}`);
+}

@@ -3,12 +3,18 @@ let y = 0;
 let root = document.documentElement;
 let zoomMin = 0.5;
 let zoomMax = 10;
+let user;
 
 
 // Waits until the DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    user = await fetchUser();
     setupGrid(25, 25, false);
-    getUser();
+
+    if (user.new_user) {
+        addDefaultTokens();
+        changeNewUser(false);
+    }
 });
 
 function setupGrid(width, height, clear) {
@@ -36,7 +42,7 @@ function setupGrid(width, height, clear) {
                 token.classList.add('token');
                 token.classList.remove('menu__item');
                 token.classList.remove('menu__item--token');
-                if (token.getAttribute('size')) token.classList.add(token.getAttribute('size'));
+                // if (token.getAttribute('size')) token.classList.add(token.getAttribute('size'));
             });
             newCell.addEventListener("dragend", () => {
                 const token = document.querySelector('.token--dragging');
@@ -49,8 +55,8 @@ function setupGrid(width, height, clear) {
                     token.remove();
 
                     // Place token
-                    const newToken = addToken(newCell, new Token(image, size));
-                    // socket.emit('placedToken', newToken);
+                    const newToken = createToken(newCell, new Token(image, size));
+                    socket.emit('placedToken', newToken);
 
                     // Refresh token menu
                     resetTokenBodyData();
@@ -62,11 +68,13 @@ function setupGrid(width, height, clear) {
 }
 
 // Places token on board
-function addToken(cell, newToken) {
+function createToken(cell, newToken) {
     const token = cell.appendChild(document.createElement('img'));
     token.setAttribute('src', newToken.image);
     token.classList.add('token');
-    token.classList.add(newToken.size);
+    // token.classList.add(newToken.size);
+    token.setAttribute('size', newToken.size);
+    token.setAttribute('width', `${newToken.size}%`);
 
     giveTokenEvents(token);
 }
@@ -87,4 +95,9 @@ function clearMap() {
     x = 0;
     y = 0;
     document.getElementById('grid').innerHTML = '';
+}
+
+async function fetchUser() {
+    const user = await getUser();
+    return user;
 }

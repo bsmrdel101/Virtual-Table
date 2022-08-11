@@ -2,23 +2,20 @@
 
 async function getTokens() {
     try {
-        await axios.get('/api/tokens')
-        .then((res) => {
-            console.log(res.data);
-            tokens = [...tokens, res.data];
-        });
-    } catch(err) {
+        const res = await axios.get('/api/tokens')
+        console.log(res.data);
+        tokens = res.data;
+    } catch (err) {
         console.log(err);
     }
 }
 
 // === POST routes === //
 
-function addToken(e, payload) {
-    e.preventDefault();
+async function addToken(payload) {
     try {
-        axios.post('/api/tokens', payload);
-    } catch(err) {
+        await axios.post('/api/tokens', payload);
+    } catch (err) {
         console.log(err);
     }
 }
