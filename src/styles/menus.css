@@ -42,10 +42,12 @@
 
 .menu__item {
     max-width: 5rem;
+    cursor: pointer;
 }
 
 .menu__item--token {
     border-radius: var(--token-radius);
+    cursor: grab;
 }
 
 .menu__item--map {

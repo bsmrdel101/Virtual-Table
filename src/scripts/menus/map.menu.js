@@ -44,19 +44,23 @@ function getMapBodyData() {
 function selectMap(e) {
     for (let map of maps) {
         if (map.id === parseInt(e.target.getAttribute('id'))) {
-            if (map.name === 'Default Map') {
-                // Set image to nothing
-                root.style.setProperty('--background-image', `url('')`);
-                setupGrid(25, 25, true);
-            } else {
-                // Set new map image
-                root.style.setProperty('--background-image', `url(${map.image})`);
-                setupGrid(e.target.clientWidth / 2, e.target.clientHeight / 2, true);
-            }
+            socket.emit('selectMap', {width: e.target.clientWidth, height: e.target.clientHeight}, map);
         }
     }
 }
 
-function createMap(e) {
+socket.on('selectMap', ((e, map) => {
+    if (map.name === 'Default Map') {
+        // Set image to nothing
+        root.style.setProperty('--background-image', `url('')`);
+        setupGrid(25, 25, true);
+    } else {
+        // Set new map image
+        root.style.setProperty('--background-image', `url(${map.image})`);
+        setupGrid(e.width / 2, e.height / 2, true);
+    }
+}));
+
+function addMap(e) {
 
 }
