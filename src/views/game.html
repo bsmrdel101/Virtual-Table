@@ -21,34 +21,40 @@
     <link rel="stylesheet" href="../styles/sidebar.css">
     <link rel="stylesheet" href="../styles/toolbar.css">
     <link rel="stylesheet" href="../styles/menus.css">
-    <!-- Scripts -->
+    <link rel="stylesheet" href="../styles/dashboard.css">
+    <!-- Scripts -->   
     <script src="../scripts/grid.js"></script>
     <script src="../scripts/token.js"></script>
     <script src="../scripts/input.js"></script>
-    <script src="../scripts/sidebar.js"></script>
     <script src="../scripts/menus/token.menu.js"></script>
     <script src="../scripts/menus/map.menu.js"></script>
+    <script src="../scripts/menus/character.menu.js"></script>
+    <script src="../scripts/dashboard.js"></script> 
     <script src="../scripts/utils.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <!-- Routes -->
     <script src="../scripts/routes/users.route.js"></script>
     <script src="../scripts/routes/tokens.route.js"></script>
+    <script src="../scripts/routes/maps.route.js"></script>
+    <script src="../scripts/routes/dashboard.route.js"></script>
+    <script src="../scripts/routes/characters.route.js"></script>
 </head>
 <body>
-    <section class="game-page-container">
-        <div class="sidebar">
-            <button class="sidebar__btn sidebar__tokens" onclick="toggleTokenMenu('tokens')">Tokens</button>
-            <button class="sidebar__btn sidebar__maps" onclick="toggleMapMenu('maps')">Maps</button>
-        </div>
-        <div class="game-content">
-            <div class="toolbar">
-                <button onclick="zoomIn()">+</button>
-                <button onclick="zoomOut()">-</button>
+    <div class="page-container">
+        <section class="dashboard-page-container">
+            <h1>Dashboard</h1>
+            <div class="dashboard-container">
+                <form onsubmit="joinPlayer(roomCode, event)" class="form--join-room">
+                    <input placeholder="room code" onchange="roomCode = event.target.value">
+                    <button type="submit">Join Room</button>
+                </form>
+                <div class="games-list">
+                    <div class="games-list__content"></div>
+                </div>
             </div>
-            <div class="grid-container">
-                <table id="grid"></table>
-            </div>
-        </div>
-    </section>
+        <section>
+        <button onclick="loginUser({username: 'bean', password: '123'}, event)">1</button>
+        <button onclick="loginUser({username: '2', password: '2'}, event)">2</button>
+    </div>  
 </body>
 </html>

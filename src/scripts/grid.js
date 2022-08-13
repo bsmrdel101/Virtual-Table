@@ -4,18 +4,30 @@ let root = document.documentElement;
 let zoomMin = 0.5;
 let zoomMax = 10;
 let user;
+let playerList = [];
 let cells = [];
+let currentMap;
+let playersListOpen = false;
 
-// Waits until the DOM is loaded
-// document.addEventListener('DOMContentLoaded', async () => {
-//     user = await fetchUser();
-//     setupGrid(25, 25, false);
+async function gamePageLoaded() {
+    user = await fetchUser();
+    socket.nickname = user.username;
+    socket.emit('userJoined', user.username);
+    setupGrid(25, 25, false);
 
-//     if (user.new_user) {
-//         addDefaultTokens();
-//         changeNewUser(false);
-//     }
-// });
+    if (user.new_user) {
+        addDefaultTokens();
+        addDefaultMaps();
+        changeNewUser(false);
+    }
+
+    if (client.clientType == 'dm') {
+        setupSidebar('dm');
+    } else {
+        setupSidebar('player');
+        toggleCharacterMenu('characters');
+    }
+}
 
 function setupGrid(width, height, clear) {
     document.getElementById('grid').addEventListener("contextmenu", e => e.preventDefault());
@@ -49,15 +61,15 @@ function setupGrid(width, height, clear) {
                 if (token) {
                     let size = token.getAttribute('size');
                     let image = token.getAttribute('src');
+                    let id = token.getAttribute('id');
                     // Set token
                     token.classList.remove('token--dragging');
                     token.removeAttribute('onmousedown');
                     token.remove();
 
                     // Place token
-                    const newToken = new Token(image, size);
-                    socket.emit('placedToken', {x: parseInt(newCell.getAttribute('x')), y: parseInt(newCell.getAttribute('y'))}, newToken, user.username);
-
+                    const newToken = new Token(id, image, size);
+                    socket.emit('placedToken', {x: parseInt(newCell.getAttribute('x')), y: parseInt(newCell.getAttribute('y'))}, newToken, user.username, room);
                     // Refresh token menu
                     resetTokenBodyData();
                 }
@@ -73,10 +85,10 @@ function setupGrid(width, height, clear) {
 function createToken(cell, newToken, username) {
     const token = cell.appendChild(document.createElement('img'));
     token.setAttribute('src', newToken.image);
+    token.setAttribute('id', newToken.id);
     token.classList.add('token');
     token.classList.add(newToken.size);
     if (username) token.setAttribute('owner', username);
-
     giveTokenEvents(token);
 }
 
@@ -98,48 +110,55 @@ function clearMap() {
     document.getElementById('grid').innerHTML = '';
 }
 
+function togglePlayerList() {
+    playersListOpen = !playersListOpen;
+    if (playersListOpen) {
+        const playerListContainer = document.querySelector('body').appendChild(document.createElement('div'));
+        playerListContainer.classList.add('players-list');
+    
+        const playerListEl = document.querySelector('.players-list');
+        for (let player of playerList) {
+            playerListEl.insertAdjacentHTML('beforeend', `
+                <p>${player}</p>
+            `);
+        }
+    } else {
+        document.querySelector('.players-list').remove();
+    }
+}
+
 async function fetchUser() {
     const user = await getUser();
     return user;
 }
 
-socket.on('connect', async () => {
-    document.addEventListener('DOMContentLoaded', async () => {
-        user = await fetchUser();
-        setupGrid(25, 25, false);
-    
-        if (user.new_user) {
-            addDefaultTokens();
-            changeNewUser(false);
-        }
+function setupSidebar(userType) {
+    const sidebar = document.querySelector('.sidebar');
+    if (userType === 'dm') {
+        sidebar.insertAdjacentHTML('beforeend', `
+            <button class="sidebar__btn sidebar__tokens" onclick="toggleTokenMenu('tokens')">Tokens</button>
+            <button class="sidebar__btn sidebar__maps" onclick="toggleMapMenu('maps')">Maps</button>
+        `);
+    } else {
+        sidebar.insertAdjacentHTML('beforeend', `
+            <button class="sidebar__btn sidebar__characters" onclick="toggleCharacterMenu('characters')">Characters</button>
+        `);
+    }
+}
 
-        socket.emit('populateData');
-    });
-});
+// =================== //
+//      SOCKET.IO      //
+// =================== //
 
 socket.on('placedToken', ((cell, token, username) => {
     const newCell = findCell(cell.x, cell.y);
     createToken(newCell, token, username);
 }));
 
-// Reloads all the assets such as tokens and the map, when the user leaves and joins the page again.
-socket.on('populateData', (async (placedTokens, selectedMap) => {
-    // Place tokens
-    for (let token of placedTokens) {
-        const newCell = await findCell(token.cell.x, token.cell.y);
-        createToken(newCell, token.token, token.username);
-    }
+socket.on('userJoined', ((clients) => {
+    playerList = clients;
+}));
 
-    // Load current map
-    let e = selectedMap[0].e;
-    let map = selectedMap[1].map;
-    if (map.name === 'Default Map') {
-        // Set image to nothing
-        root.style.setProperty('--background-image', `url('')`);
-        setupGrid(25, 25, true);
-    } else {
-        // Set new map image
-        root.style.setProperty('--background-image', `url(${map.image})`);
-        setupGrid(e.width / 2, e.height / 2, true);
-    }
+socket.on('userLeft', ((clients) => {
+    playerList = clients;
 }));

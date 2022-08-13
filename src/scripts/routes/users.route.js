@@ -25,7 +25,7 @@ async function registerUser(e, payload) {
     }
 }
 
-async function loginUser(e, payload) {
+async function loginUser(payload, e) {
     e.preventDefault();
     try {
         await axios.post('/api/user/login', payload);

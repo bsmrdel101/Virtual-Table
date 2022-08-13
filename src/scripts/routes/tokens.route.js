@@ -18,3 +18,11 @@ async function addToken(payload) {
         console.log(err);
     }
 }
+
+async function addTokenToMap(payload) {
+    try {
+        await axios.post('/api/tokens/map', payload);
+    } catch (err) {
+        console.log(err);
+    }
+}

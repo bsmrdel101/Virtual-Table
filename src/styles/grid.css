@@ -4,7 +4,7 @@
     height: 90vh;
     margin-top: 0.8rem;
     border: 2px solid var(--grid-border-color);
-    background-color: rgb(237 237 237 / 52%);
+    background-color: var(--background-color-1);
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -33,4 +33,13 @@
 
 .panning {
     cursor: move;
+}
+
+.players-list {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.3rem;
+    background-color: grey;
+    color: white;
+    padding: 0.5rem;
 }

@@ -30,6 +30,8 @@ function closeMenu(menuName) {
             case 'maps':
                 toggleMapMenu();
                 break;
+            case 'characters':
+                toggleCharacterMenu();
             default:
                 break;
         }

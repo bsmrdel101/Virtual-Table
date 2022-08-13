@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', rejectUnauthenticated, (req, res) => {
     const sqlText = (`
-        SELECT "id", "image", "size" FROM "tokens"
+        SELECT "id", "user_id", "name" FROM "games_list"
         WHERE "user_id"=$1
         ORDER BY "id";
     `);
@@ -24,13 +24,12 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 
 router.post('/', (req, res) => {
     const sqlText =`
-        INSERT INTO "tokens" ("user_id", "image", "size")
-        VALUES ($1, $2, $3);
+        INSERT INTO "games_list" ("user_id", "name")
+        VALUES ($1, $2);
     `;
     const sqlValues = [
         req.user.id,
-        req.body.image,
-        req.body.size
+        req.body.name
     ];
     pool.query(sqlText, sqlValues)
         .then(() => res.sendStatus(201))
@@ -40,25 +39,5 @@ router.post('/', (req, res) => {
     });
 });
 
-router.post('/map', (req, res) => {
-    console.log(req.body);
-    const sqlText =`
-        INSERT INTO "map_tokens" ("user_id", "map_id", "token_id", "x", "y")
-        VALUES ($1, $2, $3, $4, $5);
-    `;
-    const sqlValues = [
-        req.user.id,
-        req.body.map,
-        req.body.token,
-        req.body.x,
-        req.body.y
-    ];
-    pool.query(sqlText, sqlValues)
-        .then(() => res.sendStatus(201))
-        .catch((dberror) => {
-        console.log('Oops you did a goof: ', dberror);
-        res.sendStatus(500)
-    });
-});
 
 module.exports = router;
