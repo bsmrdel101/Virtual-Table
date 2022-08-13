@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', rejectUnauthenticated, (req, res) => {
     const sqlText = (`
-        SELECT "id", "image", "size" FROM "tokens"
+        SELECT * FROM "characters"
         WHERE "user_id"=$1
         ORDER BY "id";
     `);
@@ -24,13 +24,30 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 
 router.post('/', (req, res) => {
     const sqlText =`
-        INSERT INTO "tokens" ("user_id", "image", "size")
-        VALUES ($1, $2, $3);
+        INSERT INTO "characters" ("user_id", "name", "class", "race", "background", "level", "ac", "max_health", "current_health", "temp_health", "prof_bonus", "movement", "initiative", "inspiration", "hit_dice", "str", "dex", "con", "int", "wis", "char")
+        VALUES ($1, $2);
     `;
     const sqlValues = [
         req.user.id,
-        req.body.image,
-        req.body.size
+        req.body.name,
+        req.body.class,
+        req.body.race,
+        req.body.background,
+        req.body.level,
+        req.body.ac,
+        req.body.maxHealth,
+        req.body.maxHealth,
+        0,
+        req.body.profBonus,
+        req.body.movement,
+        req.body.initiative,
+        req.body.hitDice,
+        req.body.str,
+        req.body.dex,
+        req.body.con,
+        req.body.int,
+        req.body.wis,
+        req.body.char
     ];
     pool.query(sqlText, sqlValues)
         .then(() => res.sendStatus(201))
@@ -40,25 +57,5 @@ router.post('/', (req, res) => {
     });
 });
 
-router.post('/map', (req, res) => {
-    console.log(req.body);
-    const sqlText =`
-        INSERT INTO "map_tokens" ("user_id", "map_id", "token_id", "x", "y")
-        VALUES ($1, $2, $3, $4, $5);
-    `;
-    const sqlValues = [
-        req.user.id,
-        req.body.map,
-        req.body.token,
-        req.body.x,
-        req.body.y
-    ];
-    pool.query(sqlText, sqlValues)
-        .then(() => res.sendStatus(201))
-        .catch((dberror) => {
-        console.log('Oops you did a goof: ', dberror);
-        res.sendStatus(500)
-    });
-});
 
 module.exports = router;

@@ -5,21 +5,22 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="../styles/styles.css">
     <!-- Scripts -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="../scripts/utils.js"></script>
     <!-- Routes -->
     <script src="../scripts/routes/users.route.js"></script>
     <script>
         let username, password;
-        const usernameChange = (e) => username = e.target.value;
-        const passwordChange = (e) => password = e.target.value;
     </script>
 </head>
 <body>
     <h1>Login</h1>
-    <form onsubmit="loginUser(event, {username: username, password: password})">
-        <input placeholder="username" onchange="usernameChange(event)" required>
-        <input placeholder="password" type="password" onchange="passwordChange(event)" required>
+    <form onsubmit="loginUser({username: username, password: password}, event)">
+        <input placeholder="username" onchange="username = event.target.value" required>
+        <input placeholder="password" type="password" onchange="password = event.target.value" required>
         <button type="submit">Login</button>
     </form>
     <a href="/register">Register</a>

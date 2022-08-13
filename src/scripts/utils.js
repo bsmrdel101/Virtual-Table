@@ -30,8 +30,15 @@ function closeMenu(menuName) {
             case 'maps':
                 toggleMapMenu();
                 break;
+            case 'characters':
+                toggleCharacterMenu();
             default:
                 break;
         }
     }
+}
+
+function changeRoute(route) {
+    const wl = window.location;
+    window.location.replace(`${wl.protocol}//${wl.host}/${route}`);
 }

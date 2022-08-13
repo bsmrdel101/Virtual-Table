@@ -42,4 +42,22 @@ router.post('/logout', (req, res) => {
   res.sendStatus(200);
 });
 
+router.put('/', rejectUnauthenticated, (req, res) => {
+    const sqlText =`
+        UPDATE "user"
+        SET "new_user" = $1
+        WHERE "id" = $2;
+    `;
+    const sqlValues = [
+        req.body.newStatus,
+        req.user.id,  
+    ];
+    pool.query(sqlText, sqlValues)
+        .then((dbres) => res.sendStatus(201))
+        .catch((dberror) => {
+          console.log('Oops you did a goof', dberror);
+          res.sendStatus(500)
+    })
+});
+
 module.exports = router;

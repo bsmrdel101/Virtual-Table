@@ -6,7 +6,8 @@ async function getUser() {
             headers: { 'Content-Type': 'application/json' },
             withCredentials: true,
         };
-        await axios.get('/api/user', config)
+        const res = await axios.get('/api/user', config);
+        return res.data;
     } catch(err) {
         console.log(err);
     }
@@ -14,23 +15,31 @@ async function getUser() {
 
 // === POST routes === //
 
-function registerUser(e, payload) {
+async function registerUser(e, payload) {
     e.preventDefault();
     try {
-        axios.post('/api/user/register', payload);
-        const wl = window.location;
-        window.location.replace(`${wl.protocol}//${wl.host}/login`);
+        await axios.post('/api/user/register', payload);
+        changeRoute('login');
     } catch(err) {
         console.log(err);
     }
 }
 
-function loginUser(e, payload) {
+async function loginUser(payload, e) {
     e.preventDefault();
     try {
-        axios.post('/api/user/login', payload);
-        const wl = window.location;
-        window.location.replace(`${wl.protocol}//${wl.host}/game`);
+        await axios.post('/api/user/login', payload);
+        changeRoute('game');
+    } catch(err) {
+        console.log(err);
+    }
+}
+
+// === PUT routes === //
+
+async function changeNewUser(payload) {
+    try {
+        await axios.put('/api/user', {newStatus: payload});
     } catch(err) {
         console.log(err);
     }

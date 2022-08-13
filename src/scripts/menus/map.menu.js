@@ -1,8 +1,14 @@
-let maps = [
-    new Map(1, 'Default Map', 'https://images.squarespace-cdn.com/content/v1/5511fc7ce4b0a3782aa9418b/1429139759127-KFHWAFFFVXJWZNWTITKK/learning-the-grid-method.jpg'),
-    new Map(2, 'Test Map', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwUhS4RzGYSNBN6rAgSzwcdpzoUkYYIg_Cvg&usqp=CAU'),
+let maps = [];
+let defaultMaps = [
+    {name: 'Default Map', image: 'https://images.squarespace-cdn.com/content/v1/5511fc7ce4b0a3782aa9418b/1429139759127-KFHWAFFFVXJWZNWTITKK/learning-the-grid-method.jpg'},
 ];
+// 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwUhS4RzGYSNBN6rAgSzwcdpzoUkYYIg_Cvg&usqp=CAU'
 
+function addDefaultMaps() {
+    for (let map of defaultMaps) {
+        addMap(map);
+    }
+}
 
 function toggleMapMenu(menuName) {
     menuOpen = !menuOpen;
@@ -15,14 +21,14 @@ function toggleMapMenu(menuName) {
                 <div class="menu__body"></div>
             </div>
         `);
-
-        setTimeout(getMapBodyData(), 1000);
+        getMapBodyData();
     } else {
         closeMenu(menuName);
     }
 }
 
-function getMapBodyData() {
+async function getMapBodyData() {
+    await getMaps();
     // Populate menu body
     for (let map of maps) {
         document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
@@ -36,7 +42,7 @@ function getMapBodyData() {
     // Add new map button
     document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
         <div class="menu__item menu__item--map">
-            <button class="new-map-btn">New Map</button>
+            <button class="btn--new-item" onclick="newMap();">New Map</button>
         </div>
     `);
 }
@@ -44,19 +50,39 @@ function getMapBodyData() {
 function selectMap(e) {
     for (let map of maps) {
         if (map.id === parseInt(e.target.getAttribute('id'))) {
-            if (map.name === 'Default Map') {
-                // Set image to nothing
-                root.style.setProperty('--background-image', `url('')`);
-                setupGrid(25, 25, true);
-            } else {
-                // Set new map image
-                root.style.setProperty('--background-image', `url(${map.image})`);
-                setupGrid(e.target.clientWidth / 2, e.target.clientHeight / 2, true);
-            }
+            socket.emit('selectMap', {width: e.target.clientWidth, height: e.target.clientHeight}, map);
         }
     }
 }
 
-function createMap(e) {
+socket.on('selectMap', ((e, map) => {
+    if (map.name === 'Default Map') {
+        // Set image to nothing
+        root.style.setProperty('--background-image', `url('')`);
+        setupGrid(25, 25, true);
+    } else {
+        // Set new map image
+        root.style.setProperty('--background-image', `url(${map.image})`);
+        setupGrid(e.width / 2, e.height / 2, true);
+    }
+}));
 
+function newMap() {
+    document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
+        <form class="form--menu" onsubmit="submitNewMap(event)">
+            <input placeholder="name" onchange="mapNameChange(event)" required>
+            <input type="file" accept="image/*" onchange="mapImageChange(event)" required>
+            <button type="submit">Add Map</button>
+        </form>
+    `);
+}
+
+// For new map form
+let newMapName, newMapImage;
+const mapNameChange = (e) => newMapName = e.target.value;
+const mapImageChange = (e) => newMapImage = e.target.files[0];
+
+function submitNewMap(e) {
+    e.preventDefault();
+    addMap({name: newMapName, image: newMapImage});
 }

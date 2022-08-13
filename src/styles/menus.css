@@ -42,10 +42,12 @@
 
 .menu__item {
     max-width: 5rem;
+    cursor: pointer;
 }
 
 .menu__item--token {
     border-radius: var(--token-radius);
+    cursor: grab;
 }
 
 .menu__item--map {
@@ -57,7 +59,12 @@
     text-align: center;
 }
 
-.new-map-btn {
+.menu__item--character {
+    max-height: 4rem;
+    height: 4rem;
+}
+
+.btn--new-item {
     height: 100%;
     width: 100%;
     background-color: #ffffffc2;
@@ -65,7 +72,7 @@
     box-shadow: 0 0 0.5rem 1px rgba(0,0,0,0.2);
 }
 
-.new-map-btn:hover {
+.btn--new-item:hover {
     background-color: #edededc2;
     cursor: pointer;
 }
