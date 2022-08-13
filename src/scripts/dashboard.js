@@ -12,17 +12,25 @@ document.addEventListener('DOMContentLoaded', () => {
 function joinPlayer(roomCode, e) {
     e.preventDefault();
     room = roomCode;
-    socket.emit('joinRoom', 'player', roomCode, (newClient) => {
-       client = newClient;
-       gameScreen();
+    socket.emit('JOIN_ROOM', 'player', roomCode, (roomExists, newClient) => {
+        if (roomExists) {
+            client = newClient;
+            gameScreen();
+        } else {
+            console.log('room doesn\'t exist');
+        }
     });
 }
 
 function joinDM(roomCode) {
     room = roomCode;
-    socket.emit('joinRoom', 'dm', roomCode, (newClient) => {
-        client = newClient;
-        gameScreen();
+    socket.emit('JOIN_ROOM', 'dm', roomCode, (roomExists, newClient) => {
+        if (roomExists) {
+            client = newClient;
+            gameScreen();
+        } else {
+            console.log('game already started');
+        }
     });
 }
 
@@ -82,5 +90,7 @@ function gameScreen() {
 }
 
 function leaveRoom() {
+    socket.emit('USER_DISCONNECT', room, socket.id);
+    socket.disconnect();
     location.reload();
 }

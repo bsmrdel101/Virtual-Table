@@ -59,45 +59,72 @@ app.get('/game', (req, res) => {
   res.sendFile(path.join(__dirname, '../', 'src', 'views', 'game.html'));
 });
 
-let playerList = [];
-let clientList = [];
 let tokens = [];
-let selectedMap = [];
+let selectedMap;
 
 // Socket.io
-io.on('connection', async (socket) => {
-  // User disconnect
-  socket.on('disconnect', () => {
-    for (let client of clientList) {
-      if (socket.id === client.id) {
-        const i = clientList.indexOf(client);
-        clientList.splice(i, 1);
-        playerList.splice(i, 1);
-        io.emit('userLeft', playerList);
+io.on('connection', (socket) => {
+  socket.on('USER_DISCONNECT', (room, id) => {
+    let deleteList = [];
+    let clientList = [];    
+    const clients = io.sockets.adapter.rooms.get(room);
+    for (const clientId of clients) {
+      const clientSocket = io.sockets.sockets.get(clientId);
+      clientList.push(clientSocket.data.nickname);
+      deleteList.push(clientSocket.id);
+    }
+
+    for (const client of deleteList) {
+      if (client === id) {
+        clientList.splice(deleteList.indexOf(client), 1);
       }
     }
+    io.to(room).emit('UPDATE_PLAYER_LIST', clientList);
   });
 
   // Makes the user join a room
-  socket.on('joinRoom', (userType, room, cb) => {
-    socket.join(room);
+  socket.on('JOIN_ROOM', (userType, room, cb) => {
+    // Create client object
     const client = {
       id: socket.id,
       clientType: userType
     }
-    clientList.push(client);
-    cb(client);
+
+    // Check if room already exists
+    if (io.sockets.adapter.rooms.has(room)) {
+      if (userType !== 'dm'){
+        // If user is a player, then join
+        socket.join(room);
+        cb(true, client);
+      } else {
+        cb(false, {});
+      }
+    } else if (userType === 'dm') {
+      // If user is a dm, then create a room
+      socket.join(room);
+      cb(true, client);
+    } else {
+      cb(false, {});
+    }
   });
 
-  // Runs after user has joined the game
-  socket.on('userJoined', (name) => {
-    playerList.push(name);
-    io.emit('userJoined', playerList);
+  socket.on('SET_NAME', (name) => {
+    socket.data.nickname = {nickname: name};
   });
 
-  socket.on('placedToken', (cell, token, username, room) => {
+  socket.on('UPDATE_PLAYER_LIST', (room) => {
+    let clientList = [];
+    const clients = io.sockets.adapter.rooms.get(room);
+    for (const clientId of clients) {
+      const clientSocket = io.sockets.sockets.get(clientId);
+      clientList.push(clientSocket.data.nickname);
+    }
+    io.to(room).emit('UPDATE_PLAYER_LIST', clientList);
+  });
+
+  socket.on('PLACE_TOKEN', (cell, token, username, room) => {
     tokens.push({cell: cell, token: token, username: username});
-    io.to(room).emit('placedToken', cell, token, username);
+    io.to(room).emit('PLACE_TOKEN', cell, token, username);
   });
 
   socket.on('selectMap', (e, map) => {

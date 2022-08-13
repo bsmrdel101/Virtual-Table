@@ -11,8 +11,10 @@ let playersListOpen = false;
 
 async function gamePageLoaded() {
     user = await fetchUser();
-    socket.nickname = user.username;
-    socket.emit('userJoined', user.username);
+    socket.emit('SET_NAME', user.username);
+    socket.emit('UPDATE_PLAYER_LIST', room);
+
+    // await socket.emit('userJoined', user.username, room);
     setupGrid(25, 25, false);
 
     if (user.new_user) {
@@ -69,7 +71,7 @@ function setupGrid(width, height, clear) {
 
                     // Place token
                     const newToken = new Token(id, image, size);
-                    socket.emit('placedToken', {x: parseInt(newCell.getAttribute('x')), y: parseInt(newCell.getAttribute('y'))}, newToken, user.username, room);
+                    socket.emit('PLACE_TOKEN', {x: parseInt(newCell.getAttribute('x')), y: parseInt(newCell.getAttribute('y'))}, newToken, user.username, room);
                     // Refresh token menu
                     resetTokenBodyData();
                 }
@@ -150,15 +152,15 @@ function setupSidebar(userType) {
 //      SOCKET.IO      //
 // =================== //
 
-socket.on('placedToken', ((cell, token, username) => {
+socket.on('UPDATE_PLAYER_LIST', ((clientList) => {
+    playerList = [];
+    for (let client of clientList) {
+        playerList.push(client.nickname);
+    }
+    console.log(playerList);
+}));
+
+socket.on('PLACE_TOKEN', ((cell, token, username) => {
     const newCell = findCell(cell.x, cell.y);
     createToken(newCell, token, username);
-}));
-
-socket.on('userJoined', ((clients) => {
-    playerList = clients;
-}));
-
-socket.on('userLeft', ((clients) => {
-    playerList = clients;
 }));
