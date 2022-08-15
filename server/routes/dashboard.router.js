@@ -22,7 +22,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     })  
 });
 
-router.post('/', (req, res) => {
+router.post('/', rejectUnauthenticated, (req, res) => {
     const sqlText =`
         INSERT INTO "games_list" ("user_id", "name")
         VALUES ($1, $2);

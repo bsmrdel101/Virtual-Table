@@ -34,12 +34,3 @@
 .panning {
     cursor: move;
 }
-
-.players-list {
-    position: absolute;
-    top: 0.3rem;
-    right: 0.3rem;
-    background-color: grey;
-    color: white;
-    padding: 0.5rem;
-}

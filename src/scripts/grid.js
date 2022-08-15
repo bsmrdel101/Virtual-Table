@@ -13,8 +13,6 @@ async function gamePageLoaded() {
     user = await fetchUser();
     socket.emit('SET_NAME', user.username);
     socket.emit('UPDATE_PLAYER_LIST', room);
-
-    // await socket.emit('userJoined', user.username, room);
     setupGrid(25, 25, false);
 
     if (user.new_user) {
@@ -144,6 +142,7 @@ function setupSidebar(userType) {
     } else {
         sidebar.insertAdjacentHTML('beforeend', `
             <button class="sidebar__btn sidebar__characters" onclick="toggleCharacterMenu('characters')">Characters</button>
+            <button class="sidebar__btn sidebar__character-sheet" onclick="toggleCharacterSheet()">Character Sheet</button>
         `);
     }
 }
@@ -157,7 +156,8 @@ socket.on('UPDATE_PLAYER_LIST', ((clientList) => {
     for (let client of clientList) {
         playerList.push(client.nickname);
     }
-    console.log(playerList);
+    togglePlayerList();
+    togglePlayerList();
 }));
 
 socket.on('PLACE_TOKEN', ((cell, token, username) => {

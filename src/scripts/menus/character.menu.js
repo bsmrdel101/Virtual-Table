@@ -1,5 +1,5 @@
 let characters = [];
-
+let character;
 
 function toggleCharacterMenu(menuName) {
     menuOpen = !menuOpen;
@@ -22,11 +22,10 @@ async function getCharacterBodyData() {
     await getCharacters();
     for (let character of characters) {
         document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
-            <div class="menu__item menu__item--character">
+            <div class="menu__item menu__item--character" onclick="selectCharacter(${character.id})">
                 <img src=${character.image}>
-                <div class="menu__item__character-info">
-                    <p>${character.name}</p>
-                    <p>${character.level} ${character.class} ${character.race}</p>
+                <div>
+                    <p>${character.level} ${character.name} ${character.class}</p>
                 </div>
             </div>
         `);
@@ -34,10 +33,15 @@ async function getCharacterBodyData() {
 
     // Add new character button
     document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
-        <div class="menu__item menu__item--character">
+        <div class="menu__item menu__item--character-btn">
             <button class="btn--new-item" onclick="newCharacter()">New Character</button>
         </div>
     `);
+}
+
+async function selectCharacter(id) {
+    character = await getCharacter(id);
+    toggleCharacterMenu('characters');
 }
 
 function newCharacter() {

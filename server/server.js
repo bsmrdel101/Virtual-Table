@@ -51,8 +51,8 @@ app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname, '../', 'src', 'views', 'register.html'));
 });
 
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, '../', 'src', 'views', 'dashboard.html'));
+app.get('/expanded-view', (req, res) => {
+  res.sendFile(path.join(__dirname, '../', 'src', 'views', 'expanded-view.html'));
 });
 
 app.get('/game', (req, res) => {
