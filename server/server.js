@@ -127,6 +127,10 @@ io.on('connection', (socket) => {
     io.to(room).emit('PLACE_TOKEN', cell, token, username);
   });
 
+  socket.on('REMOVE_TOKEN', (cell, room) => {
+    io.to(room).emit('REMOVE_TOKEN', cell);
+  });
+
   socket.on('selectMap', (e, map) => {
     selectedMap = [{e}, {map}];
     io.emit('selectMap', e, map);

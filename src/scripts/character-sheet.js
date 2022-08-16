@@ -1,10 +1,23 @@
 let sheetOpen = false;
 let tempHpInput, hpInput;
 let dmgAddInput, healAddInput, tempAddInput;
+let strMod;
+let dexMod;
+let conMod;
+let intMod;
+let wisMod;
+let charMod;
 
 function toggleCharacterSheet() {
     sheetOpen = !sheetOpen;
     if (sheetOpen) {
+        let strMod = Math.floor((character.str - 10) / 2);
+        let dexMod = Math.floor((character.dex - 10) / 2);
+        let conMod = Math.floor((character.con - 10) / 2);
+        let intMod = Math.floor((character.int - 10) / 2);
+        let wisMod = Math.floor((character.wis - 10) / 2);
+        let charMod = Math.floor((character.char - 10) / 2);
+
         const sheetWindow = document.querySelector('body').appendChild(document.createElement('div'));
         sheetWindow.classList.add('character-sheet');
         sheetWindow.insertAdjacentHTML('beforeend', `
@@ -36,6 +49,50 @@ function toggleCharacterSheet() {
                     <form onsubmit="healHp(event)"><p>Heal <button type="submit">+</button><input type="number" onchange="healAddInput = event.target.value"></p></form>
                     <form onsubmit="addTempHp(event)"><p>Temp Hp <button type="submit">+</button><input type="number" onchange="tempAddInput = event.target.value"></p></form>
                 </div>
+                <div class="character-sheet__scores">
+                    <div class="character-sheet__score-box">
+                        <p>Str</p>
+                        <p>${character.str}</p>
+                        <div class="character-sheet__modifier-box">
+                            <p>${strMod < 0 ? '' : '+'} ${strMod}</p>
+                        </div>
+                    </div>
+                    <div class="character-sheet__score-box">
+                        <p>Dex</p>
+                        <p>${character.dex}</p>
+                        <div class="character-sheet__modifier-box">
+                            <p>${dexMod < 0 ? '' : '+'} ${dexMod}</p>
+                        </div>
+                    </div>
+                    <div class="character-sheet__score-box">
+                        <p>Con</p>
+                        <p>${character.con}</p>
+                        <div class="character-sheet__modifier-box">
+                            <p>${conMod < 0 ? '' : '+'} ${conMod}</p>
+                        </div>
+                    </div>
+                    <div class="character-sheet__score-box">
+                        <p>Int</p>
+                        <p>${character.int}</p>
+                        <div class="character-sheet__modifier-box">
+                            <p>${intMod < 0 ? '' : '+'} ${intMod}</p>
+                        </div>
+                    </div>
+                    <div class="character-sheet__score-box">
+                        <p>Wis</p>
+                        <p>${character.wis}</p>
+                        <div class="character-sheet__modifier-box">
+                            <p>${wisMod < 0 ? '' : '+'} ${wisMod}</p>
+                        </div>
+                    </div>
+                    <div class="character-sheet__score-box">
+                        <p>Char</p>
+                        <p>${character.char}</p>
+                        <div class="character-sheet__modifier-box">
+                            <p>${charMod < 0 ? '' : '+'} ${charMod}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         `);
 
@@ -52,6 +109,7 @@ function damageHp(e) {
     tmpHpValue -= dmgAmount;
     if (tmpHpValue < 0) tmpHpValue = 0;
     dmgAmount -= character.temp_health;
+    if (dmgAmount < 0) dmgAmount = 0;
     
     setTempHealth({id: character.id, health: tmpHpValue});
     setHealth({id: character.id, health: character.current_health - dmgAmount});
