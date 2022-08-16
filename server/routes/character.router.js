@@ -22,9 +22,26 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     })  
 });
 
-router.post('/', (req, res) => {
+router.get('/:id', rejectUnauthenticated, (req, res) => {
+    const sqlText = (`
+        SELECT * FROM "characters"
+        WHERE "id"=$1
+        ORDER BY "id";
+    `);
+    const sqlValues = [
+        req.params.id
+    ];
+    pool.query(sqlText, sqlValues)
+        .then((dbres) => res.send(dbres.rows))
+        .catch((dberror) => {
+        console.log('Oops you did a goof: ', dberror);
+        res.sendStatus(500)
+    })  
+});
+
+router.post('/', rejectUnauthenticated, (req, res) => {
     const sqlText =`
-        INSERT INTO "characters" ("user_id", "name", "class", "race", "background", "level", "ac", "max_health", "current_health", "temp_health", "prof_bonus", "movement", "initiative", "inspiration", "hit_dice", "str", "dex", "con", "int", "wis", "char")
+        INSERT INTO "characters" ("user_id", "name", "class", "race", "background", "level", "ac", "max_health", "current_health", "temp_health", "prof_bonus", "movement", "initiative", "inspiration", "hit_dice", "str", "dex", "con", "int", "wis", "char", "image")
         VALUES ($1, $2);
     `;
     const sqlValues = [
@@ -55,6 +72,42 @@ router.post('/', (req, res) => {
         console.log('Oops you did a goof: ', dberror);
         res.sendStatus(500)
     });
+});
+
+router.put('/health', rejectUnauthenticated, (req, res) => {
+    const sqlText = (`
+        UPDATE "characters"
+        SET "current_health" = $1
+        WHERE "id" = $2;
+    `);
+    const sqlValues = [
+        req.body.health,
+        req.body.id
+    ];
+    pool.query(sqlText, sqlValues)
+        .then(() => res.sendStatus(201))
+        .catch((dberror) => {
+        console.log('Oops you did a goof: ', dberror);
+        res.sendStatus(500)
+    })  
+});
+
+router.put('/temp', rejectUnauthenticated, (req, res) => {
+    const sqlText = (`
+        UPDATE "characters"
+        SET "temp_health" = $1
+        WHERE "id" = $2;
+    `);
+    const sqlValues = [
+        req.body.health,
+        req.body.id
+    ];
+    pool.query(sqlText, sqlValues)
+        .then(() => res.sendStatus(201))
+        .catch((dberror) => {
+        console.log('Oops you did a goof: ', dberror);
+        res.sendStatus(500)
+    })  
 });
 
 

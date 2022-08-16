@@ -78,7 +78,7 @@ function gameScreen() {
                     <button onclick="zoomIn()">+</button>
                     <button onclick="zoomOut()">-</button>
                     <button onclick="togglePlayerList()">Show Players</button>
-                    <a onclick="leaveRoom()">Leave Game</a>
+                    <a class="toolbar__leave-btn" onclick="leaveRoom()">Leave Game</a>
                 </div>
                 <div class="grid-container">
                     <table id="grid"></table>

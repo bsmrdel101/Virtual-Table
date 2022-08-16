@@ -8,13 +8,12 @@ let playerList = [];
 let cells = [];
 let currentMap;
 let playersListOpen = false;
+let cellToDelete;
 
 async function gamePageLoaded() {
     user = await fetchUser();
     socket.emit('SET_NAME', user.username);
     socket.emit('UPDATE_PLAYER_LIST', room);
-
-    // await socket.emit('userJoined', user.username, room);
     setupGrid(25, 25, false);
 
     if (user.new_user) {
@@ -56,20 +55,28 @@ function setupGrid(width, height, clear) {
                 token.classList.add('token');
                 token.classList.remove('menu__item');
                 token.classList.remove('menu__item--token');
-                if (token.getAttribute('size')) token.classList.add(token.getAttribute('size'));
+                if (token.getAttribute('size')) token.classList.add(token.getAttribute('size'));    
+            });
+            newCell.addEventListener("mousedown", (e) => {
+                for (let i = 0; i < 4; i++) {
+                    if (e.path[i].classList.contains('grid__cell')) {
+                        cellToDelete = e.path[i];
+                    }
+                }
             });
             newCell.addEventListener("dragend", () => {
-                const token = document.querySelector('.token--dragging');
+                const token = newCell.firstChild;
                 if (token) {
                     let size = token.getAttribute('size');
                     let image = token.getAttribute('src');
                     let id = token.getAttribute('id');
                     // Set token
                     token.classList.remove('token--dragging');
-                    token.removeAttribute('onmousedown');
-                    token.remove();
+                    token.removeAttribute('onmousedown');   
+                    // Remove token at previous position
+                    socket.emit('REMOVE_TOKEN', {x: parseInt(cellToDelete.getAttribute('x')), y: parseInt(cellToDelete.getAttribute('y'))}, room);
 
-                    // Place token
+                    // Place new token
                     const newToken = new Token(id, image, size);
                     socket.emit('PLACE_TOKEN', {x: parseInt(newCell.getAttribute('x')), y: parseInt(newCell.getAttribute('y'))}, newToken, user.username, room);
                     // Refresh token menu
@@ -90,6 +97,7 @@ function createToken(cell, newToken, username) {
     token.setAttribute('id', newToken.id);
     token.classList.add('token');
     token.classList.add(newToken.size);
+    token.setAttribute('size', newToken.size);
     if (username) token.setAttribute('owner', username);
     giveTokenEvents(token);
 }
@@ -144,6 +152,7 @@ function setupSidebar(userType) {
     } else {
         sidebar.insertAdjacentHTML('beforeend', `
             <button class="sidebar__btn sidebar__characters" onclick="toggleCharacterMenu('characters')">Characters</button>
+            <button class="sidebar__btn sidebar__character-sheet" onclick="toggleCharacterSheet()">Character Sheet</button>
         `);
     }
 }
@@ -157,10 +166,16 @@ socket.on('UPDATE_PLAYER_LIST', ((clientList) => {
     for (let client of clientList) {
         playerList.push(client.nickname);
     }
-    console.log(playerList);
+    togglePlayerList();
+    togglePlayerList();
 }));
 
 socket.on('PLACE_TOKEN', ((cell, token, username) => {
     const newCell = findCell(cell.x, cell.y);
     createToken(newCell, token, username);
+}));
+
+socket.on('REMOVE_TOKEN', ((cell) => {
+    const newCell = findCell(cell.x, cell.y);
+    newCell.innerHTML='';
 }));

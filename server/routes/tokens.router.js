@@ -22,7 +22,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     })  
 });
 
-router.post('/', (req, res) => {
+router.post('/', rejectUnauthenticated, (req, res) => {
     const sqlText =`
         INSERT INTO "tokens" ("user_id", "image", "size")
         VALUES ($1, $2, $3);
@@ -40,7 +40,7 @@ router.post('/', (req, res) => {
     });
 });
 
-router.post('/map', (req, res) => {
+router.post('/map', rejectUnauthenticated, (req, res) => {
     console.log(req.body);
     const sqlText =`
         INSERT INTO "map_tokens" ("user_id", "map_id", "token_id", "x", "y")

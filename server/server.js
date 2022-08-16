@@ -51,8 +51,8 @@ app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname, '../', 'src', 'views', 'register.html'));
 });
 
-app.get('/dashboard', (req, res) => {
-  res.sendFile(path.join(__dirname, '../', 'src', 'views', 'dashboard.html'));
+app.get('/expanded-view', (req, res) => {
+  res.sendFile(path.join(__dirname, '../', 'src', 'views', 'expanded-view.html'));
 });
 
 app.get('/game', (req, res) => {
@@ -125,6 +125,10 @@ io.on('connection', (socket) => {
   socket.on('PLACE_TOKEN', (cell, token, username, room) => {
     tokens.push({cell: cell, token: token, username: username});
     io.to(room).emit('PLACE_TOKEN', cell, token, username);
+  });
+
+  socket.on('REMOVE_TOKEN', (cell, room) => {
+    io.to(room).emit('REMOVE_TOKEN', cell);
   });
 
   socket.on('selectMap', (e, map) => {

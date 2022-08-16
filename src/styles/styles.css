@@ -12,10 +12,18 @@
     /* Tokens */
     --token-radius: 50%;
     --token-selected-color: #6767fd;
+    /* Character sheet */
+    --character-sheet-width: 30%;
+    --character-sheet-height: 50%;
+    /* Menu */
+    --menu-color-0: gray;
+    --menu-color-1: #919191;
+    --menu-color-2: #a3a3a3;
 }
 
 * {
     content: border-box;
+    font-family: 'Ubuntu', sans-serif;
 }
 
 body {

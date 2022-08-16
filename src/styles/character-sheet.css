@@ -1,0 +1,132 @@
+.character-sheet {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.3rem;
+    background-color: grey;
+    color: white;
+    padding: 0.5rem;
+    width: var(--character-sheet-width);
+    height: var(--character-sheet-height);
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+    max-width: 25rem;
+    min-width: 24.5rem;
+}
+
+.sheet-content p {
+    margin: 0.3rem 0 0 0;
+}
+
+.character-sheet__header {
+    margin-bottom: 1rem;
+    cursor: move;
+}
+
+.sheet-content {
+    display: block;
+}
+
+.character-sheet__header,
+.character-sheet__main,
+.character-sheet__health,
+.character-sheet__health-tracker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+/* IMAGE */
+.character-sheet__image {
+    width: 5rem;
+    height: 4rem;
+    max-width: 5rem;
+    max-height: 4rem;
+}
+
+/* HEALTH */
+.character-sheet__health {
+    margin-right: 52%;
+}
+
+@media screen and (max-width: 642px) {
+    .character-sheet__health {
+        margin-right: 0;
+    }
+}
+
+.character-sheet__health,
+.character-sheet__health--temp,
+.character-sheet__health-tracker {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 5px;
+    color: rgb(211 19 19);
+    display: inline-flex;
+    padding: 0.3rem;
+    margin-top: 0.3rem;
+    background-color: var(--menu-color-1);
+    position: relative;
+    padding-left: 1.7rem;
+    transition: all ease-in-out 200ms;
+    /* cursor: pointer; */
+}
+
+.character-sheet__health img,
+.character-sheet__health--temp img {
+    height: 1.1rem;
+    position: absolute;
+    top: 9px;
+    left: 5px;
+}
+
+.character-sheet__health--temp {
+    color: rgb(46, 118, 206);
+}
+
+.character-sheet__health:hover {
+    box-shadow: rgba(212, 20, 20, 0.24) 0px 3px 8px;
+}
+
+.character-sheet__health--temp:hover {
+    box-shadow: rgb(48 102 231 / 39%) 0px 3px 8px;
+}
+
+/* HEALTH TRACKER */
+.character-sheet__health-tracker {
+    color: white;
+    cursor: auto;
+    padding-left: 0.3rem;
+    flex-direction: column;
+    font-size: 0.96875em; /* 15.5px / 16px */
+    gap: 0;
+}
+
+.character-sheet__health-tracker button {
+    margin-left: 0.1rem;
+}
+
+.character-sheet__health-tracker input {
+    max-width: 6rem;
+}
+
+/* ABILITY SCORES */
+.character-sheet__scores {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.character-sheet__score-box {
+    background-color: var(--menu-color-1);
+    padding: 0 0.8rem 0.8rem;
+    margin-top: 1rem;
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    text-align: center;
+}
+
+/* ABILITY MODIFIERS */
+.character-sheet__modifier-box {
+    background-color: var(--menu-color-2);
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.75em; /* 12px / 16px */
+}

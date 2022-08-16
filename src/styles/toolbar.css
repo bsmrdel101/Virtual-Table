@@ -6,3 +6,16 @@
     box-shadow: 0 1px 6px 1px rgb(172 172 172 / 50%);
     gap: 0.5rem;
 }
+
+.toolbar__leave-btn {
+    cursor: pointer;
+}
+
+.players-list {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.3rem;
+    background-color: grey;
+    color: white;
+    padding: 0.5rem;
+}
