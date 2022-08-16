@@ -50,7 +50,7 @@ function setGamesList() {
     }
 
     gamesListEl.insertAdjacentHTML('beforeend', `
-        <button class="games-list__button" onclick="addGameForm()">Create Campaign</button>
+        <button class="games-list__button btn--hover" onclick="addGameForm()">Create Campaign</button>
     `);    
 }
 
@@ -60,7 +60,7 @@ function addGameForm() {
         document.querySelector('.games-list__content').insertAdjacentHTML('beforeend', `
             <form class="form--add-game" onsubmit="addGame({name: gameNameInput}, event)">
                 <input placeholder="name" onchange="gameNameInput = event.target.value" required>
-                <button class="button--submit">Submit</button>
+                <button class="button--submit btn--hover">Submit</button>
             </form>
         `);
     } else {
@@ -75,9 +75,9 @@ function gameScreen() {
             <div class="sidebar"></div>
             <div class="game-content">
                 <div class="toolbar">
-                    <button onclick="zoomIn()">+</button>
-                    <button onclick="zoomOut()">-</button>
-                    <button onclick="togglePlayerList()">Show Players</button>
+                    <button class="toolbar__btn" onclick="zoomIn()">+</button>
+                    <button class="toolbar__btn" onclick="zoomOut()">-</button>
+                    <button class="toolbar__btn" onclick="togglePlayerList()">Show Players</button>
                     <a class="toolbar__leave-btn" onclick="leaveRoom()">Leave Game</a>
                 </div>
                 <div class="grid-container">

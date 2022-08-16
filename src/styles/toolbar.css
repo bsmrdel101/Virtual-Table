@@ -9,6 +9,7 @@
 
 .toolbar__leave-btn {
     cursor: pointer;
+    margin-top: 0.5rem;
 }
 
 .players-list {
@@ -18,4 +19,9 @@
     background-color: grey;
     color: white;
     padding: 0.5rem;
+}
+
+.toolbar__btn {
+    background-color: #7f6d6d;
+    color: white;
 }
