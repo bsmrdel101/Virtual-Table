@@ -12,6 +12,8 @@
 
 .sidebar__btn {
     padding: 10px;
+    background-color: #7f6d6d;
+    color: white;
 }
 
 @media screen and (max-width: 748px) {

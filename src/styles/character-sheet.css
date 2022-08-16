@@ -9,7 +9,8 @@
     height: var(--character-sheet-height);
     box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
     max-width: 25rem;
-    min-width: 24.5rem;
+    min-width: 25rem;
+    min-height: 61%;
 }
 
 .sheet-content p {
@@ -56,7 +57,7 @@
 .character-sheet__health,
 .character-sheet__health--temp,
 .character-sheet__health-tracker {
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    box-shadow: rgb(0 0 0 / 24%) 0px 1px 3px;
     border-radius: 5px;
     color: rgb(211 19 19);
     display: inline-flex;
@@ -101,10 +102,16 @@
 
 .character-sheet__health-tracker button {
     margin-left: 0.1rem;
+    border-radius: 3px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 .character-sheet__health-tracker input {
     max-width: 6rem;
+    border-radius: 3px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
 }
 
 /* ABILITY SCORES */
@@ -119,7 +126,7 @@
     padding: 0 0.8rem 0.8rem;
     margin-top: 1rem;
     border-radius: 5px;
-    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    box-shadow: rgb(0 0 0 / 24%) 0px 1px 3px;
     text-align: center;
 }
 

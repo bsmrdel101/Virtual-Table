@@ -146,13 +146,13 @@ function setupSidebar(userType) {
     const sidebar = document.querySelector('.sidebar');
     if (userType === 'dm') {
         sidebar.insertAdjacentHTML('beforeend', `
-            <button class="sidebar__btn sidebar__tokens" onclick="toggleTokenMenu('tokens')">Tokens</button>
-            <button class="sidebar__btn sidebar__maps" onclick="toggleMapMenu('maps')">Maps</button>
+            <button class="sidebar__btn sidebar__tokens btn--hover" onclick="toggleTokenMenu('tokens')">Tokens</button>
+            <button class="sidebar__btn sidebar__maps btn--hover" onclick="toggleMapMenu('maps')">Maps</button>
         `);
     } else {
         sidebar.insertAdjacentHTML('beforeend', `
-            <button class="sidebar__btn sidebar__characters" onclick="toggleCharacterMenu('characters')">Characters</button>
-            <button class="sidebar__btn sidebar__character-sheet" onclick="toggleCharacterSheet()">Character Sheet</button>
+            <button class="sidebar__btn sidebar__characters btn--hover" onclick="toggleCharacterMenu('characters')">Characters</button>
+            <button class="sidebar__btn sidebar__character-sheet btn--hover" onclick="toggleCharacterSheet()">Character Sheet</button>
         `);
     }
 }
