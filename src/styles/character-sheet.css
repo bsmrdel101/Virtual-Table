@@ -2,7 +2,7 @@
     position: absolute;
     top: 0.3rem;
     right: 0.3rem;
-    background-color: grey;
+    background-color: var(--menu-color-0);
     color: white;
     padding: 0.5rem;
     width: var(--character-sheet-width);
@@ -59,7 +59,7 @@
 .character-sheet__health-tracker {
     box-shadow: rgb(0 0 0 / 24%) 0px 1px 3px;
     border-radius: 5px;
-    color: rgb(211 19 19);
+    color: rgb(237 156 156);
     display: inline-flex;
     padding: 0.3rem;
     margin-top: 0.3rem;
@@ -79,7 +79,7 @@
 }
 
 .character-sheet__health--temp {
-    color: rgb(46, 118, 206);
+    color: rgb(144 194 255);
 }
 
 .character-sheet__health:hover {
@@ -119,6 +119,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.8rem;
+    justify-content: center;
 }
 
 .character-sheet__score-box {
@@ -128,6 +129,7 @@
     border-radius: 5px;
     box-shadow: rgb(0 0 0 / 24%) 0px 1px 3px;
     text-align: center;
+    min-width: 29px;
 }
 
 /* ABILITY MODIFIERS */

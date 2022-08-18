@@ -58,9 +58,11 @@ function setupGrid(width, height, clear) {
                 if (token.getAttribute('size')) token.classList.add(token.getAttribute('size'));    
             });
             newCell.addEventListener("mousedown", (e) => {
-                for (let i = 0; i < 4; i++) {
-                    if (e.path[i].classList.contains('grid__cell')) {
-                        cellToDelete = e.path[i];
+                if (e.which === 1) {
+                    for (let i = 0; i < 4; i++) {
+                        if (e.path[i].classList.contains('grid__cell')) {
+                            cellToDelete = e.path[i];
+                        }
                     }
                 }
             });
@@ -74,7 +76,7 @@ function setupGrid(width, height, clear) {
                     token.classList.remove('token--dragging');
                     token.removeAttribute('onmousedown');   
                     // Remove token at previous position
-                    socket.emit('REMOVE_TOKEN', {x: parseInt(cellToDelete.getAttribute('x')), y: parseInt(cellToDelete.getAttribute('y'))}, room);
+                    if (cellToDelete) socket.emit('REMOVE_TOKEN', {x: parseInt(cellToDelete.getAttribute('x')), y: parseInt(cellToDelete.getAttribute('y'))}, room);
 
                     // Place new token
                     const newToken = new Token(id, image, size);
@@ -118,6 +120,7 @@ function clearMap() {
     x = 0;
     y = 0;
     document.getElementById('grid').innerHTML = '';
+    cells = [];
 }
 
 function togglePlayerList() {
@@ -177,5 +180,5 @@ socket.on('PLACE_TOKEN', ((cell, token, username) => {
 
 socket.on('REMOVE_TOKEN', ((cell) => {
     const newCell = findCell(cell.x, cell.y);
-    newCell.innerHTML='';
+    newCell.innerHTML = '';
 }));

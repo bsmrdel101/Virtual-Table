@@ -34,7 +34,14 @@ CREATE TABLE "map_tokens" (
 CREATE TABLE "games_list" (
     "id" SERIAL PRIMARY KEY,
     "user_id" INTEGER REFERENCES "user",
-    "name" TEXT
+    "name" VARCHAR (80) NOT NULL,
+    "code" VARCHAR (20) NOT NULL
+);
+
+CREATE TABLE "prev_games" (
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER REFERENCES "user",
+    "code" VARCHAR (20)
 );
 
 CREATE TABLE "characters" (

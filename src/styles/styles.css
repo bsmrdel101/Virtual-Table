@@ -16,9 +16,11 @@
     --character-sheet-width: 30%;
     --character-sheet-height: 50%;
     /* Menu */
-    --menu-color-0: gray;
-    --menu-color-1: #919191;
-    --menu-color-2: #a3a3a3;
+    --menu-color-0: #595959;
+    --menu-color-1: #696969;
+    --menu-color-2: #868282;
+    /* Buttons */
+    --btn-color-0: #605252;
 }
 
 * {

@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', rejectUnauthenticated, (req, res) => {
     const sqlText = (`
-        SELECT "id", "user_id", "name" FROM "games_list"
+        SELECT * FROM "games_list"
         WHERE "user_id"=$1
         ORDER BY "id";
     `);
@@ -22,14 +22,33 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     })  
 });
 
+router.get('/prev', rejectUnauthenticated, (req, res) => {
+    const sqlText = (`
+        SELECT * FROM "prev_games"
+        WHERE "user_id"=$1
+        ORDER BY "id";
+    `);
+    const sqlValues = [
+        req.user.id
+    ];
+    pool.query(sqlText, sqlValues)
+        .then((dbres) => res.send(dbres.rows))
+        .catch((dberror) => {
+        console.log('Oops you did a goof: ', dberror);
+        res.sendStatus(500)
+    })  
+});
+
+
 router.post('/', rejectUnauthenticated, (req, res) => {
     const sqlText =`
-        INSERT INTO "games_list" ("user_id", "name")
-        VALUES ($1, $2);
+        INSERT INTO "games_list" ("user_id", "name", "code")
+        VALUES ($1, $2, $3);
     `;
     const sqlValues = [
         req.user.id,
-        req.body.name
+        req.body.name,
+        makeID()
     ];
     pool.query(sqlText, sqlValues)
         .then(() => res.sendStatus(201))
@@ -39,5 +58,48 @@ router.post('/', rejectUnauthenticated, (req, res) => {
     });
 });
 
+router.post('/prev', rejectUnauthenticated, (req, res) => {
+    const sqlText =`
+        INSERT INTO "prev_games" ("user_id", "code")
+        VALUES ($1, $2);
+    `;
+    const sqlValues = [
+        req.user.id,
+        req.body.game
+    ];
+    pool.query(sqlText, sqlValues)
+        .then(() => res.sendStatus(201))
+        .catch((dberror) => {
+        console.log('Oops you did a goof: ', dberror);
+        res.sendStatus(500)
+    });
+});
+
+router.delete('/prev', rejectUnauthenticated, (req, res) => {
+    const sqlText =`
+        DELETE FROM "prev_games" 
+        WHERE "user_id"=$1;
+    `;
+    const sqlValues = [
+      req.user.id
+    ];
+    pool.query(sqlText, sqlValues)
+        .then(() => res.sendStatus(201))
+        .catch((dberror) => {
+        console.log('Oops you did a goof: ', dberror);
+        res.sendStatus(500)
+    });   
+});
+  
+
+function makeID() {
+    let text = '';
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (let i = 0; i < 6; i++) {
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+}
 
 module.exports = router;

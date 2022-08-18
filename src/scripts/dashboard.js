@@ -3,19 +3,24 @@ let gameFormOpen = false;
 let gameNameInput;
 let client;
 let room;
+let prevGame;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     getGames();
-    setGamesList();
+    prevGame = await getPrevGame();
+    document.getElementById('room-code-input').value = prevGame.code;
 });
 
-function joinPlayer(roomCode, e) {
+async function joinPlayer(roomCode, e) {
     e.preventDefault();
     room = roomCode;
+
     socket.emit('JOIN_ROOM', 'player', roomCode, (roomExists, newClient) => {
         if (roomExists) {
             client = newClient;
             gameScreen();
+            addPrevGame({game: roomCode});
+            socket.emit('FETCH_BOARD');
         } else {
             console.log('room doesn\'t exist');
         }
@@ -43,7 +48,7 @@ function setGamesList() {
     const gamesListEl = document.querySelector('.games-list__content');
     for (let game of gamesList) {
         gamesListEl.insertAdjacentHTML('beforeend', `
-            <div class="game-list__item" onclick="joinDM('${game.name}')">
+            <div class="game-list__item" onclick="joinDM('${game.code}')">
                 <p>${game.name}</p>
             </div>
         `);
@@ -78,6 +83,7 @@ function gameScreen() {
                     <button class="toolbar__btn" onclick="zoomIn()">+</button>
                     <button class="toolbar__btn" onclick="zoomOut()">-</button>
                     <button class="toolbar__btn" onclick="togglePlayerList()">Show Players</button>
+                    <p class="toolbar__text">Room: ${room}</p>
                     <a class="toolbar__leave-btn" onclick="leaveRoom()">Leave Game</a>
                 </div>
                 <div class="grid-container">

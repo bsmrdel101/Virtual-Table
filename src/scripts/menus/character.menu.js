@@ -34,7 +34,7 @@ async function getCharacterBodyData() {
     // Add new character button
     document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
         <div class="menu__item menu__item--character-btn">
-            <button class="btn--new-item" onclick="newCharacter()">New Character</button>
+            <button class="btn--new-item" onclick="toggleNewCharacterWindow()">New Character</button>
         </div>
     `);
 }
@@ -44,20 +44,20 @@ async function selectCharacter(id) {
     toggleCharacterMenu('characters');
 }
 
-function newCharacter() {
-    document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
-        <form class="form--menu" onsubmit="submitNewCharacter(event)">
-            <input placeholder="name" onchange="characterNameChange(event)" required>
-            <button type="submit">Add Character</button>
-        </form>
-    `);
-}
+// function newCharacter() {
+//     document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
+//         <form class="form--menu" onsubmit="submitNewCharacter(event)">
+//             <input placeholder="name" onchange="characterNameChange(event)" required>
+//             <button type="submit">Add Character</button>
+//         </form>
+//     `);
+// }
 
-// For new map form
-let newCharacterName, newCharacterLevel, newCharacterClass, newCharacterRace;
-const characterNameChange = (e) => newCharacterName = e.target.value;
+// // For new character form
+// let newCharacterName, newCharacterLevel, newCharacterClass, newCharacterRace;
+// const characterNameChange = (e) => newCharacterName = e.target.value;
 
-function submitNewCharacter(e) {
-    e.preventDefault();
-    addCharacter({name: newMapName, image: newMapImage});
-}
+// function submitNewCharacter(e) {
+//     e.preventDefault();
+//     addCharacter({name: newMapName, image: newMapImage});
+// }

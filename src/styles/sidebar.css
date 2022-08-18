@@ -12,7 +12,7 @@
 
 .sidebar__btn {
     padding: 10px;
-    background-color: #7f6d6d;
+    background-color: var(--btn-color-0);
     color: white;
 }
 

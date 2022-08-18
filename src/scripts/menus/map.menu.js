@@ -50,12 +50,12 @@ async function getMapBodyData() {
 function selectMap(e) {
     for (let map of maps) {
         if (map.id === parseInt(e.target.getAttribute('id'))) {
-            socket.emit('selectMap', {width: e.target.clientWidth, height: e.target.clientHeight}, map);
+            socket.emit('SELECT_MAP', {width: e.target.clientWidth, height: e.target.clientHeight}, map);
         }
     }
 }
 
-socket.on('selectMap', ((e, map) => {
+socket.on('SELECT_MAP', ((e, map) => {
     if (map.name === 'Default Map') {
         // Set image to nothing
         root.style.setProperty('--background-image', `url('')`);
@@ -84,5 +84,5 @@ const mapImageChange = (e) => newMapImage = e.target.files[0];
 
 function submitNewMap(e) {
     e.preventDefault();
-    addMap({name: newMapName, image: newMapImage});
+    addMap({ name: newMapName, image: newMapImage });
 }
