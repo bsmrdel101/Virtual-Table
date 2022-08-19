@@ -13,19 +13,21 @@ function addDefaultTokens() {
 }
 
 function toggleTokenMenu(menuName) {
-    menuOpen = !menuOpen;
-    if (menuOpen) {
-        selectedMenu = 'tokens';
-        // Create menu
-        document.querySelector('.game-page-container').insertAdjacentHTML('beforeend', `
-            <div class="menu">
-                <button class="menu__btn menu__btn--close" onclick="closeMenu()">X</button>
-                <div class="menu__body"></div>
-            </div>
-        `);
-        getTokenBodyData();
-    } else {
-        closeMenu(menuName);
+    if (client.clientType === 'dm') {
+        menuOpen = !menuOpen;
+        if (menuOpen) {
+            selectedMenu = 'tokens';
+            // Create menu
+            document.querySelector('.game-page-container').insertAdjacentHTML('beforeend', `
+                <div class="menu">
+                    <button class="menu__btn menu__btn--close" onclick="closeMenu()">X</button>
+                    <div class="menu__body"></div>
+                </div>
+            `);
+            getTokenBodyData();
+        } else {
+            closeMenu(menuName);
+        }
     }
 }
 

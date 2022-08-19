@@ -22,9 +22,7 @@
     background: none;
     color: white;
     font-size: 1em;
-}
-
-.menu__btn--close:hover {
+    box-shadow: none;
     cursor: pointer;
 }
 
@@ -38,6 +36,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 15rem;
+    color: white;
 }
 
 .menu__item {

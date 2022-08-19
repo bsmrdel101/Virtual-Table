@@ -35,6 +35,15 @@ async function loginUser(payload, e) {
     }
 }
 
+async function logout() {
+    try {
+        await axios.post('/api/user/logout');
+        changeRoute('login');
+    } catch(err) {
+        console.log(err);
+    }
+}
+
 // === PUT routes === //
 
 async function changeNewUser(payload) {

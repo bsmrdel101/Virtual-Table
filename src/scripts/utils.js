@@ -83,3 +83,13 @@ function dragElement(elmnt, headerName) {
       document.onmousemove = null;
     }
 }
+
+function closeAllWindows() {
+    if (menuOpen) {
+        document.querySelector('.menu').remove();
+        menuOpen = false;
+    }
+    if (client.clientType === 'player') {
+        if (sheetOpen) toggleCharacterSheet();
+    }
+}

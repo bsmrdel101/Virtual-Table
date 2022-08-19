@@ -60,7 +60,6 @@ app.get('/game', (req, res) => {
 });
 
 let tokens = [];
-let selectedMap;
 
 // Socket.io
 io.on('connection', (socket) => {
@@ -131,9 +130,9 @@ io.on('connection', (socket) => {
     io.to(room).emit('REMOVE_TOKEN', cell);
   });
 
-  socket.on('selectMap', (e, map) => {
+  socket.on('SELECT_MAP', (e, map) => {
     selectedMap = [{e}, {map}];
-    io.emit('selectMap', e, map);
+    io.emit('SELECT_MAP', e, map);
   });
 });
 
