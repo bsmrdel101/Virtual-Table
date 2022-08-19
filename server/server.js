@@ -60,7 +60,6 @@ app.get('/game', (req, res) => {
 });
 
 let tokens = [];
-let selectedMap;
 
 // Socket.io
 io.on('connection', (socket) => {

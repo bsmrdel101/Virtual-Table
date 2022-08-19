@@ -1,0 +1,30 @@
+.new-character {
+  position: absolute;
+  top: 0.3rem;
+  right: 40%;
+  background-color: grey;
+  color: white;
+  padding: 0.5rem;
+  width: 30%;
+  height: 50%;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+  max-width: 30rem;
+  min-width: 30rem;
+  min-height: 61%;
+}
+
+.new-character__header {
+  margin-bottom: 1rem;
+  cursor: move;
+}
+
+.new-character__form {
+  display: block;
+}
+
+.nc-input-box {
+  display: inline-grid;
+  margin: 0.2rem;
+}
+
+/*# sourceMappingURL=new-character.css.map */

@@ -36,6 +36,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     max-height: 15rem;
+    color: white;
 }
 
 .menu__item {

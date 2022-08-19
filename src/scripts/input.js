@@ -21,6 +21,15 @@ document.addEventListener('keydown', (e) => {
         case e.key === '-' || e.key === '_':
             zoomOut();
             break;
+        case e.which === 49:
+            client.clientType === 'dm' ? toggleTokenMenu('tokens') : toggleCharacterMenu('characters');
+            break;
+        case e.which === 50:
+            client.clientType === 'dm' ? toggleMapMenu('maps') : toggleCharacterSheet();
+            break;
+        case e.key === 'Escape':
+            closeAllWindows();
+            break;
         default:
             break;
     }

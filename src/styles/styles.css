@@ -41,7 +41,8 @@ body {
 }
 
 .game-content {
-    max-width: 80vw;
+    max-width: 51rem;
+    min-width: 51rem;
     height: 100vh;
     margin-right: 0.8rem;
     position: relative;
@@ -88,4 +89,8 @@ button {
     width: 10rem;
     gap: 0.5rem;
     margin-bottom: 1.5rem;
+}
+
+.button--logout {
+    margin: 3rem 0 3rem 1rem;
 }

@@ -8,10 +8,11 @@ let prevGame;
 document.addEventListener('DOMContentLoaded', async () => {
     getGames();
     prevGame = await getPrevGame();
+    roomCode = prevGame.code;
     document.getElementById('room-code-input').value = prevGame.code;
 });
 
-async function joinPlayer(roomCode, e) {
+function joinPlayer(roomCode, e) {
     e.preventDefault();
     room = roomCode;
 

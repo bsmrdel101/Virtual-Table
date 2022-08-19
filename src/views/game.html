@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="../styles/dashboard.css">
     <link rel="stylesheet" href="../styles/character-sheet.css">
     <link rel="stylesheet" href="../styles/new-character.css">
+    <link rel="stylesheet" href="../styles/output.css">
     <!-- Scripts -->   
     <script src="../scripts/grid.js"></script>
     <script src="../scripts/token.js"></script>
@@ -53,12 +54,13 @@
             <h1 class="page-title">Dashboard</h1>
             <div class="dashboard-container">
                 <form onsubmit="joinPlayer(roomCode, event)" class="form--join-room">
-                    <input id="room-code-input" placeholder="room code" onchange="roomCode = event.target.value" required>
+                    <input id="room-code-input" placeholder="room code" onchange="roomCode = event.target.value" value="" required>
                     <button type="submit">Join Room</button>
                 </form>
                 <div class="games-list">
                     <div class="games-list__content"></div>
                 </div>
+                <button onclick="logout()" class="button btn--hover button--logout">Log out</button>
             </div>
         <section>
     </div>
