@@ -1,4 +1,5 @@
 let tokenDeltaX, tokenDeltaY;
+let hasEvents = false;
 
 
 // Add event listeners for the token
@@ -29,7 +30,7 @@ function giveTokenEvents(token) {
     token.addEventListener('mouseup',(e) => {
         switch (e.which) {
             case 1:
-                selectToken(e.target);
+                // selectToken(e.target);
                 document.querySelector('.game-page-container').classList.remove('token--dragging-cursor');
                 break;
             default:
@@ -37,28 +38,28 @@ function giveTokenEvents(token) {
         }
     });
     // Fires when user uses scroll wheel
-    token.addEventListener('wheel', (e) => {
-        if (canScale) {
-            if (e.wheelDeltaY < 0) {
-                upscaleToken(token);
-            } else {
-                descaleToken(token);
-            }
-        }
-    });
+    // token.addEventListener('wheel', (e) => {
+    //     if (canScale) {
+    //         if (e.wheelDeltaY < 0) {
+    //             upscaleToken(token);
+    //         } else {
+    //             descaleToken(token);
+    //         }
+    //     }
+    // });
 }
 
 // Highlights and selects token
-function selectToken(token) {
-    if (token.classList.contains('token--selected')) {
-        token.classList.remove('token--selected');
-    } else {
-        for (const _token of document.getElementsByClassName('token')) {
-            _token.classList.remove('token--selected');
-        }
-        token.classList.add('token--selected');
-    }
-}
+// function selectToken(token) {
+//     if (token.classList.contains('token--selected')) {
+//         token.classList.remove('token--selected');
+//     } else {
+//         for (const _token of document.getElementsByClassName('token')) {
+//             _token.classList.remove('token--selected');
+//         }
+//         token.classList.add('token--selected');
+//     }
+// }
 
 function upscaleToken(token) {
     if (token.classList.contains('token--tiny')) {

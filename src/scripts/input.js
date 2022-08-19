@@ -25,7 +25,10 @@ document.addEventListener('keydown', (e) => {
             client.clientType === 'dm' ? toggleTokenMenu('tokens') : toggleCharacterMenu('characters');
             break;
         case e.which === 50:
-            client.clientType === 'dm' ? toggleMapMenu('maps') : toggleCharacterSheet();
+            client.clientType === 'dm' ? toggleCreaturesWindow() : toggleCharacterSheet();
+            break;
+        case e.which === 51:
+            client.clientType === 'dm' ? toggleMapMenu('maps') : console.log('nothing');
             break;
         case e.key === 'Escape':
             closeAllWindows();

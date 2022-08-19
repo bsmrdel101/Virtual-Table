@@ -64,6 +64,11 @@ input {
     transform: scale(1.025, 1.025);
 }
 
+select {
+    padding: 0.2rem;
+    border-radius: 5px; 
+}
+
 button {
     padding: 0.5rem;
     border: none;
@@ -75,6 +80,17 @@ button {
 
 .btn--hover:hover {
     transform: scale(1.025, 1.025);
+}
+
+.btn--window-close {
+    border: none;
+    background-color: var(--menu-color-0);
+    margin: 0;
+    box-shadow: none;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: 0;
 }
 
 /* LOGIN */

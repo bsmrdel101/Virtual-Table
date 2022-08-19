@@ -32,12 +32,14 @@ const tokensRouter = require('./routes/tokens.router');
 const mapsRouter = require('./routes/maps.router');
 const dashboardRouter = require('./routes/dashboard.router');
 const characterRouter = require('./routes/character.router');
+const creaturesRouter = require('./routes/creatures.router');
 
 app.use('/api/user', userRouter);
 app.use('/api/tokens', tokensRouter);
 app.use('/api/maps', mapsRouter);
 app.use('/api/dashboard', dashboardRouter);
 app.use('/api/characters', characterRouter);
+app.use('/api/creatures', creaturesRouter);
 
 
 app.use(express.static('src'));
@@ -129,6 +131,10 @@ io.on('connection', (socket) => {
   socket.on('REMOVE_TOKEN', (cell, room) => {
     io.to(room).emit('REMOVE_TOKEN', cell);
   });
+
+  socket.on('ADD_DOUBLE_CLICK', (cell, room) => {
+    socket.to(room).emit('ADD_DOUBLE_CLICK', cell);
+  })
 
   socket.on('SELECT_MAP', (e, map) => {
     selectedMap = [{e}, {map}];
