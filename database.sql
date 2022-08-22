@@ -53,11 +53,11 @@ CREATE TABLE "characters" (
     "background" VARCHAR (80) NOT NULL,
     "level" INTEGER NOT NULL,
     "ac" INTEGER NOT NULL,
+    "alignment" VARCHAR (80),
     "max_health" INTEGER NOT NULL,
     "current_health" INTEGER NOT NULL,
     "temp_health" INTEGER DEFAULT 0,
     "prof_bonus" INTEGER NOT NULL,
-    "movement" INTEGER,
     "initiative" INTEGER,
     "inspiration" BOOLEAN DEFAULT false,
 	"hit_dice" INTEGER,
@@ -67,4 +67,82 @@ CREATE TABLE "characters" (
 	"int" INTEGER NOT NULL DEFAULT 0,
 	"wis" INTEGER NOT NULL DEFAULT 0,
 	"char" INTEGER NOT NULL DEFAULT 0
+);
+
+CREATE TABLE "speeds" (
+    "id" SERIAL PRIMARY KEY,
+    "character_id" INTEGER REFERENCES "characters",
+    "creature_id" INTEGER REFERENCES "creatures",
+    "walk_speed" INTEGER,
+    "swim_speed" INTEGER,
+    "burrow_speed" INTEGER,
+    "fly_speed" INTEGER,
+    "hover_speed" INTEGER,
+    "climb_speed" INTEGER
+);
+
+CREATE TABLE "proficiencies" (
+    "id" SERIAL PRIMARY KEY,
+    "character_id" INTEGER REFERENCES "characters",
+    "creature_id" INTEGER REFERENCES "creatures",
+    "name" VARCHAR (80),
+    "value" INTEGER,
+);
+
+CREATE TABLE "vulnerabilities" (
+    "id" SERIAL PRIMARY KEY,
+    "character_id" INTEGER REFERENCES "characters",
+    "creature_id" INTEGER REFERENCES "creatures",
+    "name" VARCHAR (80)
+);
+
+CREATE TABLE "resistances" (
+    "id" SERIAL PRIMARY KEY,
+    "character_id" INTEGER REFERENCES "characters",
+    "creature_id" INTEGER REFERENCES "creatures",
+    "name" VARCHAR (80)
+);
+
+CREATE TABLE "immunities" (
+    "id" SERIAL PRIMARY KEY,
+    "character_id" INTEGER REFERENCES "characters",
+    "creature_id" INTEGER REFERENCES "creatures",
+    "name" VARCHAR (80),
+    "type" VARCHAR (80)
+);
+
+CREATE TABLE "senses" (
+    "id" SERIAL PRIMARY KEY,
+    "character_id" INTEGER REFERENCES "characters",
+    "creature_id" INTEGER REFERENCES "creatures",
+    "name" VARCHAR (80),
+    "value" INTEGER
+);
+
+CREATE TABLE "languages" (
+    "id" SERIAL PRIMARY KEY,
+    "character_id" INTEGER REFERENCES "characters",
+    "creature_id" INTEGER REFERENCES "creatures",
+    "name" VARCHAR (80)
+);
+
+CREATE TABLE "creatures" (
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER REFERENCES "user",
+    "image" TEXT,
+    "name" VARCHAR (80),
+    "size" VARCHAR (80),
+    "type" VARCHAR (80),
+    "alignment" VARCHAR (80),
+    "ac" INTEGER,
+    "hit_points" INTEGER,
+    "hit_dice" VARCHAR (80),
+    "str" INTEGER,
+    "dex" INTEGER,
+    "con" INTEGER,
+    "int" INTEGER,
+    "wis" INTEGER,
+    "char" INTEGER,
+    "cr" INTEGER,
+    "xp" INTEGER
 );

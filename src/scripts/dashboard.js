@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     prevGame = await getPrevGame();
     roomCode = prevGame.code;
     document.getElementById('room-code-input').value = prevGame.code;
+    // Get D&D api data
+    getCreatures();
 });
 
 function joinPlayer(roomCode, e) {

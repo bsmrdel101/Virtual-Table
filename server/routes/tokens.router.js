@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/', rejectUnauthenticated, (req, res) => {
     const sqlText = (`
-        SELECT "id", "image", "size" FROM "tokens"
+        SELECT * FROM "tokens"
         WHERE "user_id"=$1
         ORDER BY "id";
     `);

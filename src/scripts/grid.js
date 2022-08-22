@@ -9,6 +9,7 @@ let cells = [];
 let currentMap;
 let playersListOpen = false;
 let cellToDelete;
+let canPlace = true;
 
 async function gamePageLoaded() {
     user = await fetchUser();
@@ -51,8 +52,11 @@ function setupGrid(width, height, clear) {
             // Fires when element is dragged over this grid cell
             newCell.addEventListener("dragover", (e) => {
                 const token = document.querySelector('.token--dragging');
+                if (!hasEvents) giveTokenEvents(token);
+                hasEvents = true;
                 newCell.appendChild(token);
                 token.classList.add('token');
+                if (token.classList.contains('menu__item')) cellToDelete = '';
                 token.classList.remove('menu__item');
                 token.classList.remove('menu__item--token');
                 if (token.getAttribute('size')) token.classList.add(token.getAttribute('size'));    
@@ -71,18 +75,36 @@ function setupGrid(width, height, clear) {
                 if (token) {
                     let size = token.getAttribute('size');
                     let image = token.getAttribute('src');
+                    let relative = token.getAttribute('relative'); 
                     let id = token.getAttribute('id');
                     // Set token
                     token.classList.remove('token--dragging');
-                    token.removeAttribute('onmousedown');   
+                    token.removeAttribute('onmousedown');
+                    // Open stats menu after double click
+                    token.addEventListener("dblclick", () => {
+                        if (relative === 'null' || client.clientType === 'player') return;
+
+                        if (canOpenStats) {
+                            openCreatureStatsWindow(relative)
+                            canOpenStats = false;
+                        } else {
+                            setTimeout(function() { canOpenStats = true; }, 100);
+                        }
+                    });
+                    // Add double click listener when player moves the token
+                    if (client.clientType === 'player') {
+                        socket.emit('ADD_DOUBLE_CLICK', {x: parseInt(newCell.getAttribute('x')), y: parseInt(newCell.getAttribute('y'))}, room);
+                    }
                     // Remove token at previous position
                     if (cellToDelete) socket.emit('REMOVE_TOKEN', {x: parseInt(cellToDelete.getAttribute('x')), y: parseInt(cellToDelete.getAttribute('y'))}, room);
 
                     // Place new token
-                    const newToken = new Token(id, image, size);
+                    const newToken = new Token(id, image, size, relative);
+                    canPlace = false;
                     socket.emit('PLACE_TOKEN', {x: parseInt(newCell.getAttribute('x')), y: parseInt(newCell.getAttribute('y'))}, newToken, user.username, room);
                     // Refresh token menu
                     resetTokenBodyData();
+                    canOpenStats = true;
                 }
             });
 
@@ -94,14 +116,31 @@ function setupGrid(width, height, clear) {
 
 // Places token on board
 function createToken(cell, newToken, username) {
-    const token = cell.appendChild(document.createElement('img'));
-    token.setAttribute('src', newToken.image);
-    token.setAttribute('id', newToken.id);
-    token.classList.add('token');
-    token.classList.add(newToken.size);
-    token.setAttribute('size', newToken.size);
-    if (username) token.setAttribute('owner', username);
-    giveTokenEvents(token);
+    if (canPlace) {
+        const token = cell.appendChild(document.createElement('img'));
+        token.setAttribute('src', newToken.image);
+        token.setAttribute('id', newToken.id);
+        token.setAttribute('relative', newToken.relative);
+        token.classList.add('token');
+        token.classList.add(newToken.size);
+        token.setAttribute('size', newToken.size);
+        if (username) token.setAttribute('owner', username);
+        giveTokenEvents(token);
+
+        let relative = token.getAttribute('relative');
+        token.addEventListener("dblclick", () => {
+            if (relative === 'null' || client.clientType === 'player') return;
+
+            if (canOpenStats) {
+                openCreatureStatsWindow(relative)
+                canOpenStats = false;
+            } else {
+                setTimeout(function() { canOpenStats = true; }, 100);
+            }
+        });
+    } else {
+        canPlace = true;
+    }
 }
 
 function zoomIn() {
@@ -150,6 +189,7 @@ function setupSidebar(userType) {
     if (userType === 'dm') {
         sidebar.insertAdjacentHTML('beforeend', `
             <button class="sidebar__btn sidebar__tokens btn--hover" onclick="toggleTokenMenu('tokens')">Tokens</button>
+            <button class="sidebar__btn sidebar__maps btn--hover" onclick="toggleCreaturesWindow()">Creatures</button>
             <button class="sidebar__btn sidebar__maps btn--hover" onclick="toggleMapMenu('maps')">Maps</button>
         `);
     } else {
@@ -182,3 +222,24 @@ socket.on('REMOVE_TOKEN', ((cell) => {
     const newCell = findCell(cell.x, cell.y);
     newCell.innerHTML = '';
 }));
+
+// socket.on('ADD_DOUBLE_CLICK', ((cell) => {
+//     if (client.clientType === 'dm') {
+//         const newCell = findCell(cell.x, cell.y);
+//         for (let _token of document.getElementsByClassName('token')) {
+//             if (_token.parentElement === newCell) {
+//                 let relative = _token.getAttribute('relative');
+//                 _token.addEventListener("dblclick", () => {
+//                     if (relative === 'null' || client.clientType === 'player') return;
+
+//                     if (canOpenStats) {
+//                         openCreatureStatsWindow(relative)
+//                         canOpenStats = false;
+//                     } else {
+//                         setTimeout(function() { canOpenStats = true; }, 100);
+//                     }
+//                 });
+//             }
+//         }
+//     }
+// }));
