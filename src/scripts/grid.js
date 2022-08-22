@@ -43,7 +43,7 @@ function setupGrid(width, height, clear) {
         for (let b = 0; b < width; b++) {
             let newCell = newRow.appendChild(document.createElement('td'));
             newCell.classList.add('grid__cell');
-            if (x > width - 1) x = 0
+            if (x > width - 1) x = 0;
 
             newCell.setAttribute('x', x);
             newCell.setAttribute('y', y);
@@ -243,3 +243,4 @@ socket.on('REMOVE_TOKEN', ((cell) => {
 //         }
 //     }
 // }));
+

@@ -51,7 +51,6 @@ function filterCreaturesList(value) {
 
 async function getCreaturesBodyData() {
     await getCustomCreatures();
-    console.log(customCreatures);
     for (let creature of creatures) {
         document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
             <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
@@ -61,10 +60,10 @@ async function getCreaturesBodyData() {
     }
     for (let creature of customCreatures) {
         document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
-            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
+            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
                 <p>${creature.name}</p>
             </div>
-        `);
+        `); 
     }
 }
 
@@ -82,7 +81,7 @@ async function getCustomCreaturesData() {
     await getCustomCreatures();
     for (let creature of customCreatures) {
         document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
-            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
+            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
                 <p>${creature.name}</p>
             </div>
         `);

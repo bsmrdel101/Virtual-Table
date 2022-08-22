@@ -69,7 +69,7 @@ CREATE TABLE "characters" (
 	"char" INTEGER NOT NULL DEFAULT 0
 );
 
-CREATE TABLE "speeds" (
+CREATE TABLE "speeds" ( 
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
@@ -85,45 +85,45 @@ CREATE TABLE "proficiencies" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
-    "name" VARCHAR (80),
-    "value" INTEGER,
+    "prof_name" VARCHAR (80),
+    "prof_value" INTEGER
 );
 
 CREATE TABLE "vulnerabilities" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
-    "name" VARCHAR (80)
+    "vul_name" VARCHAR (80)
 );
 
 CREATE TABLE "resistances" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
-    "name" VARCHAR (80)
+    "res_name" VARCHAR (80)
 );
 
 CREATE TABLE "immunities" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
-    "name" VARCHAR (80),
-    "type" VARCHAR (80)
+    "immune_name" VARCHAR (80),
+    "immune_type" VARCHAR (80)
 );
 
 CREATE TABLE "senses" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
-    "name" VARCHAR (80),
-    "value" INTEGER
+    "sense_name" VARCHAR (80),
+    "sense_value" INTEGER
 );
 
 CREATE TABLE "languages" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
-    "name" VARCHAR (80)
+    "list" TEXT
 );
 
 CREATE TABLE "creatures" (

@@ -1,4 +1,5 @@
-test('Generating grid', () => {
-    setupGrid(60, 20, true);
-    expect(cells.length).toBe(1200);
+describe ('Grid', () => {
+    it ('Creates a grid with certain width and height', () => {
+        setupGrid(10, 30);
+    });
 });
