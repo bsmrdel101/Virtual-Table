@@ -146,3 +146,36 @@ CREATE TABLE "creatures" (
     "cr" INTEGER,
     "xp" INTEGER
 );
+
+CREATE TABLE "creature_abilities" (
+    "id" SERIAL PRIMARY KEY,
+    "creature_id" INTEGER REFERENCES "creatures",
+    "ability_name" VARCHAR (120),
+    "ability_desc" TEXT
+);
+
+CREATE TABLE "creature_actions" (
+    "id" SERIAL PRIMARY KEY,
+    "creature_id" INTEGER REFERENCES "creatures",
+    "action_name" VARCHAR (120),
+    "action_desc" TEXT
+);
+
+CREATE TABLE "legendary_actions" (
+    "id" SERIAL PRIMARY KEY,
+    "creature_id" INTEGER REFERENCES "creatures",
+    "leg_action_name" VARCHAR (120),
+    "leg_action_desc" TEXT
+);
+
+CREATE TABLE "creature_action_rolls" (
+    "id" SERIAL PRIMARY KEY,
+    "action_id" INTEGER REFERENCES "creature_actions",
+    "ability_id" INTEGER REFERENCES "creature_abilities",
+    "leg_action_id" INTEGER REFERENCES "legendary_actions",
+    "name" VARCHAR (120),
+    "amount" VARCHAR (80),
+    "dice_type" VARCHAR (80),
+    "dmg_type" VARCHAR (80),
+    "to_hit" VARCHAR (80)
+);

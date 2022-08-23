@@ -37,6 +37,14 @@ router.get('/:index', rejectUnauthenticated, (req, res) => {
             ON "creatures"."id"="resistances"."creature_id"
         JOIN "immunities"
             ON "creatures"."id"="immunities"."creature_id"
+        JOIN "senses"
+            ON "creatures"."id"="senses"."creature_id"
+        JOIN "creature_abilities"
+            ON "creatures"."id"="creature_abilities"."creature_id"
+        JOIN "creature_actions"
+            ON "creatures"."id"="creature_actions"."creature_id"
+        JOIN "languages"
+            ON "creatures"."id"="languages"."creature_id"
         WHERE "index"=$1
         ORDER BY "creatures"."id";
     `);

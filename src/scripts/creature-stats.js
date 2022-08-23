@@ -35,7 +35,7 @@ async function openCreatureStatsWindow(index, custom) {
                 <div class="creature-stats-window__vul-res" id="vul-res--${creature.index}"></div>
                 <div class="creature-stats-window__senses" id="senses--${creature.index}"></div>
                 <div class="creature-stats-window__languages">
-                    <p>${creature.list}</p>
+                    <p>${creature.languages}</p>
                 </div>
                 <div class="creature-stats-window__body">
                     <p>Xp: ${creature.xp}</p>
@@ -50,6 +50,9 @@ async function openCreatureStatsWindow(index, custom) {
         getCustomScoresData();
         getCustomProficiencyData();
         getCustomVulResData();
+        getCustomSensesData();
+        getCustomSpecialAbilityData();
+        getCustomActionsData();
     } else {
         window.insertAdjacentHTML('beforeend', `
             <div class="creature-stats-content">
@@ -325,5 +328,46 @@ function getCustomVulResData() {
                 <p>${stat}</p>
             `);
         }
+    }
+}
+
+function getCustomSensesData() {
+    for (let sense of creature.senses) {
+        document.getElementById(`senses--${creature.index}`).insertAdjacentHTML('beforeend', `
+            <p>${sense.name} ${sense.value} ft.</p>
+        `);
+    }
+}
+
+function getCustomSpecialAbilityData() {
+    for (let ability of creature.abilities) {
+        document.getElementById(`special-abilities--${creature.index}`).insertAdjacentHTML('beforeend', `
+            <div class="special-abilities__box">
+                <p class="special-abilities__name">${ability.name}</p>
+                <p class="special-abilities__desc">${ability.desc}</p>
+            </div>
+        `);
+    }
+}
+
+function getCustomActionsData() {
+    for (let action of creature.actions) {
+        document.getElementById(`actions--${creature.index}`).insertAdjacentHTML('beforeend', `
+            <div class="actions__box">
+                <p class="actions__name">${action.name}</p>
+                <p class="actions__desc">${action.desc}</p>
+            </div>
+        `);
+    }
+}
+
+function getCustomLegActionsData() {
+    for (let action of creature.legendary_actions) {
+        document.getElementById(`legendary-actions--${creature.index}`).insertAdjacentHTML('beforeend', `
+            <div class="actions__box">
+                <p class="actions__name">${action.name}</p>
+                <p class="actions__desc">${action.desc}</p>
+            </div>
+        `);
     }
 }
