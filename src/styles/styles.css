@@ -64,9 +64,35 @@ input {
     transform: scale(1.025, 1.025);
 }
 
+.input--sm {
+    width: 3rem;
+}
+
+.input--md {
+    width: 8rem;
+}
+
+.form__input-add input {
+    margin: 0.1rem auto;
+}
+
+.form__btn--remove {
+    background-color: rgb(212 62 62);
+    color: white;
+    max-height: 1.5rem;
+    margin-top: 0.34rem;
+}
+
 select {
     padding: 0.2rem;
     border-radius: 5px; 
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.17rem;
+    align-items: center;
 }
 
 button {
@@ -109,4 +135,9 @@ button {
 
 .button--logout {
     margin: 3rem 0 3rem 1rem;
+}
+
+.flex-container {
+    display: flex;
+    gap: 0.3rem;
 }
