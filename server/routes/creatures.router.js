@@ -7,9 +7,7 @@ const router = express.Router();
 
 router.get('/', rejectUnauthenticated, (req, res) => {
     const sqlText = (`
-        SELECT *, "creatures"."id" AS "ID" FROM "creatures"
-        JOIN "speeds"
-            ON "creatures"."id"="speeds"."creature_id"
+        SELECT * FROM "creatures"
         WHERE "user_id"=$1
         ORDER BY "creatures"."id";
     `);
@@ -27,8 +25,6 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 router.get('/:index', rejectUnauthenticated, (req, res) => {
     const sqlText = (`
         SELECT * FROM "creatures"
-        JOIN "speeds"
-            ON "creatures"."id"="speeds"."creature_id"
         JOIN "proficiencies"
             ON "creatures"."id"="proficiencies"."creature_id"
         JOIN "vulnerabilities"
@@ -64,8 +60,8 @@ router.get('/:index', rejectUnauthenticated, (req, res) => {
 router.post('/', rejectUnauthenticated, (req, res) => {
     console.log(req.body);
     const sqlText =`
-        INSERT INTO "creatures" ("user_id", "index", "image", "name", "size", "type", "alignment", "ac", "hit_points", "hit_dice", "str", "dex", "con", "int", "wis", "char", "cr", "xp")
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18);
+        INSERT INTO "creatures" ("user_id", "index", "image", "name", "size", "type", "alignment", "ac", "hit_points", "hit_dice", "str", "dex", "con", "int", "wis", "char", "cr", "xp", "walk_speed", "swim_speed", "burrow_speed", "fly_speed", "climb_speed")
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23);
     `;
     const sqlValues = [
         req.user.id,
@@ -85,7 +81,12 @@ router.post('/', rejectUnauthenticated, (req, res) => {
         req.body.wis,
         req.body.char,
         req.body.cr,
-        req.body.xp
+        req.body.xp,
+        req.body.walk,
+        req.body.swim,
+        req.body.burrow,
+        req.body.fly,
+        req.body.climb
     ];
     pool.query(sqlText, sqlValues)
         .then(() => res.sendStatus(201))
@@ -94,27 +95,5 @@ router.post('/', rejectUnauthenticated, (req, res) => {
         res.sendStatus(500)
     });
 });
-
-router.post('/speeds', rejectUnauthenticated, (req, res) => {
-    console.log(req.body.id, req.body.creature.speeds);
-    const sqlText =`
-        INSERT INTO "speeds" ("creature_id", "walk_speed", "swim_speed", "burrow_speed", "fly_speed", "hover__speed", "climb_speed")
-        VALUES ($1, $2, $3, $4, $5, $6, $7);
-    `;
-    const sqlValues = [
-        req.body.id,
-        req.body.creature.speeds[0],
-        req.body.creature.speeds[0],
-        req.body.creature.speeds[0],
-        req.body.creature.speeds[0],
-        req.body.creature.speeds[0],
-    ];
-    pool.query(sqlText, sqlValues)
-        .then(() => res.sendStatus(201))
-        .catch((dberror) => {
-        console.log('Oops you did a goof: ', dberror);
-        res.sendStatus(500)
-    });
-})
 
 module.exports = router;

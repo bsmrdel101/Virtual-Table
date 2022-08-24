@@ -144,7 +144,13 @@ CREATE TABLE "creatures" (
     "wis" INTEGER,
     "char" INTEGER,
     "cr" INTEGER,
-    "xp" INTEGER
+    "xp" INTEGER,
+    "index" TEXT,
+    "walk_speed" INTEGER,
+    "swim_speed" INTEGER,
+    "burrow_speed" INTEGER,
+    "fly_speed" INTEGER,
+    "climb_speed" INTEGER
 );
 
 CREATE TABLE "creature_abilities" (

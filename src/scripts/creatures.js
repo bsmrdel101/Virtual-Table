@@ -4,7 +4,7 @@ let creaturesOpen = false;
 let creatureFormOpen
 
 // Form data
-let creatureFormName, creatureFormSize = "medium", creatureFormType, creatureFormAlignment, creatureFormAc, creatureFormHitPoints, creatureFormHitDice, creatureFormStr, creatureFormDex, creatureFormCon, creatureFormInt, creatureFormWis, creatureFormChar, creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, creatureFormCr, creatureFormXp;
+let creatureFormName, creatureFormSize = "medium", creatureFormType, creatureFormAlignment, creatureFormAc, creatureFormHitPoints, creatureFormHitDice, creatureFormStr, creatureFormDex, creatureFormCon, creatureFormInt, creatureFormWis, creatureFormChar, creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, creatureFormCr, creatureFormXp, creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb;
 
 function toggleCreaturesWindow() {
     creaturesOpen = !creaturesOpen;
@@ -142,12 +142,15 @@ function toggleNewCreatureForm() {
                             <div class="form__input-add form__input-add--speed">
                                 <label>Movement
                                     <div class="flex-container">
-                                        <input placeholder="Walk" class="input--md creature-inputs__speed-name" required>
+                                        <p>Walk</p>
                                         <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value" required>
+                                    </div>
+                                    <div class="flex-container">
+                                        <p>Swim</p>
+                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
                                     </div>
                                 </label>
                             </div>
-                            <button type="button" onclick="addInputs('speed')" class="creature-form__btn--input">Add speed</button>
                         </div>
                     </div>
                     <div class="creatures-window-form__body--box">
@@ -301,17 +304,12 @@ function addDescInputs(_name) {
 
 async function submitCreatureForm(e) {
     e.preventDefault();
-    await getCustomCreatures(); 
-
-    let speeds = [];
     let proficiencies = [];
     let senses = [];
     let abilities = [];
     let actions = [];
     let legActions = [];
 
-    let speedName = document.getElementsByClassName('creature-inputs__speed-name');
-    let speedValue = document.getElementsByClassName('creature-inputs__speed-value');
     let proficiencyName = document.getElementsByClassName('creature-inputs__proficiency-name');
     let proficiencyValue = document.getElementsByClassName('creature-inputs__proficiency-value');
     let senseName = document.getElementsByClassName('creature-inputs__sense-name');
@@ -323,11 +321,6 @@ async function submitCreatureForm(e) {
     let legActionName = document.getElementsByClassName('creature-inputs__leg-action-name');
     let legActionDesc = document.getElementsByClassName('creature-inputs__leg-action-desc');
 
-    for (let i = 0; i < speedName.length; i++) {
-        if (speedName[i].value !== '' || speedValue[i].value !== '') {
-            speeds.push({name: speedName[i].value, value: speedValue[i].value});
-        }
-    }
     for (let i = 0; i < proficiencyName.length; i++) {
         if (proficiencyName[i].value !== '' || proficiencyValue[i].value !== '') {
             proficiencies.push({name: proficiencyName[i].value, value: proficiencyValue[i].value});
@@ -353,8 +346,8 @@ async function submitCreatureForm(e) {
             legActions.push({name: legActionName[i].value, desc: legActionDesc[i].value});
         }
     }
-    
-    const newCreature = new CreatureFormData(indexConverter(creatureFormName), 'https://www.dandwiki.com/w/images/3/37/BreadSpawn.jpg', creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, parseInt(creatureFormAc), parseInt(creatureFormHitPoints), creatureFormHitDice, parseInt(creatureFormStr), parseInt(creatureFormDex), parseInt(creatureFormCon), parseInt(creatureFormInt), parseInt(creatureFormWis), parseInt(creatureFormChar), creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, parseInt(creatureFormCr), parseInt(creatureFormXp), speeds, proficiencies, senses, abilities, actions, legActions);
+
+    const newCreature = new CreatureFormData(indexConverter(creatureFormName), 'https://www.dandwiki.com/w/images/3/37/BreadSpawn.jpg', creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, parseInt(creatureFormAc), parseInt(creatureFormHitPoints), creatureFormHitDice, creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb, parseInt(creatureFormStr), parseInt(creatureFormDex), parseInt(creatureFormCon), parseInt(creatureFormInt), parseInt(creatureFormWis), parseInt(creatureFormChar), creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, parseInt(creatureFormCr), parseInt(creatureFormXp), proficiencies, senses, abilities, actions, legActions);
     addCreature({id: (customCreatures[customCreatures.length - 1].ID) + 1, creature: newCreature});
 }
 
@@ -388,8 +381,13 @@ class CreatureFormData {
     abilities;
     actions;
     legActions;
+    walk;
+    swim;
+    burrow;
+    fly;
+    climb;
 
-    constructor(index, image, name, size, type, alignment, ac, hp, hitDice, str, dex, con, int, wis, char, vul, res, dmgImmune, conImmune, languages, cr, xp, speeds, proficiencies, senses, abilities, actions, legActions) {
+    constructor(index, image, name, size, type, alignment, ac, hp, hitDice, str, dex, con, int, wis, char, vul, res, dmgImmune, conImmune, languages, cr, xp, speeds, proficiencies, senses, abilities, actions, legActions, walk, swim, burrow, fly, climb) {
         this.index = index;
         this.image = image;        
         this.name = name;
