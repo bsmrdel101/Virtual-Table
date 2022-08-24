@@ -69,7 +69,7 @@ CREATE TABLE "characters" (
 	"char" INTEGER NOT NULL DEFAULT 0
 );
 
-CREATE TABLE "speeds" (
+CREATE TABLE "speeds" ( 
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
@@ -85,45 +85,45 @@ CREATE TABLE "proficiencies" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
-    "name" VARCHAR (80),
-    "value" INTEGER,
+    "prof_name" VARCHAR (80),
+    "prof_value" INTEGER
 );
 
 CREATE TABLE "vulnerabilities" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
-    "name" VARCHAR (80)
+    "vul_name" VARCHAR (80)
 );
 
 CREATE TABLE "resistances" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
-    "name" VARCHAR (80)
+    "res_name" VARCHAR (80)
 );
 
 CREATE TABLE "immunities" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
-    "name" VARCHAR (80),
-    "type" VARCHAR (80)
+    "immune_name" VARCHAR (80),
+    "immune_type" VARCHAR (80)
 );
 
 CREATE TABLE "senses" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
-    "name" VARCHAR (80),
-    "value" INTEGER
+    "sense_name" VARCHAR (80),
+    "sense_value" INTEGER
 );
 
 CREATE TABLE "languages" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters",
     "creature_id" INTEGER REFERENCES "creatures",
-    "name" VARCHAR (80)
+    "list" TEXT
 );
 
 CREATE TABLE "creatures" (
@@ -144,5 +144,44 @@ CREATE TABLE "creatures" (
     "wis" INTEGER,
     "char" INTEGER,
     "cr" INTEGER,
-    "xp" INTEGER
+    "xp" INTEGER,
+    "index" TEXT,
+    "walk_speed" INTEGER,
+    "swim_speed" INTEGER,
+    "burrow_speed" INTEGER,
+    "fly_speed" INTEGER,
+    "climb_speed" INTEGER
+);
+
+CREATE TABLE "creature_abilities" (
+    "id" SERIAL PRIMARY KEY,
+    "creature_id" INTEGER REFERENCES "creatures",
+    "ability_name" VARCHAR (120),
+    "ability_desc" TEXT
+);
+
+CREATE TABLE "creature_actions" (
+    "id" SERIAL PRIMARY KEY,
+    "creature_id" INTEGER REFERENCES "creatures",
+    "action_name" VARCHAR (120),
+    "action_desc" TEXT
+);
+
+CREATE TABLE "legendary_actions" (
+    "id" SERIAL PRIMARY KEY,
+    "creature_id" INTEGER REFERENCES "creatures",
+    "leg_action_name" VARCHAR (120),
+    "leg_action_desc" TEXT
+);
+
+CREATE TABLE "creature_action_rolls" (
+    "id" SERIAL PRIMARY KEY,
+    "action_id" INTEGER REFERENCES "creature_actions",
+    "ability_id" INTEGER REFERENCES "creature_abilities",
+    "leg_action_id" INTEGER REFERENCES "legendary_actions",
+    "name" VARCHAR (120),
+    "amount" VARCHAR (80),
+    "dice_type" VARCHAR (80),
+    "dmg_type" VARCHAR (80),
+    "to_hit" VARCHAR (80)
 );

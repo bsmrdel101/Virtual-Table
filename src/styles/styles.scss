@@ -64,9 +64,39 @@ input {
     transform: scale(1.025, 1.025);
 }
 
+@mixin input($width) {
+    width: $width;
+}
+
+.input--sm {
+    @include input(3rem);
+}
+
+.input--md {
+    @include input(8rem);
+}
+
+.form__input-add input {
+    margin: 0.1rem auto;
+}
+
+.form__btn--remove {
+    background-color: rgb(212 62 62);
+    color: white;
+    max-height: 1.5rem;
+    margin-top: 0.34rem;
+}
+
 select {
     padding: 0.2rem;
     border-radius: 5px; 
+}
+
+label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.17rem;
+    align-items: center;
 }
 
 button {
@@ -78,19 +108,21 @@ button {
     cursor: pointer;
 }
 
-.btn--hover:hover {
-    transform: scale(1.025, 1.025);
-}
+.btn {
+    &--hover:hover {
+        transform: scale(1.025, 1.025);
+    }
 
-.btn--window-close {
-    border: none;
-    background-color: var(--menu-color-0);
-    margin: 0;
-    box-shadow: none;
-    color: white;
-    position: absolute;
-    right: 0;
-    top: 0;
+    &--window-close {
+        border: none;
+        background-color: var(--menu-color-0);
+        margin: 0;
+        box-shadow: none;
+        color: white;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
 }
 
 /* LOGIN */
@@ -107,6 +139,11 @@ button {
     margin-bottom: 1.5rem;
 }
 
-.button--logout {
+.btn--logout {
     margin: 3rem 0 3rem 1rem;
+}
+
+.flex-container {
+    display: flex;
+    gap: 0.3rem;
 }

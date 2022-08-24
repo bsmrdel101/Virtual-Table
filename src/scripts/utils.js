@@ -93,3 +93,11 @@ function closeAllWindows() {
         if (sheetOpen) toggleCharacterSheet();
     }
 }
+
+function indexConverter(text) {
+    return text.replace(/\s+/g, '-').toLowerCase();
+}
+
+if (typeof module !== 'undefined') module.exports = {
+    indexConverter
+};
