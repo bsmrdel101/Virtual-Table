@@ -11,11 +11,11 @@
     max-width: 30rem;
     min-width: 30rem;
     min-height: 61%;
-}
 
-.new-character__header {
-    margin-bottom: 1rem;
-    cursor: move;
+    &__header {
+        margin-bottom: 1rem;
+        cursor: move;
+    }
 }
 
 .new-character__form {

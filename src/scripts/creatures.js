@@ -142,8 +142,8 @@ function toggleNewCreatureForm() {
                             <div class="form__input-add form__input-add--speed">
                                 <label>Movement
                                     <div class="flex-container">
-                                        <input placeholder="Walk" class="input--md creature-inputs__speed-name">
-                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
+                                        <input placeholder="Walk" class="input--md creature-inputs__speed-name" required>
+                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value" required>
                                     </div>
                                 </label>
                             </div>
@@ -175,8 +175,8 @@ function toggleNewCreatureForm() {
                             <div class="form__input-add form__input-add--proficiency">
                                 <label>Proficiencies
                                     <div class="flex-container">
-                                        <input placeholder="Perception" class="input--md creature-inputs__speed-name">
-                                        <input placeholder="6" type="number" class="input--sm creature-inputs__speed-value">
+                                        <input placeholder="Perception" class="input--md creature-inputs__proficiency-name">
+                                        <input placeholder="6" type="number" class="input--sm creature-inputs__proficiency-value">
                                     </div>
                                 </label>
                             </div>
@@ -208,8 +208,8 @@ function toggleNewCreatureForm() {
                             <div class="form__input-add form__input-add--sense">
                                 <label>Senses
                                     <div class="flex-container">
-                                        <input placeholder="Darkvision" class="input--md creature-inputs__speed-name">
-                                        <input placeholder="60" type="number" class="input--sm creature-inputs__speed-value">
+                                        <input placeholder="Darkvision" class="input--md creature-inputs__sense-name">
+                                        <input placeholder="60" type="number" class="input--sm creature-inputs__sense-value">
                                     </div>
                                 </label>
                             </div>
@@ -233,8 +233,8 @@ function toggleNewCreatureForm() {
                         <div>
                             <div class="form__input-add form__input-add--ability">
                                 <label>Special Abilities
-                                    <input placeholder="Ability name" class="input--md creature-inputs__speed-name">
-                                    <textarea rows="3" cols="40" placeholder="description"></textarea>
+                                    <input placeholder="Ability name" class="input--md creature-inputs__ability-name">
+                                    <textarea rows="3" cols="40" placeholder="description" class="creature-inputs__ability-desc"></textarea>
                                 </label>
                             </div>
                             <button type="button" onclick="addDescInputs('ability')" class="creature-form__btn--input">Add ability</button>
@@ -244,8 +244,8 @@ function toggleNewCreatureForm() {
                         <div>
                             <div class="form__input-add form__input-add--action">
                                 <label>Actions
-                                    <input placeholder="Action name" class="input--md creature-inputs__speed-name">
-                                    <textarea rows="3" cols="40" placeholder="description"></textarea>
+                                    <input placeholder="Action name" class="input--md creature-inputs__action-name">
+                                    <textarea rows="3" cols="40" placeholder="description" class="creature-inputs__action-desc"></textarea>
                                 </label>
                             </div>
                             <button type="button" onclick="addDescInputs('action')" class="creature-form__btn--input">Add action</button>
@@ -255,8 +255,8 @@ function toggleNewCreatureForm() {
                         <div>
                             <div class="form__input-add form__input-add--leg-action">
                                 <label>Legendary Actions
-                                    <input placeholder="Action name" class="input--md creature-inputs__speed-name">
-                                    <textarea rows="3" cols="40" placeholder="description"></textarea>
+                                    <input placeholder="Action name" class="input--md creature-inputs__leg-action-name">
+                                    <textarea rows="3" cols="40" placeholder="description" class="creature-inputs__leg-action-desc"></textarea>
                                 </label>
                             </div>
                             <button type="button" onclick="addDescInputs('leg-action')" class="creature-form__btn--input">Add Legendary action</button>
@@ -278,8 +278,8 @@ function toggleNewCreatureForm() {
 function addInputs(_name) {
     document.querySelector(`.form__input-add--${_name}`).insertAdjacentHTML('beforeend', `
         <div class="flex-container">
-            <input placeholder="name" class="input--md creature-inputs__speed-name">
-            <input placeholder="value" type="number" class="input--sm creature-inputs__speed-value">
+            <input placeholder="name" class="input--md creature-inputs__${_name}-name">
+            <input placeholder="value" type="number" class="input--sm creature-inputs__${_name}-value">
             <button type="button" onclick="this.parentNode.remove()" class="form__btn--remove">X</button>
         </div>
     `);
@@ -291,70 +291,132 @@ function addDescInputs(_name) {
         <label>
             <br/>
             <div class="flex-container">
-                <input placeholder="Ability name" class="input--md creature-inputs__speed-name">
+                <input placeholder="Ability name" class="input--md creature-inputs__${_name}-name">
                 <button type="button" onclick="this.parentNode.parentNode.remove()" class="form__btn--remove">X</button>
             </div>
-            <textarea rows="3" cols="40" placeholder="description"></textarea>
+            <textarea rows="3" cols="40" placeholder="description" class="creature-inputs__${_name}-desc"></textarea>
         </label>
     `);
 }
 
-function submitCreatureForm(e) {
+async function submitCreatureForm(e) {
     e.preventDefault();
+    await getCustomCreatures(); 
+
     let speeds = [];
+    let proficiencies = [];
+    let senses = [];
+    let abilities = [];
+    let actions = [];
+    let legActions = [];
 
-    let speedInputs = document.getElementsByClassName('creature-inputs__speed-name');
+    let speedName = document.getElementsByClassName('creature-inputs__speed-name');
+    let speedValue = document.getElementsByClassName('creature-inputs__speed-value');
+    let proficiencyName = document.getElementsByClassName('creature-inputs__proficiency-name');
+    let proficiencyValue = document.getElementsByClassName('creature-inputs__proficiency-value');
+    let senseName = document.getElementsByClassName('creature-inputs__sense-name');
+    let senseValue = document.getElementsByClassName('creature-inputs__sense-value');
+    let abilityName = document.getElementsByClassName('creature-inputs__ability-name');
+    let abilityDesc = document.getElementsByClassName('creature-inputs__ability-desc');
+    let actionName = document.getElementsByClassName('creature-inputs__action-name');
+    let actionDesc = document.getElementsByClassName('creature-inputs__action-desc');
+    let legActionName = document.getElementsByClassName('creature-inputs__leg-action-name');
+    let legActionDesc = document.getElementsByClassName('creature-inputs__leg-action-desc');
 
-    for (let i = 0; i < speedInputs.length; i++) {
-        console.log(speedInputs[i]);
+    for (let i = 0; i < speedName.length; i++) {
+        if (speedName[i].value !== '' || speedValue[i].value !== '') {
+            speeds.push({name: speedName[i].value, value: speedValue[i].value});
+        }
     }
-
-    const newCreature = new CreatureFormData(creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, creatureFormAc, creatureFormHitPoints, creatureFormHitDice, creatureFormStr, creatureFormDex, creatureFormCon, creatureFormInt, creatureFormWis, creatureFormChar, creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, creatureFormCr, creatureFormXp);
+    for (let i = 0; i < proficiencyName.length; i++) {
+        if (proficiencyName[i].value !== '' || proficiencyValue[i].value !== '') {
+            proficiencies.push({name: proficiencyName[i].value, value: proficiencyValue[i].value});
+        }
+    }
+    for (let i = 0; i < senseName.length; i++) {
+        if (senseName[i].value !== '' || senseValue[i].value !== '') {
+            senses.push({name: senseName[i].value, value: senseValue[i].value});
+        }
+    }
+    for (let i = 0; i < abilityName.length; i++) {
+        if (abilityName[i].value !== '' || abilityDesc[i].value !== '') {
+            abilities.push({name: abilityName[i].value, desc: abilityDesc[i].value});
+        }
+    }
+    for (let i = 0; i < actionName.length; i++) {
+        if (actionName[i].value !== '' || actionDesc[i].value !== '') {
+            actions.push({name: actionName[i].value, desc: actionDesc[i].value});
+        }
+    }
+    for (let i = 0; i < legActionName.length; i++) {
+        if (legActionName[i].value !== '' || legActionDesc[i].value !== '') {
+            legActions.push({name: legActionName[i].value, desc: legActionDesc[i].value});
+        }
+    }
+    
+    const newCreature = new CreatureFormData(indexConverter(creatureFormName), 'https://www.dandwiki.com/w/images/3/37/BreadSpawn.jpg', creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, parseInt(creatureFormAc), parseInt(creatureFormHitPoints), creatureFormHitDice, parseInt(creatureFormStr), parseInt(creatureFormDex), parseInt(creatureFormCon), parseInt(creatureFormInt), parseInt(creatureFormWis), parseInt(creatureFormChar), creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, parseInt(creatureFormCr), parseInt(creatureFormXp), speeds, proficiencies, senses, abilities, actions, legActions);
+    addCreature({id: (customCreatures[customCreatures.length - 1].ID) + 1, creature: newCreature});
 }
 
 // Holds creature form data
 class CreatureFormData {
-    #name;
-    #size;
-    #type;
-    #alignment;
-    #ac;
-    #hp;
-    #hitDice;
-    #str;
-    #dex;
-    #con;
-    #int;
-    #wis;
-    #char;
-    #vul;
-    #res;
-    #dmgImmune;
-    #conImmune;
-    #languages;
-    #cr;
-    #xp;
+    index;
+    image;
+    name;
+    size;
+    type;
+    alignment;
+    ac;
+    hp;
+    hitDice;
+    str;
+    dex;
+    con;
+    int;
+    wis;
+    char;
+    vul;
+    res;
+    dmgImmune;
+    conImmune;
+    languages;
+    cr;
+    xp;
+    speeds;
+    proficiencies;
+    senses;
+    abilities;
+    actions;
+    legActions;
 
-    constructor(name, size, type, alignment, ac, hp, hitDice, str, dex, con, int, wis, char, vul, res, dmgImmune, conImmune, languages, cr, xp) {
-        this.#name = name;
-        this.#size = size;
-        this.#type = type;
-        this.#alignment = alignment;
-        this.#ac = ac;
-        this.#hp = hp;
-        this.#hitDice = hitDice;
-        this.#str = str;
-        this.#dex = dex;
-        this.#con = con;
-        this.#int = int;
-        this.#wis = wis;
-        this.#char = char;
-        this.#vul = vul;
-        this.#res = res;
-        this.#dmgImmune = dmgImmune;
-        this.#conImmune = conImmune;
-        this.#languages = languages;
-        this.#cr = cr;
-        this.#xp = xp;
+    constructor(index, image, name, size, type, alignment, ac, hp, hitDice, str, dex, con, int, wis, char, vul, res, dmgImmune, conImmune, languages, cr, xp, speeds, proficiencies, senses, abilities, actions, legActions) {
+        this.index = index;
+        this.image = image;        
+        this.name = name;
+        this.size = size;
+        this.type = type;
+        this.alignment = alignment;
+        this.ac = ac;
+        this.hp = hp;
+        this.hitDice = hitDice;
+        this.str = str;
+        this.dex = dex;
+        this.con = con;
+        this.int = int;
+        this.wis = wis;
+        this.char = char;
+        this.vul = vul;
+        this.res = res;
+        this.dmgImmune = dmgImmune;
+        this.conImmune = conImmune;
+        this.languages = languages;
+        this.cr = cr;
+        this.xp = xp;
+        this.speeds = speeds;
+        this.proficiencies = proficiencies;
+        this.senses = senses;
+        this.abilities = abilities;
+        this.actions = actions;
+        this.legActions = legActions;
     }
 }

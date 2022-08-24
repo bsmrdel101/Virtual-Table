@@ -123,6 +123,7 @@ function removeExtraCustomData(array, name) {
 async function getCustomCreatures() {
     try {
         const res = await axios.get('/api/creatures');
+        console.log(res.data);
         customCreatures = res.data;
     } catch (err) {
         console.log(err);
@@ -131,3 +132,14 @@ async function getCustomCreatures() {
 
 // === POST routes === //
 
+async function addCreature(payload) {
+    console.log(payload);
+    try {
+        // Add basic creature stats
+        await axios.post('/api/creatures', payload.creature);
+        // Add creature speeds
+        await axios.post('/api/creatures/speeds', payload);
+    } catch (err) {
+        console.log(err);
+    }
+}

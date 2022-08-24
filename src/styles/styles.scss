@@ -64,12 +64,16 @@ input {
     transform: scale(1.025, 1.025);
 }
 
+@mixin input($width) {
+    width: $width;
+}
+
 .input--sm {
-    width: 3rem;
+    @include input(3rem);
 }
 
 .input--md {
-    width: 8rem;
+    @include input(8rem);
 }
 
 .form__input-add input {
