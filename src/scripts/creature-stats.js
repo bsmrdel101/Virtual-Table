@@ -53,6 +53,7 @@ async function openCreatureStatsWindow(index, custom) {
         getCustomSensesData();
         getCustomSpecialAbilityData();
         getCustomActionsData();
+        getCustomLegActionsData();
     } else {
         window.insertAdjacentHTML('beforeend', `
             <div class="creature-stats-content">
@@ -362,7 +363,7 @@ function getCustomActionsData() {
 }
 
 function getCustomLegActionsData() {
-    for (let action of creature.legendary_actions) {
+    for (let action of creature.legActions) {
         document.getElementById(`legendary-actions--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="actions__box">
                 <p class="actions__name">${action.name}</p>

@@ -97,3 +97,13 @@ function closeAllWindows() {
 function indexConverter(text) {
     return text.replace(/\s+/g, '-').toLowerCase();
 }
+
+// module.exports = {
+//     indexConverter,
+//     closeAllWindows,
+//     dragElement,
+//     changeRoute,
+//     closeMenu,
+//     findCell,
+//     clamp
+// };

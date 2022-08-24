@@ -21,6 +21,7 @@ async function getSpecificCreature(index, custom) {
             let senses = [];
             let abilities = [];
             let actions = [];
+            let legActions = [];
             
             // Separate different parts of the response into arrays
             for (let stat of res.data) {
@@ -30,6 +31,7 @@ async function getSpecificCreature(index, custom) {
                 senses.push({name: stat.sense_name, value: stat.sense_value});
                 abilities.push({name: stat.ability_name, desc: stat.ability_desc});
                 actions.push({name: stat.action_name, desc: stat.action_desc});
+                legActions.push({name: stat.leg_action_name, desc: stat.leg_action_desc});
 
                 if (stat.immune_type === 'damage') {
                     damageImmunities.push(stat.immune_name);
@@ -38,14 +40,15 @@ async function getSpecificCreature(index, custom) {
                 }
             }
 
-            RemoveExtraCustomData(proficiencies, 'name');
-            RemoveExtraCustomData(vulnerabilities);
-            RemoveExtraCustomData(resistances);
-            RemoveExtraCustomData(damageImmunities);
-            RemoveExtraCustomData(conditionImmunities);
-            RemoveExtraCustomData(senses, 'name');
-            RemoveExtraCustomData(abilities, 'name');
-            RemoveExtraCustomData(actions, 'name');
+            removeExtraCustomData(proficiencies, 'name');
+            removeExtraCustomData(vulnerabilities);
+            removeExtraCustomData(resistances);
+            removeExtraCustomData(damageImmunities);
+            removeExtraCustomData(conditionImmunities);
+            removeExtraCustomData(senses, 'name');
+            removeExtraCustomData(abilities, 'name');
+            removeExtraCustomData(actions, 'name');
+            removeExtraCustomData(legActions, 'name');
 
             const modifiedRes = {
                 id: res.data[0].id,
@@ -82,7 +85,8 @@ async function getSpecificCreature(index, custom) {
                 conditionImmunities: conditionImmunities,
                 senses: senses,
                 abilities: abilities,
-                actions: actions
+                actions: actions,
+                legActions: legActions
             };
             console.log(modifiedRes);
             return modifiedRes;
@@ -96,7 +100,7 @@ async function getSpecificCreature(index, custom) {
 }
 
 // Remove duplicate data from the database
-function RemoveExtraCustomData(array, name) {
+function removeExtraCustomData(array, name) {
     if (name) {
         // Loop through array with objects
         for (let i = 0; i < array.length - 1; i++) {
@@ -126,5 +130,4 @@ async function getCustomCreatures() {
 }
 
 // === POST routes === //
-
 

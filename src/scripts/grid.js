@@ -91,10 +91,6 @@ function setupGrid(width, height, clear) {
                             setTimeout(function() { canOpenStats = true; }, 100);
                         }
                     });
-                    // Add double click listener when player moves the token
-                    if (client.clientType === 'player') {
-                        socket.emit('ADD_DOUBLE_CLICK', {x: parseInt(newCell.getAttribute('x')), y: parseInt(newCell.getAttribute('y'))}, room);
-                    }
                     // Remove token at previous position
                     if (cellToDelete) socket.emit('REMOVE_TOKEN', {x: parseInt(cellToDelete.getAttribute('x')), y: parseInt(cellToDelete.getAttribute('y'))}, room);
 
@@ -222,25 +218,3 @@ socket.on('REMOVE_TOKEN', ((cell) => {
     const newCell = findCell(cell.x, cell.y);
     newCell.innerHTML = '';
 }));
-
-// socket.on('ADD_DOUBLE_CLICK', ((cell) => {
-//     if (client.clientType === 'dm') {
-//         const newCell = findCell(cell.x, cell.y);
-//         for (let _token of document.getElementsByClassName('token')) {
-//             if (_token.parentElement === newCell) {
-//                 let relative = _token.getAttribute('relative');
-//                 _token.addEventListener("dblclick", () => {
-//                     if (relative === 'null' || client.clientType === 'player') return;
-
-//                     if (canOpenStats) {
-//                         openCreatureStatsWindow(relative)
-//                         canOpenStats = false;
-//                     } else {
-//                         setTimeout(function() { canOpenStats = true; }, 100);
-//                     }
-//                 });
-//             }
-//         }
-//     }
-// }));
-

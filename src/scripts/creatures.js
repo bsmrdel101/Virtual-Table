@@ -3,6 +3,9 @@ let customCreatures = [];
 let creaturesOpen = false;
 let creatureFormOpen
 
+// Form data
+let creatureFormName, creatureFormSize = "medium", creatureFormType, creatureFormAlignment, creatureFormAc, creatureFormHitPoints, creatureFormHitDice, creatureFormStr, creatureFormDex, creatureFormCon, creatureFormInt, creatureFormWis, creatureFormChar, creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, creatureFormCr, creatureFormXp;
+
 function toggleCreaturesWindow() {
     creaturesOpen = !creaturesOpen;
     if (creaturesOpen) {
@@ -100,38 +103,38 @@ function toggleNewCreatureForm() {
                 <div class="creatures-window-form__header">
                     <h2>New Creature</h2>
                 </div>
-                <form class="creatures-window-form__body">
+                <form class="creatures-window-form__body" onsubmit="submitCreatureForm(event)">
                     <label>Token
                         <input type="file">
                     </label>
                     <div class="creatures-window-form__body--box">
                         <label>Name
-                            <input required>
+                            <input required onchange="creatureFormName = event.target.value">
                         </label>
                         <label>Size
-                            <select>
+                            <select onchange="creatureFormSize = event.target.value">
                                 <option value="tiny">Tiny</option>
                                 <option value="small">Small</option>
                                 <option value="medium" selected>Medium</option>
-                                <option value="">Large</option>
-                                <option value="">Huge</option>
-                                <option value="">Gargantuan</option>
+                                <option value="large">Large</option>
+                                <option value="huge">Huge</option>
+                                <option value="gargantuan">Gargantuan</option>
                             </select>
                         </label>
                         <label>Type
-                            <input class="input--md">
+                            <input class="input--md" onchange="creatureFormType = event.target.value">
                         </label>
                         <label>Alignment
-                            <input class="input--sm">
+                            <input class="input--sm" onchange="creatureFormAlignment = event.target.value">
                         </label>
                         <label>AC
-                            <input class="input--sm" type="number">
+                            <input class="input--sm" type="number" onchange="creatureFormAc = event.target.value">
                         </label>
                         <label>Hit Points
-                            <input class="input--sm" type="number">
+                            <input class="input--sm" type="number" onchange="creatureFormHitPoints = event.target.value">
                         </label>
                         <label>Hit Dice
-                            <input class="input--sm">
+                            <input class="input--sm" onchange="creatureFormHitDice = event.target.value">
                         </label>
                     </div>
                     <div class="creatures-window-form__body--box">
@@ -149,22 +152,22 @@ function toggleNewCreatureForm() {
                     </div>
                     <div class="creatures-window-form__body--box">
                         <label>Str
-                            <input class="input--sm" type="number">
+                            <input class="input--sm" type="number" onchange="creatureFormStr = event.target.value">
                         </label>
                         <label>Dex
-                            <input class="input--sm" type="number">
+                            <input class="input--sm" type="number" onchange="creatureFormDex = event.target.value">
                         </label>
                         <label>Con
-                            <input class="input--sm" type="number">
+                            <input class="input--sm" type="number" onchange="creatureFormCon = event.target.value">
                         </label>
                         <label>Int
-                            <input class="input--sm" type="number">
+                            <input class="input--sm" type="number" onchange="creatureFormInt = event.target.value">
                         </label>
                         <label>Wis
-                            <input class="input--sm" type="number">
+                            <input class="input--sm" type="number" onchange="creatureFormWis = event.target.value">
                         </label>
                         <label>Char
-                            <input class="input--sm" type="number">
+                            <input class="input--sm" type="number" onchange="creatureFormChar = event.target.value">
                         </label>
                     </div>
                     <div class="creatures-window-form__body--box">
@@ -182,22 +185,22 @@ function toggleNewCreatureForm() {
                     </div>
                     <div class="creatures-window-form__body--box">
                         <label>Vulnerabilities
-                            <textarea rows="3" cols="40" placeholder="fire, thunder"></textarea>
+                            <textarea rows="3" cols="40" placeholder="fire, thunder" onchange="creatureFormVul = event.target.value"></textarea>
                         </label>
                     </div>
                     <div class="creatures-window-form__body--box">
                         <label>Resistances
-                            <textarea rows="3" cols="40" placeholder="poison, bludgeoning"></textarea>
+                            <textarea rows="3" cols="40" placeholder="poison, bludgeoning" onchange="creatureFormRes = event.target.value"></textarea>
                         </label>
                     </div>
                     <div class="creatures-window-form__body--box">
                         <label>Damage Immunities
-                            <textarea rows="3" cols="40" placeholder="nonmagical slashing"></textarea>
+                            <textarea rows="3" cols="40" placeholder="nonmagical slashing" onchange="creatureFormDmgImmune = event.target.value"></textarea>
                         </label>
                     </div>
                     <div class="creatures-window-form__body--box">
                         <label>Condition Immunities
-                            <textarea rows="3" cols="40" placeholder="prone, restrained"></textarea>
+                            <textarea rows="3" cols="40" placeholder="prone, restrained" onchange="creatureFormConImmune = event.target.value"></textarea>
                         </label>
                     </div>
                     <div class="creatures-window-form__body--box">
@@ -215,15 +218,15 @@ function toggleNewCreatureForm() {
                     </div>
                     <div class="creatures-window-form__body--box">
                         <label>Languages
-                            <textarea rows="3" cols="40"></textarea>
+                            <textarea rows="3" cols="40" onchange="creatureFormLanguages = event.target.value"></textarea>
                         </label>
                     </div>
                     <div class="creatures-window-form__body--box">
                         <label>CR
-                            <input type="number" class="input--sm">
+                            <input type="number" class="input--sm" onchange="creatureFormCr = event.target.value">
                         </label>
                         <label>XP
-                            <input type="number" class="input--sm">
+                            <input type="number" class="input--sm" onchange="creatureFormXp = event.target.value">
                         </label>
                     </div>
                     <div class="creatures-window-form__body--box">
@@ -237,6 +240,30 @@ function toggleNewCreatureForm() {
                             <button type="button" onclick="addDescInputs('ability')" class="creature-form__btn--input">Add ability</button>
                         </div>
                     </div>
+                    <div class="creatures-window-form__body--box">
+                        <div>
+                            <div class="form__input-add form__input-add--action">
+                                <label>Actions
+                                    <input placeholder="Action name" class="input--md creature-inputs__speed-name">
+                                    <textarea rows="3" cols="40" placeholder="description"></textarea>
+                                </label>
+                            </div>
+                            <button type="button" onclick="addDescInputs('action')" class="creature-form__btn--input">Add action</button>
+                        </div>
+                    </div>
+                    <div class="creatures-window-form__body--box">
+                        <div>
+                            <div class="form__input-add form__input-add--leg-action">
+                                <label>Legendary Actions
+                                    <input placeholder="Action name" class="input--md creature-inputs__speed-name">
+                                    <textarea rows="3" cols="40" placeholder="description"></textarea>
+                                </label>
+                            </div>
+                            <button type="button" onclick="addDescInputs('leg-action')" class="creature-form__btn--input">Add Legendary action</button>
+                        </div>
+                    </div>
+                    <br/>
+                    <button type="submit">Add Creature</button>
                 </form>
             </div>
         `);
@@ -247,6 +274,7 @@ function toggleNewCreatureForm() {
     }
 }
 
+// Adds two inputs when user clicks a button
 function addInputs(_name) {
     document.querySelector(`.form__input-add--${_name}`).insertAdjacentHTML('beforeend', `
         <div class="flex-container">
@@ -257,15 +285,76 @@ function addInputs(_name) {
     `);
 }
 
+// Adds an input and textarea when user clicks a button
 function addDescInputs(_name) {
     document.querySelector(`.form__input-add--${_name}`).insertAdjacentHTML('beforeend', `
-        <br/>
         <label>
+            <br/>
             <div class="flex-container">
                 <input placeholder="Ability name" class="input--md creature-inputs__speed-name">
-                <button type="button" onclick="this.parentNode.remove()" class="form__btn--remove">X</button>
+                <button type="button" onclick="this.parentNode.parentNode.remove()" class="form__btn--remove">X</button>
             </div>
             <textarea rows="3" cols="40" placeholder="description"></textarea>
         </label>
     `);
+}
+
+function submitCreatureForm(e) {
+    e.preventDefault();
+    let speeds = [];
+
+    let speedInputs = document.getElementsByClassName('creature-inputs__speed-name');
+
+    for (let i = 0; i < speedInputs.length; i++) {
+        console.log(speedInputs[i]);
+    }
+
+    const newCreature = new CreatureFormData(creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, creatureFormAc, creatureFormHitPoints, creatureFormHitDice, creatureFormStr, creatureFormDex, creatureFormCon, creatureFormInt, creatureFormWis, creatureFormChar, creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, creatureFormCr, creatureFormXp);
+}
+
+// Holds creature form data
+class CreatureFormData {
+    #name;
+    #size;
+    #type;
+    #alignment;
+    #ac;
+    #hp;
+    #hitDice;
+    #str;
+    #dex;
+    #con;
+    #int;
+    #wis;
+    #char;
+    #vul;
+    #res;
+    #dmgImmune;
+    #conImmune;
+    #languages;
+    #cr;
+    #xp;
+
+    constructor(name, size, type, alignment, ac, hp, hitDice, str, dex, con, int, wis, char, vul, res, dmgImmune, conImmune, languages, cr, xp) {
+        this.#name = name;
+        this.#size = size;
+        this.#type = type;
+        this.#alignment = alignment;
+        this.#ac = ac;
+        this.#hp = hp;
+        this.#hitDice = hitDice;
+        this.#str = str;
+        this.#dex = dex;
+        this.#con = con;
+        this.#int = int;
+        this.#wis = wis;
+        this.#char = char;
+        this.#vul = vul;
+        this.#res = res;
+        this.#dmgImmune = dmgImmune;
+        this.#conImmune = conImmune;
+        this.#languages = languages;
+        this.#cr = cr;
+        this.#xp = xp;
+    }
 }

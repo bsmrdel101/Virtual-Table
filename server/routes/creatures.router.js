@@ -45,6 +45,8 @@ router.get('/:index', rejectUnauthenticated, (req, res) => {
             ON "creatures"."id"="creature_actions"."creature_id"
         JOIN "languages"
             ON "creatures"."id"="languages"."creature_id"
+        JOIN "legendary_actions"
+            ON "creatures"."id"="legendary_actions"."creature_id"
         WHERE "index"=$1
         ORDER BY "creatures"."id";
     `);
