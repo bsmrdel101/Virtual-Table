@@ -5,15 +5,20 @@
     padding: 10px;
     box-shadow: 0 1px 6px 1px rgb(172 172 172 / 50%);
     gap: 0.5rem;
-}
 
-.toolbar__leave-btn {
-    cursor: pointer;
-    margin: 0.4rem 0;
-}
+    &__btn {
+        background-color: var(--btn-color-0);
+        color: white;
+    }
 
-.toolbar__text {
-    margin: 0.4rem 0;
+    &__leave-btn {
+        cursor: pointer;
+        margin: 0.4rem 0;
+    }
+    
+    &__text {
+        margin: 0.4rem 0;
+    }
 }
 
 .players-list {
@@ -23,9 +28,4 @@
     background-color: grey;
     color: white;
     padding: 0.5rem;
-}
-
-.toolbar__btn {
-    background-color: var(--btn-color-0);
-    color: white;
 }

@@ -53,6 +53,7 @@ document.addEventListener('keyup', (e) => {
 document.addEventListener('mousedown', (e) => {
     switch (true) {
         case e.which === 2:
+            e.preventDefault();
             targetPosX = e.x;
             targetPosY = e.y;
             dragging = true;

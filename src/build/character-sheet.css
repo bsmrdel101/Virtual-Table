@@ -133,7 +133,7 @@
 
 /* ABILITY MODIFIERS */
 .character-sheet__modifier-box {
-  background-color: var(--menu-color-2);
+  background-color: var(--menu-color-3);
   border-radius: 5px;
   text-align: center;
   font-size: 0.75em; /* 12px / 16px */
