@@ -38,7 +38,7 @@
 }
 
 .creature-scores__modifier {
-  background-color: var(--menu-color-2);
+  background-color: var(--menu-color-3);
   border-radius: 5px;
   text-align: center;
   font-size: 0.75em; /* 12px / 16px */
@@ -57,7 +57,7 @@
 .creatures-window::-webkit-scrollbar-track,
 .creature-stats-window::-webkit-scrollbar-track,
 .creatures-window-form::-webkit-scrollbar-track {
-  background-color: var(--menu-color-2);
+  background-color: var(--menu-color-3);
 }
 
 .creatures-window::-webkit-scrollbar-thumb,

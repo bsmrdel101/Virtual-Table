@@ -8,27 +8,25 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-}
 
-.sidebar__btn {
-    padding: 10px;
-    background-color: var(--btn-color-0);
-    color: white;
-}
+    &__btn {
+        padding: 10px;
+        background-color: var(--btn-color-0);
+        color: white;
+    }
 
-@media screen and (max-width: 748px) {
-    .sidebar {
+    @media (max-width: 748px) {
         min-width: 100%;
         min-height: 12vh;
         flex-direction: row;
         flex-wrap: wrap;
-    }
-
-    .game-page-container {
-        flex-wrap: wrap;
-    }
     
-    .game-content {
-        margin-left: 2rem;
+        .game-page-container {
+            flex-wrap: wrap;
+        }
+        
+        .game-content {
+            margin-left: 2rem;
+        }
     }
 }
