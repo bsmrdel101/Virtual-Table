@@ -96,6 +96,7 @@ function toggleCharacterSheet() {
             </div>
         `);
 
+        disableHotkeys();
         dragElement(sheetWindow, 'character-sheet');
     } else {
         document.querySelector('.character-sheet').remove();

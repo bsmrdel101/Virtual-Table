@@ -33,6 +33,7 @@ function toggleNewCharacterWindow() {
                 </center>
             </form>
         `);
+        disableHotkeys();
         dragElement(newCharacterWindow, 'new-character');
     } else {
         document.querySelector('.new-character').remove();

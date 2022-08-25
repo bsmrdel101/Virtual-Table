@@ -271,6 +271,7 @@ function toggleNewCreatureForm() {
             </div>
         `);
         
+        disableHotkeys();
         dragElement(window, 'creatures-window-form');
     } else {
         document.querySelector('.creatures-window-form').remove();
