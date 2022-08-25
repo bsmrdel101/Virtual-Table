@@ -1,40 +1,43 @@
 let canScale = false;
 let targetPosX, targetPosY;
 let dragging = false;
+let canUseHotkey = true; 
 
 // === EVENT HANDLERS === //
 
 // Fires when user presses key
 document.addEventListener('keydown', (e) => {
-    switch (true) {
-        case e.key === 'Meta' || e.key === 'Control':
-            canScale = true;
-            break;
-        case e.key === 'Delete':
-            for (const _token of document.getElementsByClassName('token')) {
-                if (_token.classList.contains('token--selected')) _token.remove();
-            }
-            break;
-        case e.key === '+' || e.key === '=':
-            zoomIn();
-            break;
-        case e.key === '-' || e.key === '_':
-            zoomOut();
-            break;
-        case e.which === 49:
-            client.clientType === 'dm' ? toggleTokenMenu('tokens') : toggleCharacterMenu('characters');
-            break;
-        case e.which === 50:
-            client.clientType === 'dm' ? toggleCreaturesWindow() : toggleCharacterSheet();
-            break;
-        case e.which === 51:
-            client.clientType === 'dm' ? toggleMapMenu('maps') : console.log('nothing');
-            break;
-        case e.key === 'Escape':
-            closeAllWindows();
-            break;
-        default:
-            break;
+    if (canUseHotkey) {
+        switch (true) {
+            case e.key === 'Meta' || e.key === 'Control':
+                canScale = true;
+                break;
+            case e.key === 'Delete':
+                for (const _token of document.getElementsByClassName('token')) {
+                    if (_token.classList.contains('token--selected')) _token.remove();
+                }
+                break;
+            case e.key === '+' || e.key === '=':
+                zoomIn();
+                break;
+            case e.key === '-' || e.key === '_':
+                zoomOut();
+                break;
+            case e.which === 49:
+                client.clientType === 'dm' ? toggleTokenMenu('tokens') : toggleCharacterMenu('characters');
+                break;
+            case e.which === 50:
+                client.clientType === 'dm' ? toggleCreaturesWindow() : toggleCharacterSheet();
+                break;
+            case e.which === 51:
+                client.clientType === 'dm' ? toggleMapMenu('maps') : console.log('nothing');
+                break;
+            case e.key === 'Escape':
+                closeAllWindows();
+                break;
+            default:
+                break;
+        }
     }
 });
 

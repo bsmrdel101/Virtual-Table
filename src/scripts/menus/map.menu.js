@@ -75,6 +75,7 @@ function newMap() {
             <button type="submit">Add Map</button>
         </form>
     `);
+    disableHotkeys();
 }
 
 // For new map form

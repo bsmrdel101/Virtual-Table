@@ -98,6 +98,14 @@ function indexConverter(text) {
     return text.replace(/\s+/g, '-').toLowerCase();
 }
 
+function disableHotkeys() {
+    // Detects when input is focused and disabled hotkeys
+    for (let input of document.querySelectorAll('input')) {
+        input.addEventListener('focusin', () => { canUseHotkey = false; });
+        input.addEventListener('focusout', () => { canUseHotkey = true; });
+    }
+}
+
 if (typeof module !== 'undefined') module.exports = {
     indexConverter
 };
