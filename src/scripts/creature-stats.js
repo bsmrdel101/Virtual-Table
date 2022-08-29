@@ -545,9 +545,8 @@ function getCustomActionsData() {
 
         if (rolls) {
             for (let dmg of rolls) {
-                if (dmg.damage_type) {
-                    element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${dmg.damage_dice} ${dmg.damage_type.index}</button>`);
-                }
+                damage = separateDmgRoll(dmg);
+                element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${damage.damageDice} ${damage.damageType}</button>`);
             }
         }
         i++;
@@ -585,3 +584,7 @@ function getActionDesc(_string) {
 }
 
 // Splits and returns an attack damage rolls
+function separateDmgRoll(dmg) {
+    let damage = dmg.split(' ');
+    return {damageDice: damage[0], damageType: damage[1]}
+}
