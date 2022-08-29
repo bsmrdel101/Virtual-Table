@@ -134,7 +134,34 @@ async function getCustomCreatures() {
 async function addCreature(payload) {
     console.log(payload);
     try {
+        let creatureId;
+        // Create creature base stats
         await axios.post('/api/creatures', payload);
+        // Get id of the creature that was just made
+        const res = await axios.get('/api/creatures');
+        creatureId = res.data[res.data.length - 1].id;
+
+        // Add the rest of the creature data
+        for (let prof of payload.proficiencies) {
+            await axios.post('/api/creatures/prof', {id: creatureId, data: {name: prof.name, value: prof.value}});
+        }
+        await axios.post('/api/creatures/vul', {id: creatureId, data: {name: payload.vul}});
+        await axios.post('/api/creatures/res', {id: creatureId, data: {name: payload.res}});
+        await axios.post('/api/creatures/immunities', {id: creatureId, data: {dmgImmune: true, name: payload.dmgImmune}});
+        await axios.post('/api/creatures/immunities', {id: creatureId, data: {conImmune: true, name: payload.conImmune}});
+        for (let sense of payload.senses) {
+            await axios.post('/api/creatures/senses', {id: creatureId, data: {name: sense.name, value: sense.value}});
+        }
+        await axios.post('/api/creatures/languages', {id: creatureId, data: {name: payload.languages}});
+        for (let ability of payload.abilities) {
+            await axios.post('/api/creatures/abilities', {id: creatureId, data: {name: ability.name, desc: ability.desc}});
+        }
+        for (let action of payload.actions) {
+            await axios.post('/api/creatures/actions', {id: creatureId, data: {name: action.name, desc: action.desc}});
+        }
+        for (let action of payload.legActions) {
+            await axios.post('/api/creatures/leg-actions', {id: creatureId, data: {name: action.name, desc: action.desc}});
+        }
     } catch (err) {
         console.log(err);
     }
