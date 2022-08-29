@@ -84,16 +84,7 @@ function dragElement(elmnt, headerName) {
     }
 }
 
-function closeAllWindows() {
-    if (menuOpen) {
-        document.querySelector('.menu').remove();
-        menuOpen = false;
-    }
-    if (client.clientType === 'player') {
-        if (sheetOpen) toggleCharacterSheet();
-    }
-}
-
+// Would turn "Creature Name" into "creature-name"
 function indexConverter(text) {
     return text.replace(/\s+/g, '-').toLowerCase();
 }

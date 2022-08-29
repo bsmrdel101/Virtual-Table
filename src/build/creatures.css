@@ -14,7 +14,7 @@
   min-width: 25rem;
   min-height: 61%;
   overflow-y: auto;
-  border-bottom: 8px solid #595959;
+  border-bottom: 8px solid var(--menu-color-0);
 }
 
 .creature-stats-window {
@@ -32,7 +32,7 @@
   background-color: var(--menu-color-1);
   padding: 0 0.8rem 0.8rem;
   border-radius: 5px;
-  box-shadow: rgb(0 0 0/24%) 0px 1px 3px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 3px;
   text-align: center;
   min-width: 29px;
 }
@@ -109,7 +109,7 @@
 }
 
 .creatures-window__item:nth-child(even) {
-  background-color: #767676;
+  background-color: var(--menu-color-2);
 }
 
 .creatures-window-form__body--box {
