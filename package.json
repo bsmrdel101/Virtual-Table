@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "sass": "sass --watch src/styles:build",
+    "sass": "sass --watch src/styles:src/build",
     "start": "nodemon server/server.js"
   },
   "repository": {

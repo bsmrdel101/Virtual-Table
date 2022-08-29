@@ -128,10 +128,10 @@ function toggleNewCreatureForm() {
                             <input class="input--sm" onchange="creatureFormAlignment = event.target.value">
                         </label>
                         <label>AC
-                            <input class="input--sm" type="number" onchange="creatureFormAc = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormAc = event.target.value" required>
                         </label>
                         <label>Hit Points
-                            <input class="input--sm" type="number" onchange="creatureFormHitPoints = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormHitPoints = event.target.value" required>
                         </label>
                         <label>Hit Dice
                             <input class="input--sm" onchange="creatureFormHitDice = event.target.value">
@@ -143,10 +143,22 @@ function toggleNewCreatureForm() {
                                 <label>Movement
                                     <div class="flex-container">
                                         <p>Walk</p>
-                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value" required>
+                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
                                     </div>
                                     <div class="flex-container">
                                         <p>Swim</p>
+                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
+                                    </div>
+                                    <div class="flex-container">
+                                        <p>Burrow</p>
+                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
+                                    </div>
+                                    <div class="flex-container">
+                                        <p>Fly</p>
+                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
+                                    </div>
+                                    <div class="flex-container">
+                                        <p>Climb</p>
                                         <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
                                     </div>
                                 </label>
@@ -155,22 +167,22 @@ function toggleNewCreatureForm() {
                     </div>
                     <div class="creatures-window-form__body--box">
                         <label>Str
-                            <input class="input--sm" type="number" onchange="creatureFormStr = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormStr = event.target.value" value=0 required>
                         </label>
                         <label>Dex
-                            <input class="input--sm" type="number" onchange="creatureFormDex = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormDex = event.target.value" value=0 required>
                         </label>
                         <label>Con
-                            <input class="input--sm" type="number" onchange="creatureFormCon = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormCon = event.target.value" value=0 required>
                         </label>
                         <label>Int
-                            <input class="input--sm" type="number" onchange="creatureFormInt = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormInt = event.target.value" value=0 required>
                         </label>
                         <label>Wis
-                            <input class="input--sm" type="number" onchange="creatureFormWis = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormWis = event.target.value" value=0 required>
                         </label>
                         <label>Char
-                            <input class="input--sm" type="number" onchange="creatureFormChar = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormChar = event.target.value" value=0 required>
                         </label>
                     </div>
                     <div class="creatures-window-form__body--box">

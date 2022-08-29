@@ -75,7 +75,6 @@ async function getSpecificCreature(index, custom) {
                     {name: 'Swim', value: res.data[0].swim_speed},
                     {name: 'Burrow', value: res.data[0].burrow_speed},
                     {name: 'Fly', value: res.data[0].fly_speed},
-                    {name: 'Hover', value: res.data[0].hover_speed},
                     {name: 'Climb', value: res.data[0].climb_speed}
                 ],
                 proficiencies: proficiencies,
