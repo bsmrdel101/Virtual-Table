@@ -3,6 +3,8 @@ let creatureIndexList = [];
 let canOpenStats = true;
 
 async function openCreatureStatsWindow(index, custom) {
+    // Check if a creature's stats are already open
+    // If they are open the close the window instead
     for (let listItem of creatureIndexList) {
         if (listItem === index) {
             if (document.querySelector(`.creature-stats-window--${index}`)) document.querySelector(`.creature-stats-window--${index}`).remove();         
@@ -12,11 +14,14 @@ async function openCreatureStatsWindow(index, custom) {
     }
 
     creatureIndexList.push(index);
+    // Get data for selected creature
     creature = await getSpecificCreature(index, custom);
+
     const window = document.querySelector('body').appendChild(document.createElement('div'));
     window.classList.add('creature-stats-window');
     window.classList.add(`creature-stats-window--${creature.index}`);
     if (custom) {
+        // Render custom creature
         window.insertAdjacentHTML('beforeend', `
             <div class="creature-stats-content">
                 <button class="btn--window-close" onclick="removeCreatureStatsWindow('${creature.index}')">X</button>
@@ -53,6 +58,7 @@ async function openCreatureStatsWindow(index, custom) {
             </div>
         `);
 
+        // Populate body data
         getCustomSpeedData();
         getCustomScoresData();
         getCustomProficiencyData();
@@ -62,6 +68,7 @@ async function openCreatureStatsWindow(index, custom) {
         getCustomActionsData();
         getCustomLegActionsData();
     } else {
+        // Render standard creature
         window.insertAdjacentHTML('beforeend', `
             <div class="creature-stats-content">
                 <button class="btn--window-close" onclick="removeCreatureStatsWindow('${creature.index}')">X</button>
@@ -99,6 +106,7 @@ async function openCreatureStatsWindow(index, custom) {
             </div>
         `);
 
+        // Populate body data
         getCreatureSpeedData();
         getCreatureScoresData();
         getCreatureProficiencyData();
@@ -108,9 +116,11 @@ async function openCreatureStatsWindow(index, custom) {
         getCreatureActionsData();
         getCreatureLegActionsData();
     }
+    // Make this window draggable
     dragElement(window, `creature-stats-window--${creature.index}`);
 }
 
+// Remove a specific creature window
 function removeCreatureStatsWindow(index) {
     for (let listItem of creatureIndexList) {
         if (listItem === index) {
@@ -554,12 +564,36 @@ function getCustomActionsData() {
 }
 
 function getCustomLegActionsData() {
+    let rolls, desc, toHit;
+    let i = 0;
+
     for (let action of creature.legActions) {
+        rolls = getActionDesc(action.desc).rolls;
+        desc = getActionDesc(action.desc).desc;
+        toHit = getActionDesc(action.desc).toHit;
+
         document.getElementById(`legendary-actions--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="actions__box">
-                <p class="actions__name"><span class="bold">${action.name}.</span> ${action.desc}</p>
+                <p class="actions__name"><span class="bold">${action.name}.</span> ${desc}</p>
+                ${toHit ? `<button class="btn--attack btn--hover"><i class="fa-solid fa-dice-d20"></i>${toHit}</button>` : ''}
+                <span id="${creature.index}-${action.name}-${i}"></span>
             </div>
         `);
+        i++;
+    }
+
+    i = 0;
+    for (let action of creature.legActions) {
+        let element = document.getElementById(`${creature.index}-${action.name}-${i}`);
+        element.classList.add('legendary-actions__box--dmg_dice');
+
+        if (rolls) {
+            for (let dmg of rolls) {
+                damage = separateDmgRoll(dmg);
+                element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${damage.damageDice} ${damage.damageType}</button>`);
+            }
+        }
+        i++;
     }
 }
 

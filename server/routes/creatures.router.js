@@ -24,7 +24,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
 
 router.get('/:index', rejectUnauthenticated, (req, res) => {
     const sqlText = (`
-        SELECT * FROM "creatures"
+        SELECT "creatures"."id", "creatures"."user_id", "image", "name", "size", "type", "alignment", "ac", "hit_points", "hit_dice", "str", "dex", "con", "int", "wis", "char", "cr", "xp", "index", "walk_speed", "swim_speed", "burrow_speed", "fly_speed", "climb_speed", "prof_name", "prof_value", "vul_name", "res_name", "immune_name", "immune_type", "sense_name", "sense_value", "ability_name", "ability_desc", "action_name", "action_desc", "list", "leg_action_name", "leg_action_desc" FROM "creatures"
         JOIN "proficiencies"
             ON "creatures"."id"="proficiencies"."creature_id"
         JOIN "vulnerabilities"
