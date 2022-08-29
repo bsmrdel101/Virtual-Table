@@ -348,8 +348,8 @@ async function submitCreatureForm(e) {
         }
     }
 
-    const newCreature = new CreatureFormData(indexConverter(creatureFormName), 'https://www.dandwiki.com/w/images/3/37/BreadSpawn.jpg', creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, parseInt(creatureFormAc), parseInt(creatureFormHitPoints), creatureFormHitDice, creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb, parseInt(creatureFormStr), parseInt(creatureFormDex), parseInt(creatureFormCon), parseInt(creatureFormInt), parseInt(creatureFormWis), parseInt(creatureFormChar), creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, parseInt(creatureFormCr), parseInt(creatureFormXp), proficiencies, senses, abilities, actions, legActions);
-    addCreature({id: (customCreatures[customCreatures.length - 1].ID) + 1, creature: newCreature});
+    const newCreature = new CreatureFormData(indexConverter(creatureFormName), 'https://www.dandwiki.com/w/images/3/37/BreadSpawn.jpg', creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, parseInt(creatureFormAc), parseInt(creatureFormHitPoints), creatureFormHitDice, parseInt(creatureFormStr), parseInt(creatureFormDex), parseInt(creatureFormCon), parseInt(creatureFormInt), parseInt(creatureFormWis), parseInt(creatureFormChar), creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, parseInt(creatureFormCr), parseInt(creatureFormXp), creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb, proficiencies, senses, abilities, actions, legActions);
+    addCreature(newCreature);
 }
 
 // Holds creature form data
@@ -388,7 +388,7 @@ class CreatureFormData {
     fly;
     climb;
 
-    constructor(index, image, name, size, type, alignment, ac, hp, hitDice, str, dex, con, int, wis, char, vul, res, dmgImmune, conImmune, languages, cr, xp, speeds, proficiencies, senses, abilities, actions, legActions, walk, swim, burrow, fly, climb) {
+    constructor(index, image, name, size, type, alignment, ac, hp, hitDice, str, dex, con, int, wis, char, vul, res, dmgImmune, conImmune, languages, cr, xp, walk, swim, burrow, fly, climb, proficiencies, senses, abilities, actions, legActions) {
         this.index = index;
         this.image = image;        
         this.name = name;
@@ -411,7 +411,11 @@ class CreatureFormData {
         this.languages = languages;
         this.cr = cr;
         this.xp = xp;
-        this.speeds = speeds;
+        this.walk = walk;
+        this.swim = swim;
+        this.fly = fly;
+        this.burrow = burrow;
+        this.climb = climb;
         this.proficiencies = proficiencies;
         this.senses = senses;
         this.abilities = abilities;
