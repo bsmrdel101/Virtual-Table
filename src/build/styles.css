@@ -16,11 +16,22 @@
   --character-sheet-width: 30%;
   --character-sheet-height: 50%;
   /* Menu */
-  --menu-color-0: #595959;
-  --menu-color-1: #696969;
-  --menu-color-2: #868282;
+  --menu-color-0: #413a3a;
+  --menu-color-1: #575252;
+  --menu-color-2: #6f6767;
+  --menu-color-3: #796f6f;
   /* Buttons */
   --btn-color-0: #605252;
+  /* Colors */
+  --color-blue-0: rgb(48 102 231 / 39%) 0px 3px 8px;
+  --color-blue-1: rgb(144 194 255);
+  --color-red-0: rgba(212, 20, 20, 0.24) 0px 3px 8px;
+  --color-red-1: #7c4e4e;
+  --color-red-2: #e97d7d;
+  --color-red-3: rgb(237 156 156);
+  /* Font size */
+  --font-sm: 0.9375rem; /* 15px */
+  --font-md: 1.4375rem /* 23px */ ;
 }
 
 * {
@@ -107,7 +118,6 @@ button {
 .btn--hover:hover {
   transform: scale(1.025, 1.025);
 }
-
 .btn--window-close {
   border: none;
   background-color: var(--menu-color-0);
@@ -117,6 +127,16 @@ button {
   position: absolute;
   right: 0;
   top: 0;
+}
+.btn--logout {
+  margin: 3rem 0 3rem 1rem;
+}
+.btn--attack {
+  margin-top: 0.3rem;
+}
+
+.bold {
+  font-weight: 600;
 }
 
 /* LOGIN */
@@ -131,10 +151,6 @@ button {
   width: 10rem;
   gap: 0.5rem;
   margin-bottom: 1.5rem;
-}
-
-.button--logout {
-  margin: 3rem 0 3rem 1rem;
 }
 
 .flex-container {

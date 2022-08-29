@@ -1,7 +1,7 @@
 let creatures = [];
 let customCreatures = [];
 let creaturesOpen = false;
-let creatureFormOpen
+let creatureFormOpen;
 
 // Form data
 let creatureFormName, creatureFormSize = "medium", creatureFormType, creatureFormAlignment, creatureFormAc, creatureFormHitPoints, creatureFormHitDice, creatureFormStr, creatureFormDex, creatureFormCon, creatureFormInt, creatureFormWis, creatureFormChar, creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, creatureFormCr, creatureFormXp, creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb;
@@ -23,6 +23,9 @@ function toggleCreaturesWindow() {
                             <option value="standard">Standard</option>
                             <option value="custom">Custom</option>
                         </select>
+                    </label>
+                    <label>
+                        <input placeholder="search" onchange="searchCreaturesList(event.target.value)">
                     </label>
                     <button class="btn--hover" onclick="toggleNewCreatureForm()">New Creature</button>
                 </div>
@@ -54,21 +57,45 @@ function filterCreaturesList(value) {
     }
 }
 
+async function searchCreaturesList(value) {
+    document.querySelector('.creatures-window__body').innerHTML = '';
+    await getCustomCreatures();
+
+    creatures.forEach((creature) => {
+        if (creature.name.toLowerCase().includes(value.toLowerCase())) {
+            document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
+                <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
+                    <p>${creature.name}</p>
+                </div>
+            `);
+        }
+    });
+    customCreatures.forEach((creature) => {
+        if (creature.name.toLowerCase().includes(value.toLowerCase())) {
+            document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
+                <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
+                    <p>${creature.name}</p>
+                </div>
+            `);
+        }
+    });
+}
+
 async function getCreaturesBodyData() {
     await getCustomCreatures();
-    for (let creature of creatures) {
-        document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
-            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
-                <p>${creature.name}</p>
-            </div>
-        `);
-    }
     for (let creature of customCreatures) {
         document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
             <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
                 <p>${creature.name}</p>
             </div>
         `); 
+    }
+    for (let creature of creatures) {
+        document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
+            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
+                <p>${creature.name}</p>
+            </div>
+        `);
     }
 }
 
@@ -128,10 +155,10 @@ function toggleNewCreatureForm() {
                             <input class="input--sm" onchange="creatureFormAlignment = event.target.value">
                         </label>
                         <label>AC
-                            <input class="input--sm" type="number" onchange="creatureFormAc = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormAc = event.target.value" required>
                         </label>
                         <label>Hit Points
-                            <input class="input--sm" type="number" onchange="creatureFormHitPoints = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormHitPoints = event.target.value" required>
                         </label>
                         <label>Hit Dice
                             <input class="input--sm" onchange="creatureFormHitDice = event.target.value">
@@ -143,10 +170,22 @@ function toggleNewCreatureForm() {
                                 <label>Movement
                                     <div class="flex-container">
                                         <p>Walk</p>
-                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value" required>
+                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
                                     </div>
                                     <div class="flex-container">
                                         <p>Swim</p>
+                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
+                                    </div>
+                                    <div class="flex-container">
+                                        <p>Burrow</p>
+                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
+                                    </div>
+                                    <div class="flex-container">
+                                        <p>Fly</p>
+                                        <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
+                                    </div>
+                                    <div class="flex-container">
+                                        <p>Climb</p>
                                         <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
                                     </div>
                                 </label>
@@ -155,22 +194,22 @@ function toggleNewCreatureForm() {
                     </div>
                     <div class="creatures-window-form__body--box">
                         <label>Str
-                            <input class="input--sm" type="number" onchange="creatureFormStr = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormStr = event.target.value" value="0" required>
                         </label>
                         <label>Dex
-                            <input class="input--sm" type="number" onchange="creatureFormDex = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormDex = event.target.value" value="0" required>
                         </label>
                         <label>Con
-                            <input class="input--sm" type="number" onchange="creatureFormCon = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormCon = event.target.value" value="0" required>
                         </label>
                         <label>Int
-                            <input class="input--sm" type="number" onchange="creatureFormInt = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormInt = event.target.value" value="0" required>
                         </label>
                         <label>Wis
-                            <input class="input--sm" type="number" onchange="creatureFormWis = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormWis = event.target.value" value="0" required>
                         </label>
                         <label>Char
-                            <input class="input--sm" type="number" onchange="creatureFormChar = event.target.value">
+                            <input class="input--sm" type="number" onchange="creatureFormChar = event.target.value" value="0" required>
                         </label>
                     </div>
                     <div class="creatures-window-form__body--box">

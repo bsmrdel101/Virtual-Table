@@ -3,15 +3,17 @@
   background-color: var(--background-color-2);
   display: flex;
   padding: 10px;
-  box-shadow: 0 1px 6px 1px rgb(172 172 172/50%);
+  box-shadow: 0 1px 6px 1px rgba(172, 172, 172, 0.5);
   gap: 0.5rem;
 }
-
+.toolbar__btn {
+  background-color: var(--btn-color-0);
+  color: white;
+}
 .toolbar__leave-btn {
   cursor: pointer;
   margin: 0.4rem 0;
 }
-
 .toolbar__text {
   margin: 0.4rem 0;
 }
@@ -23,11 +25,6 @@
   background-color: grey;
   color: white;
   padding: 0.5rem;
-}
-
-.toolbar__btn {
-  background-color: var(--btn-color-0);
-  color: white;
 }
 
 /*# sourceMappingURL=toolbar.css.map */
