@@ -1,7 +1,7 @@
 let creatures = [];
 let customCreatures = [];
 let creaturesOpen = false;
-let creatureFormOpen
+let creatureFormOpen;
 
 // Form data
 let creatureFormName, creatureFormSize = "medium", creatureFormType, creatureFormAlignment, creatureFormAc, creatureFormHitPoints, creatureFormHitDice, creatureFormStr, creatureFormDex, creatureFormCon, creatureFormInt, creatureFormWis, creatureFormChar, creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, creatureFormCr, creatureFormXp, creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb;
@@ -25,8 +25,7 @@ function toggleCreaturesWindow() {
                         </select>
                     </label>
                     <label>
-                        Search
-                        <input onchange="searchCreaturesList(event.target.value)">
+                        <input placeholder="search" onchange="searchCreaturesList(event.target.value)">
                     </label>
                     <button class="btn--hover" onclick="toggleNewCreatureForm()">New Creature</button>
                 </div>

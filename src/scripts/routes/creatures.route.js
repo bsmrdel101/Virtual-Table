@@ -138,3 +138,7 @@ async function addCreature(payload) {
         console.log(err);
     }
 }
+
+if (typeof module !== 'undefined') module.exports = {
+    removeExtraCustomData
+};
