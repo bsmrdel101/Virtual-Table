@@ -66,7 +66,7 @@ async function getCreaturesBodyData() {
     for (let creature of customCreatures) {
         document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
             <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
-                <p>${creature.name}</p>
+                <p>${creature.name}</p> <i class="fa-solid fa-trash-can" onclick="deleteCreature('${creature.index}')"></i>
             </div>
         `); 
     }
@@ -87,7 +87,7 @@ async function getCustomCreaturesData() {
     for (let creature of customCreatures) {
         document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
             <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
-                <p>${creature.name}</p>
+                <p>${creature.name}</p> <i class="fa-solid fa-trash-can" onclick="deleteCreature('${creature.index}')"></i>
             </div>
         `);
     }
