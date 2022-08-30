@@ -12,6 +12,14 @@ async function openCreatureStatsWindow(index, custom) {
             return;
         }
     }
+    // creatureIndexList.forEach((listItem) => {
+    //     if (listItem === index) {
+    //         if (document.querySelector(`.creature-stats-window--${index}`)) document.querySelector(`.creature-stats-window--${index}`).remove();         
+    //         creatureIndexList.splice(creatureIndexList.indexOf(index), 1);
+    //         return;
+    //     }
+    // });
+
 
     creatureIndexList.push(index);
     // Get data for selected creature
@@ -122,13 +130,13 @@ async function openCreatureStatsWindow(index, custom) {
 
 // Remove a specific creature window
 function removeCreatureStatsWindow(index) {
-    for (let listItem of creatureIndexList) {
+    creatureIndexList.forEach((listItem) => {
         if (listItem === index) {
             document.querySelector(`.creature-stats-window--${index}`).remove();         
             creatureIndexList.splice(creatureIndexList.indexOf(index), 1);
             return;
         }
-    }   
+    });
 }
 
 // Separates the string for skills/saving throws and splits them into their name and value 
@@ -158,11 +166,11 @@ function getCreatureSpeedData() {
 
     const text = document.getElementById(`speed--${creature.index}`).appendChild(document.createElement('p'));
     text.insertAdjacentHTML('beforeend', `<span class="bold">Speed </span>`);
-    for (let speed of speeds) {
+    speeds.forEach((speed) => {
         text.insertAdjacentHTML('beforeend', `
             ${speed.name} ${speed.value},
         `);
-    }
+    });
 }
 
 function getCreatureScoresData() {
@@ -196,14 +204,14 @@ function getCreatureProficiencyData() {
     let skills = [];
     let string = '';
 
-    for (let proficiency of creature.proficiencies) {
+    creature.proficiencies.forEach((proficiency) => {
         const modifiedProf = separateProf(proficiency.proficiency.name + proficiency.value, proficiency.value);
         if (proficiency.proficiency.name.includes('Saving')) {
             string += ` ${modifiedProf} +${proficiency.value},`;
         } else {
             skills.push({name: modifiedProf, value: proficiency.value});
         }
-    }
+    });
     string = string.replace(/,*$/, '');
     text.insertAdjacentHTML('beforeend', string);
     // If there are no saves, remove the section
@@ -212,9 +220,9 @@ function getCreatureProficiencyData() {
     string = '';
     const skillsText = document.getElementById(`skills--${creature.index}`).appendChild(document.createElement('p'));
     skillsText.insertAdjacentHTML('beforeend',`<span class="bold">Skills </span>`);
-    for (let skill of skills) {
+    skills.forEach((skill) => {
         string += ` ${skill.name} +${skill.value},`;
-    }
+    });
     string = string.replace(/,*$/, '');
     skillsText.insertAdjacentHTML('beforeend', string);
     // If there are no skills, remove the section
@@ -228,9 +236,9 @@ function getCreatureVulResData() {
         text.insertAdjacentHTML('beforeend',`<span class="bold">Vulnerabilities </span>`);
         let string = '';
 
-        for (let stat of creature.damage_vulnerabilities) {
-            string += ` ${stat},`;
-        }
+        creature.damage_vulnerabilities.forEach((stat) => {
+            string += ` ${stat.name},`;
+        });
         string = string.replace(/,*$/, '');
         text.insertAdjacentHTML('beforeend', string);
     }
@@ -241,9 +249,9 @@ function getCreatureVulResData() {
         text.insertAdjacentHTML('beforeend',`<span class="bold">Resistances </span>`);
         let string = '';
 
-        for (let stat of creature.damage_resistances) {
-            string += ` ${stat},`;
-        }
+        creature.damage_resistances.forEach((stat) => {
+            string += ` ${stat.name},`;
+        });
         string = string.replace(/,*$/, '');
         text.insertAdjacentHTML('beforeend', string);
     }
@@ -254,9 +262,9 @@ function getCreatureVulResData() {
         text.insertAdjacentHTML('beforeend',`<span class="bold">Damage Immunities </span>`);
         let string = '';
 
-        for (let stat of creature.damage_immunities) {
-            string += ` ${stat},`;
-        }
+        creature.damage_immunities.forEach((stat) => {
+            string += ` ${stat.name},`;
+        });
         string = string.replace(/,*$/, '');
         text.insertAdjacentHTML('beforeend', string);
     }
@@ -267,9 +275,9 @@ function getCreatureVulResData() {
         text.insertAdjacentHTML('beforeend',`<span class="bold">Condition Immunities </span>`);
         let string = '';
 
-        for (let stat of creature.condition_immunities) {
+        creature.condition_immunities.forEach((stat) => {
             string += ` ${stat.name},`;
-        }
+        });
         string = string.replace(/,*$/, '');
         text.insertAdjacentHTML('beforeend', string);
     }
@@ -287,26 +295,26 @@ function getCreatureSensesData() {
     text.insertAdjacentHTML('beforeend',`<span class="bold">Senses </span>`);
     let string = '';
 
-    for (let sense of senses) {
+    senses.forEach((sense) => {
         string += ` ${sense.name} ${sense.value},`;
-    }
+    });
     string = string.replace(/,*$/, '');
     text.insertAdjacentHTML('beforeend', string);
 }
 
 function getCreatureSpecialAbilityData() {
-    for (let ability of creature.special_abilities) {
+    creature.special_abilities.forEach((ability) => {
         document.getElementById(`special-abilities--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="special-abilities__box">
                 <p class="special-abilities__name"><span class="bold">${ability.name}.</span> ${ability.desc}</p>
             </div>
         `);
-    }
+    });
 }
 
 function getCreatureActionsData() {
     let i = 0;
-    for (let action of creature.actions) {
+    creature.actions.forEach((action) => {
         console.log(action);
 
         document.getElementById(`actions--${creature.index}`).insertAdjacentHTML('beforeend', `
@@ -317,31 +325,31 @@ function getCreatureActionsData() {
             </div>
         `);
         i++;
-    }
+    });
 
     i = 0;
-    for (let action of creature.actions) {
+    creature.actions.forEach((action) => {
         let element = document.getElementById(`${creature.index}-${action.name}-${i}`);
         element.classList.add('actions__box--dmg_dice');
 
         if (action.damage) {
-            for (let dmg of action.damage) {
+            action.damage.forEach((dmg) => {
                 if (dmg.damage_type) {
                     element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${dmg.damage_dice} ${dmg.damage_type.index}</button>`);
                 } else if (dmg.from) {
-                    for (let option of dmg.from.options) {
+                    dmg.from.options.forEach((option) => {
                         element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${option.notes ? option.notes : ''} ${option.damage_dice} ${option.damage_type.index}</button>`);
-                    }
-                }
-            }
+                    });
+                } 
+            });
         }
         i++;
-    }
+    });
 }
 
 function getCreatureLegActionsData() {
     let i = 0;
-    for (let action of creature.legendary_actions) {
+    creature.legendary_actions.forEach((action) => {
         console.log(action);
 
         document.getElementById(`legendary-actions--${creature.index}`).insertAdjacentHTML('beforeend', `
@@ -352,45 +360,45 @@ function getCreatureLegActionsData() {
             </div>
         `);
         i++;
-    }
+    });
 
     i = 0;
-    for (let action of creature.legendary_actions) {
+    creature.legendary_actions.forEach((action) => {
         let element = document.getElementById(`${creature.index}-${action.name}-${i}`);
         element.classList.add('actions__box--dmg_dice');
 
         if (action.damage) {
-            for (let dmg of action.damage) {
+            action.damage.forEach((dmg) => {
                 if (dmg.damage_type) {
                     element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${dmg.damage_dice} ${dmg.damage_type.index}</button>`);
                 } else if (dmg.from) {
-                    for (let option of dmg.from.options) {
-                        element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${option.notes ? option.notes : ''} ${option.damage_dice} ${option.damage_type.index}</button>`);
-                    }
+                    dmg.from.options.forEach((option) => {
+                        element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${option.notes ? option.notes : ''} ${option.damage_dice} ${option.damage_type.index}</button>`);  
+                    });
                 }
-            }
+            });
         }
         i++;
-    }
+    });
 }
 
 // === Custom Creature Data === //
 
 function getCustomSpeedData() {
     let speeds = [];
-    for (let speed of creature.speeds) {
+    creature.speeds.forEach((speed) => {
         if (speed.value !== null) {
             speeds.push(speed);
         }
-    }
+    })
 
     const text = document.getElementById(`speed--${creature.index}`).appendChild(document.createElement('p'));
     text.insertAdjacentHTML('beforeend', `<span class="bold">Speed </span>`);
-    for (let speed of speeds) {
+    speeds.forEach((speed) => {
         text.insertAdjacentHTML('beforeend', `
             ${speed.name} ${speed.value} ft.,
         `);
-    }
+    });
 }
 
 function getCustomScoresData() {
@@ -424,14 +432,14 @@ function getCustomProficiencyData() {
     let skills = [];
     let string = '';
 
-    for (let proficiency of creature.proficiencies) {
+    creature.proficiencies.forEach((proficiency) => {
         const modifiedProf = separateProf(proficiency.name + proficiency.value, proficiency.value);
         if (proficiency.name.includes('Saving')) {
             string += ` ${modifiedProf} +${proficiency.value},`;
         } else {
             skills.push({name: modifiedProf, value: proficiency.value});
         }
-    }
+    });
     string = string.replace(/,*$/, '');
     text.insertAdjacentHTML('beforeend', string);
     // If there are no saves, remove the section
@@ -440,9 +448,9 @@ function getCustomProficiencyData() {
     string = '';
     const skillsText = document.getElementById(`skills--${creature.index}`).appendChild(document.createElement('p'));
     skillsText.insertAdjacentHTML('beforeend',`<span class="bold">Skills </span>`);
-    for (let skill of skills) {
+    skills.forEach((skill) => {
         string += ` ${skill.name} +${skill.value},`;
-    }
+    });
     string = string.replace(/,*$/, '');
     skillsText.insertAdjacentHTML('beforeend', string);
     // If there are no skills, remove the section
@@ -456,9 +464,9 @@ function getCustomVulResData() {
         text.insertAdjacentHTML('beforeend',`<span class="bold">Vulnerabilities </span>`);
         let string = '';
 
-        for (let stat of creature.vulnerabilities) {
+        creature.vulnerabilities,forEach((stat) => {
             string += ` ${stat},`;
-        }
+        });
         string = string.replace(/,*$/, '');
         text.insertAdjacentHTML('beforeend', string);
     }
@@ -469,9 +477,9 @@ function getCustomVulResData() {
         text.insertAdjacentHTML('beforeend',`<span class="bold">Resistances </span>`);
         let string = '';
 
-        for (let stat of creature.resistances) {
+        creature.resistances,forEach((stat) => {
             string += ` ${stat},`;
-        }
+        });
         string = string.replace(/,*$/, '');
         text.insertAdjacentHTML('beforeend', string);
     }
@@ -482,9 +490,9 @@ function getCustomVulResData() {
         text.insertAdjacentHTML('beforeend',`<span class="bold">Damage Immunities </span>`);
         let string = '';
 
-        for (let stat of creature.damageImmunities) {
+        creature.damageImmunities,forEach((stat) => {
             string += ` ${stat},`;
-        }
+        });
         string = string.replace(/,*$/, '');
         text.insertAdjacentHTML('beforeend', string);
     }
@@ -495,9 +503,9 @@ function getCustomVulResData() {
         text.insertAdjacentHTML('beforeend',`<span class="bold">Condition Immunities </span>`);
         let string = '';
 
-        for (let stat of creature.conditionImmunities) {
+        creature.conditionImmunities,forEach((stat) => {
             string += ` ${stat},`;
-        }
+        });
         string = string.replace(/,*$/, '');
         text.insertAdjacentHTML('beforeend', string);
     }
@@ -508,35 +516,31 @@ function getCustomSensesData() {
     text.insertAdjacentHTML('beforeend',`<span class="bold">Senses </span>`);
     let string = '';
 
-    for (let sense of creature.senses) {
+    creature.senses.forEach((sense) => {
         if (sense.name.includes('passive') || sense.name.includes('Passive')) {
             string += ` ${sense.name} ${sense.value},`;
         } else {
             string += ` ${sense.name} ${sense.value} ft.,`;
         }
-    }
+    });
     string = string.replace(/,*$/, '');
     text.insertAdjacentHTML('beforeend', string);
 }
 
 function getCustomSpecialAbilityData() {
-    for (let ability of creature.abilities) {
+    creature.abilities.forEach((ability) => {
         document.getElementById(`special-abilities--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="special-abilities__box">
                 <p class="special-abilities__name"><span class="bold">${ability.name}.</span> ${ability.desc}</p>
             </div>
         `);
-    }
+    });
 }
 
 function getCustomActionsData() {
-    let rolls, desc, toHit;
     let i = 0;
-
-    for (let action of creature.actions) {
-        rolls = getActionDesc(action.desc).rolls;
-        desc = getActionDesc(action.desc).desc;
-        toHit = getActionDesc(action.desc).toHit;
+    creature.actions.forEach((action) => {
+        const { rolls, desc, toHit } = getActionDesc(action.desc);
 
         document.getElementById(`actions--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="actions__box">
@@ -546,31 +550,25 @@ function getCustomActionsData() {
             </div>
         `);
         i++;
-    }
+    });
 
     i = 0;
-    for (let action of creature.actions) {
+    creature.actions.forEach((action) => {
         let element = document.getElementById(`${creature.index}-${action.name}-${i}`);
         element.classList.add('actions__box--dmg_dice');
 
-        if (rolls) {
-            for (let dmg of rolls) {
-                damage = separateDmgRoll(dmg);
-                element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${damage.damageDice} ${damage.damageType}</button>`);
-            }
-        }
+        rolls.forEach((dmg) => {
+            damage = separateDmgRoll(dmg);
+            element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${damage.damageDice} ${damage.damageType}</button>`);
+        });
         i++;
-    }
+    });
 }
 
 function getCustomLegActionsData() {
-    let rolls, desc, toHit;
     let i = 0;
-
-    for (let action of creature.legActions) {
-        rolls = getActionDesc(action.desc).rolls;
-        desc = getActionDesc(action.desc).desc;
-        toHit = getActionDesc(action.desc).toHit;
+    creature.legActions.forEach((action) => {
+        const { rolls, desc, toHit } = getActionDesc(action.desc);
 
         document.getElementById(`legendary-actions--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="actions__box">
@@ -580,21 +578,19 @@ function getCustomLegActionsData() {
             </div>
         `);
         i++;
-    }
+    });
 
     i = 0;
-    for (let action of creature.legActions) {
+    creature.legActions.forEach((action) => {
         let element = document.getElementById(`${creature.index}-${action.name}-${i}`);
         element.classList.add('legendary-actions__box--dmg_dice');
 
-        if (rolls) {
-            for (let dmg of rolls) {
-                damage = separateDmgRoll(dmg);
-                element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${damage.damageDice} ${damage.damageType}</button>`);
-            }
-        }
+        rolls.forEach((dmg) => {
+            const { damageDice, damageType }  = separateDmgRoll(dmg);
+            element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${damageDice} ${damageType}</button>`);
+        });
         i++;
-    }
+    });
 }
 
 // Returns a string without the square brackets, and array with action rolls
@@ -619,6 +615,6 @@ function getActionDesc(_string) {
 
 // Splits and returns an attack damage rolls
 function separateDmgRoll(dmg) {
-    let damage = dmg.split(' ');
-    return {damageDice: damage[0], damageType: damage[1]}
+    const [ damageDice, damageType ] = dmg.split(' ');
+    return { damageDice, damageType };
 }
