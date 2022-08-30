@@ -167,22 +167,22 @@ function toggleNewCreatureForm() {
                     </div>
                     <div class="creatures-window-form__body--box">
                         <label>Str
-                            <input class="input--sm" type="number" onchange="creatureFormStr = event.target.value" value=0 required>
+                            <input class="input--sm" type="number" onchange="creatureFormStr = event.target.value" value="0" required>
                         </label>
                         <label>Dex
-                            <input class="input--sm" type="number" onchange="creatureFormDex = event.target.value" value=0 required>
+                            <input class="input--sm" type="number" onchange="creatureFormDex = event.target.value" value="0" required>
                         </label>
                         <label>Con
-                            <input class="input--sm" type="number" onchange="creatureFormCon = event.target.value" value=0 required>
+                            <input class="input--sm" type="number" onchange="creatureFormCon = event.target.value" value="0" required>
                         </label>
                         <label>Int
-                            <input class="input--sm" type="number" onchange="creatureFormInt = event.target.value" value=0 required>
+                            <input class="input--sm" type="number" onchange="creatureFormInt = event.target.value" value="0" required>
                         </label>
                         <label>Wis
-                            <input class="input--sm" type="number" onchange="creatureFormWis = event.target.value" value=0 required>
+                            <input class="input--sm" type="number" onchange="creatureFormWis = event.target.value" value="0" required>
                         </label>
                         <label>Char
-                            <input class="input--sm" type="number" onchange="creatureFormChar = event.target.value" value=0 required>
+                            <input class="input--sm" type="number" onchange="creatureFormChar = event.target.value" value="0" required>
                         </label>
                     </div>
                     <div class="creatures-window-form__body--box">
