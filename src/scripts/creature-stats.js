@@ -315,8 +315,6 @@ function getCreatureSpecialAbilityData() {
 function getCreatureActionsData() {
     let i = 0;
     creature.actions.forEach((action) => {
-        console.log(action);
-
         document.getElementById(`actions--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="actions__box">
                 <p class="actions__name"><span class="bold">${action.name}.</span> ${action.desc}</p>
@@ -350,8 +348,6 @@ function getCreatureActionsData() {
 function getCreatureLegActionsData() {
     let i = 0;
     creature.legendary_actions.forEach((action) => {
-        console.log(action);
-
         document.getElementById(`legendary-actions--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="actions__box">
                 <p class="actions__name"><span class="bold">${action.name}.</span> ${action.desc}</p>
