@@ -166,3 +166,13 @@ async function addCreature(payload) {
         console.log(err);
     }
 }
+
+// === DELETE routes === //
+
+async function deleteCreature(index) {
+    try {
+        await axios.delete(`/api/creatures/${index}`);
+    } catch (err) {
+        console.log(err);
+    }
+}
