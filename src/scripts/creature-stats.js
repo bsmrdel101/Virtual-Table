@@ -464,7 +464,7 @@ function getCustomVulResData() {
         text.insertAdjacentHTML('beforeend',`<span class="bold">Vulnerabilities </span>`);
         let string = '';
 
-        creature.vulnerabilities,forEach((stat) => {
+        creature.vulnerabilities.forEach((stat) => {
             string += ` ${stat},`;
         });
         string = string.replace(/,*$/, '');
@@ -477,7 +477,7 @@ function getCustomVulResData() {
         text.insertAdjacentHTML('beforeend',`<span class="bold">Resistances </span>`);
         let string = '';
 
-        creature.resistances,forEach((stat) => {
+        creature.resistances.forEach((stat) => {
             string += ` ${stat},`;
         });
         string = string.replace(/,*$/, '');
@@ -490,7 +490,7 @@ function getCustomVulResData() {
         text.insertAdjacentHTML('beforeend',`<span class="bold">Damage Immunities </span>`);
         let string = '';
 
-        creature.damageImmunities,forEach((stat) => {
+        creature.damageImmunities.forEach((stat) => {
             string += ` ${stat},`;
         });
         string = string.replace(/,*$/, '');
@@ -503,7 +503,7 @@ function getCustomVulResData() {
         text.insertAdjacentHTML('beforeend',`<span class="bold">Condition Immunities </span>`);
         let string = '';
 
-        creature.conditionImmunities,forEach((stat) => {
+        creature.conditionImmunities.forEach((stat) => {
             string += ` ${stat},`;
         });
         string = string.replace(/,*$/, '');
@@ -540,7 +540,7 @@ function getCustomSpecialAbilityData() {
 function getCustomActionsData() {
     let i = 0;
     creature.actions.forEach((action) => {
-        const { rolls, desc, toHit } = getActionDesc(action.desc);
+        const { desc, toHit } = getActionDesc(action.desc);
 
         document.getElementById(`actions--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="actions__box">
@@ -554,7 +554,9 @@ function getCustomActionsData() {
 
     i = 0;
     creature.actions.forEach((action) => {
+        const { rolls } = getActionDesc(action.desc);
         let element = document.getElementById(`${creature.index}-${action.name}-${i}`);
+
         element.classList.add('actions__box--dmg_dice');
 
         rolls.forEach((dmg) => {
@@ -568,7 +570,7 @@ function getCustomActionsData() {
 function getCustomLegActionsData() {
     let i = 0;
     creature.legActions.forEach((action) => {
-        const { rolls, desc, toHit } = getActionDesc(action.desc);
+        const { desc, toHit } = getActionDesc(action.desc);
 
         document.getElementById(`legendary-actions--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="actions__box">
@@ -582,7 +584,9 @@ function getCustomLegActionsData() {
 
     i = 0;
     creature.legActions.forEach((action) => {
+        const { rolls } = getActionDesc(action.desc);
         let element = document.getElementById(`${creature.index}-${action.name}-${i}`);
+        
         element.classList.add('legendary-actions__box--dmg_dice');
 
         rolls.forEach((dmg) => {

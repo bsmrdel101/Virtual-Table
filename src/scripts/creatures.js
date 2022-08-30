@@ -24,6 +24,10 @@ function toggleCreaturesWindow() {
                             <option value="custom">Custom</option>
                         </select>
                     </label>
+                    <label>
+                        Search
+                        <input onchange="searchCreaturesList(event.target.value)">
+                    </label>
                     <button class="btn--hover" onclick="toggleNewCreatureForm()">New Creature</button>
                 </div>
                 <div class="creatures-window__body"></div>
@@ -52,6 +56,30 @@ function filterCreaturesList(value) {
         default:
             break;
     }
+}
+
+async function searchCreaturesList(value) {
+    document.querySelector('.creatures-window__body').innerHTML = '';
+    await getCustomCreatures();
+
+    creatures.forEach((creature) => {
+        if (creature.name.toLowerCase().includes(value.toLowerCase())) {
+            document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
+                <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
+                    <p>${creature.name}</p>
+                </div>
+            `);
+        }
+    });
+    customCreatures.forEach((creature) => {
+        if (creature.name.toLowerCase().includes(value.toLowerCase())) {
+            document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
+                <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
+                    <p>${creature.name}</p>
+                </div>
+            `);
+        }
+    });
 }
 
 async function getCreaturesBodyData() {

@@ -40,15 +40,15 @@ async function getSpecificCreature(index, custom) {
                 }
             }
 
-            removeExtraCustomData(proficiencies, 'name');
-            removeExtraCustomData(vulnerabilities);
-            removeExtraCustomData(resistances);
-            removeExtraCustomData(damageImmunities);
-            removeExtraCustomData(conditionImmunities);
-            removeExtraCustomData(senses, 'name');
-            removeExtraCustomData(abilities, 'name');
-            removeExtraCustomData(actions, 'name');
-            removeExtraCustomData(legActions, 'name');
+            proficiencies = removeExtraCustomData(proficiencies, true);
+            vulnerabilities = removeExtraCustomData(vulnerabilities);
+            resistances = removeExtraCustomData(resistances);
+            damageImmunities = removeExtraCustomData(damageImmunities);
+            conditionImmunities = removeExtraCustomData(conditionImmunities);
+            senses = removeExtraCustomData(senses, true);
+            abilities = removeExtraCustomData(abilities, true);
+            actions = removeExtraCustomData(actions, true);
+            legActions = removeExtraCustomData(legActions, true);
 
             const modifiedRes = {
                 id: res.data[0].id,
@@ -100,23 +100,23 @@ async function getSpecificCreature(index, custom) {
 
 // Remove duplicate data from the database
 function removeExtraCustomData(array, name) {
+    let result = [];
     if (name) {
         // Loop through array with objects
         for (let i = 0; i < array.length - 1; i++) {
-            if (array[i].name === array[i + 1].name) {
-                array.splice(array[i].indexOf, 1);
-                i--;
+            if (!result.some((item) => array[i].name === item.name)) {
+                result.push(array[i]);
             }
         }
     } else {
         // Loops through array normally
         for (let i = 0; i < array.length - 1; i++) {
-            if (array[i] === array[i + 1]) {
-                array.splice(array[i].indexOf, 1);
-                i--;
+            if (result.includes(array[i])) {
+                result.push(array[i]);
             }
         }
     }
+    return result;
 }
 
 async function getCustomCreatures() {
