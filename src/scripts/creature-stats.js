@@ -1,8 +1,8 @@
-let creature;
 let creatureIndexList = [];
-let canOpenStats = true;
 
 async function openCreatureStatsWindow(index, custom) {
+    // Check if a creature's stats are already open
+    // If they are open the close the window instead
     for (let listItem of creatureIndexList) {
         if (listItem === index) {
             if (document.querySelector(`.creature-stats-window--${index}`)) document.querySelector(`.creature-stats-window--${index}`).remove();         
@@ -10,257 +10,91 @@ async function openCreatureStatsWindow(index, custom) {
             return;
         }
     }
-
     creatureIndexList.push(index);
-    creature = await getSpecificCreature(index, custom);
+    // Get data for selected creature
+    let creature = await getCreatureByIndex(index, custom);
+
+    renderCreatureStatsWindow(creature);
+}
+
+const creatureStatsWindow = (creature) => `
+    <div class="creature-stats-content">
+        <button class="btn--window-close" onclick="removeCreatureStatsWindow('${creature.index}')">X</button>
+        <div class="creature-stats-window__header creature-stats-window--${creature.index}__header">
+            <h3>${creature.name}</h3>
+            <p>${creature.size ? `${creature.size} ` : ''}${creature.type ? creature.type : ''}, ${creature.alignment ? creature.alignment: ''}</p>
+        </div>
+        <div class="creature-stats-window__body">
+            <p><span class="bold">Armor Class</span> ${creature.ac}</p>
+            <p><span class="bold">Health</span> ${creature.hit_points} ${creature.hit_dice ? `(${creature.hit_dice})` : ''}</p>
+            <div class="creature-stats-window__speed" id="speed--${creature.index}"></div>
+        <div class="creatures-window__body--general-stats">
+            <div class="creature-stats-window__scores" id="scores--${creature.index}"></div>
+            <div class="creature-stats-window__proficiencies" id="proficiencies--${creature.index}"></div>
+            <div class="creature-stats-window__proficiencies" id="skills--${creature.index}"></div>
+            <div class="creature-stats-window__vul-res" id="vul-res--${creature.index}"></div>
+            <div class="creature-stats-window__senses" id="senses--${creature.index}"></div>
+            <div class="creature-stats-window__languages">
+                ${creature.languages.length > 0 ? `<p><span class="bold">Languages</span> ${creature.languages}</p>` : ``}
+            </div>
+            <div class="creature-stats-window__body">
+                <p><span class="bold">Challenge</span> ${creature.cr ? creature.cr : '-'} (${creature.xp ? creature.xp : 0} XP)</p>
+            </div>
+        </div>
+        <div class="creature-stats-window__special-abilities" id="special-abilities--${creature.index}"></div>
+        ${creature.actions.length > 0 ? `<div class="creatures-window__body--actions">
+            <h4>Actions</h4>
+            <div class="creature-stats-window__actions" id="actions--${creature.index}"></div>
+        </div>` : ''}
+        ${creature.legActions.length > 0 ? `<div class="creatures-window__body--actions">
+            <h4>Legendary Actions</h4>
+            <div class="creature-stats-window__legendary-actions" id="legendary-actions--${creature.index}"></div>
+        </div>` : ''}
+    </div>
+`;
+
+function renderCreatureStatsWindow(creature) {
     const window = document.querySelector('body').appendChild(document.createElement('div'));
     window.classList.add('creature-stats-window');
     window.classList.add(`creature-stats-window--${creature.index}`);
 
-    if (custom) {
-        window.insertAdjacentHTML('beforeend', `
-            <div class="creature-stats-content">
-                <button class="btn--window-close" onclick="removeCreatureStatsWindow('${creature.index}')">X</button>
-                <div class="creature-stats-window__header creature-stats-window--${creature.index}__header">
-                    <h3>${creature.name}</h3>
-                </div>
-                <div class="creature-stats-window__body">
-                    <p>${creature.size}, ${creature.type}, ${creature.alignment}</p>
-                    <p>AC: ${creature.ac}</p>
-                    <p>Health: ${creature.hit_points}, Hit dice: ${creature.hit_dice}</p>
-                </div>
-                <div class="creature-stats-window__speed" id="speed--${creature.index}"></div>
-                <div class="creature-stats-window__scores" id="scores--${creature.index}"></div>
-                <div class="creature-stats-window__proficiencies" id="proficiencies--${creature.index}"></div>
-                <div class="creature-stats-window__vul-res" id="vul-res--${creature.index}"></div>
-                <div class="creature-stats-window__senses" id="senses--${creature.index}"></div>
-                <div class="creature-stats-window__languages">
-                    <p>${creature.languages}</p>
-                </div>
-                <div class="creature-stats-window__body">
-                    <p>Xp: ${creature.xp}</p>
-                </div>
-                <div class="creature-stats-window__special-abilities" id="special-abilities--${creature.index}"></div>
-                <div class="creature-stats-window__actions" id="actions--${creature.index}"></div>
-                <div class="creature-stats-window__legendary-actions" id="legendary-actions--${creature.index}"></div>
-            </div>
-        `);
+    window.insertAdjacentHTML('beforeend', creatureStatsWindow(creature));
 
-        getCustomSpeedData();
-        getCustomScoresData();
-        getCustomProficiencyData();
-        getCustomVulResData();
-        getCustomSensesData();
-        getCustomSpecialAbilityData();
-        getCustomActionsData();
-        getCustomLegActionsData();
-    } else {
-        window.insertAdjacentHTML('beforeend', `
-            <div class="creature-stats-content">
-                <button class="btn--window-close" onclick="removeCreatureStatsWindow('${creature.index}')">X</button>
-                <div class="creature-stats-window__header creature-stats-window--${creature.index}__header">
-                    <h3>${creature.name}</h3>
-                </div>
-                <div class="creature-stats-window__body">
-                    <p>${creature.size}, ${creature.type}, ${creature.alignment}</p>
-                    <p>AC: ${creature.armor_class}</p>
-                    <p>Health: ${creature.hit_points}, Hit dice: ${creature.hit_dice}</p>
-                </div>
-                <div class="creature-stats-window__speed" id="speed--${creature.index}"></div>
-                <div class="creature-stats-window__scores" id="scores--${creature.index}"></div>
-                <div class="creature-stats-window__proficiencies" id="proficiencies--${creature.index}"></div>
-                <div class="creature-stats-window__vul-res" id="vul-res--${creature.index}"></div>
-                <div class="creature-stats-window__senses" id="senses--${creature.index}"></div>
-                <div class="creature-stats-window__languages">
-                    <p>${creature.languages}</p>
-                </div>
-                <div class="creature-stats-window__body">
-                    <p>Xp: ${creature.xp}</p>
-                </div>
-                <div class="creature-stats-window__special-abilities" id="special-abilities--${creature.index}"></div>
-                <div class="creature-stats-window__actions" id="actions--${creature.index}"></div>
-                <div class="creature-stats-window__legendary-actions" id="legendary-actions--${creature.index}"></div>
-            </div>
-        `);
+    // Populate body data
+    getCreatureSpeedData(creature);
+    getCreatureScoresData(creature);
+    getCreatureProficiencyData(creature);
+    getCreatureVulResData(creature);
+    getCreatureSensesData(creature);
+    getCreatureSpecialAbilityData(creature);
+    getCreatureActionsData(creature);
+    getCreatureLegActionsData(creature);
 
-        getCreatureSpeedData();
-        getCreatureScoresData();
-        getCreatureProficiencyData();
-        getCreatureVulResData();
-        getCreatureSensesData();
-        getCreatureSpecialAbilityData();
-        getCreatureActionsData();
-        getCreatureLegActionsData();
-    }
+    // Make this window draggable
     dragElement(window, `creature-stats-window--${creature.index}`);
 }
 
-function removeCreatureStatsWindow(index) {
-    for (let listItem of creatureIndexList) {
-        if (listItem === index) {
-            document.querySelector(`.creature-stats-window--${index}`).remove();         
-            creatureIndexList.splice(creatureIndexList.indexOf(index), 1);
-            return;
-        }
-    }   
-}
 
-// === Standard Creature Data === //
+// === Creature Data === //
 
-function getCreatureSpeedData() {
+function getCreatureSpeedData(creature) {
     let speeds = [];
-    if (creature.speed.walk) speeds.push({name: 'Walk', value: creature.speed.walk});
-    if (creature.speed.swim) speeds.push({name: 'Swim', value: creature.speed.swim});
-    if (creature.speed.fly) speeds.push({name: 'Fly', value: creature.speed.fly});
-    if (creature.speed.burrow) speeds.push({name: 'Burrow', value: creature.speed.burrow});
-    if (creature.speed.hover) speeds.push({name: 'Hover', value: creature.speed.hover});
-    if (creature.speed.climb) speeds.push({name: 'Climb', value: creature.speed.climb});
-
-    for (let speed of speeds) {
-        document.getElementById(`speed--${creature.index}`).insertAdjacentHTML('beforeend', `
-            <p>${speed.name} ${speed.value}</p>
-        `);
-    }
-}
-
-function getCreatureScoresData() {
-    let scoreNames = ['Str', 'Dex', 'Con', 'Int', 'Wis', 'Char'];
-    let scoreValues = [
-        creature.strength,
-        creature.dexterity,
-        creature.constitution,
-        creature.intelligence,
-        creature.wisdom,
-        creature.charisma
-    ];
-    
-    for (let i = 0; i < 6; i++) {
-        let modifier = Math.floor((scoreValues[i] - 10) / 2);
-        document.getElementById(`scores--${creature.index}`).insertAdjacentHTML('beforeend', `
-            <div class="creature-scores__box">
-                <p>${scoreNames[i]}</p>
-                <p>${scoreValues[i]}</p>
-                <div class="creature-scores__modifier">
-                    <p>${modifier < 0 ? '' : '+'}${modifier}</p>
-                </div>
-            </div>
-        `);
-    }
-}
-
-function getCreatureProficiencyData() {
-    for (let proficiency of creature.proficiencies) {
-        document.getElementById(`proficiencies--${creature.index}`).insertAdjacentHTML('beforeend', `
-            <p>${proficiency.proficiency.name} ${proficiency.value}</p>
-        `);
-    }
-}
-
-function getCreatureVulResData() {
-    // Vulnerabilities
-    if (creature.damage_vulnerabilities.length > 0) {
-        document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `<p class="vul-res__title">Vulnerabilities:</p>`);
-        for (let stat of creature.damage_vulnerabilities) {
-            document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `
-                <p>${stat}</p>
-            `);
-        }
-    }
-    // Resistances
-    if (creature.damage_resistances.length > 0) {
-        document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `<p class="vul-res__title">Resistances:</p>`);
-        for (let stat of creature.damage_resistances) {
-            document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `
-                <p>${stat}</p>
-            `);
-        }
-    }
-    // Damage immunities
-    if (creature.damage_immunities.length > 0) {
-        document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `<p class="vul-res__title">Damage Immunities:</p>`);
-        for (let stat of creature.damage_immunities) {
-            document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `
-                <p>${stat}</p>
-            `);
-        }
-    }
-    // Condition immunities
-    if (creature.condition_immunities.length > 0) {
-        document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `<p class="vul-res__title">Condition Immunities:</p>`);
-        for (let stat of creature.condition_immunities) {
-            document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `
-                <p>${stat.name}</p>
-            `);
-        }
-    }
-}
-
-function getCreatureSensesData() {
-    let senses = [];
-    if (creature.senses.blindsight) senses.push({name: 'Blindsight', value: creature.senses.blindsight});
-    if (creature.senses.darkvision) senses.push({name: 'Darkvision', value: creature.senses.darkvision});
-    if (creature.senses.tremorsense) senses.push({name: 'Tremorsense', value: creature.senses.tremorsense});
-    if (creature.senses.truesight) senses.push({name: 'Truesight', value: creature.senses.truesight});
-    if (creature.senses.passive_perception) senses.push({name: 'Passive Perception', value: creature.senses.passive_perception});
-
-    for (let sense of senses) {
-        document.getElementById(`senses--${creature.index}`).insertAdjacentHTML('beforeend', `
-            <p>${sense.name} ${sense.value}</p>
-        `);
-    }
-}
-
-function getCreatureSpecialAbilityData() {
-    for (let ability of creature.special_abilities) {
-        document.getElementById(`special-abilities--${creature.index}`).insertAdjacentHTML('beforeend', `
-            <div class="special-abilities__box">
-                <p class="special-abilities__name">${ability.name}</p>
-                <p class="special-abilities__desc">${ability.desc}</p>
-            </div>
-        `);
-    }
-}
-
-function getCreatureActionsData() {
-    for (let action of creature.actions) {
-        document.getElementById(`actions--${creature.index}`).insertAdjacentHTML('beforeend', `
-            <div class="actions__box">
-                <p class="actions__name">${action.name}</p>
-                <p class="actions__desc">${action.desc}</p>
-            </div>
-        `);
-    }
-}
-
-function getCreatureLegActionsData() {
-    for (let action of creature.legendary_actions) {
-        document.getElementById(`legendary-actions--${creature.index}`).insertAdjacentHTML('beforeend', `
-            <div class="actions__box">
-                <p class="actions__name">${action.name}</p>
-                <p class="actions__desc">${action.desc}</p>
-            </div>
-        `);
-    }
-}
-
-// === Custom Creature Data === //
-
-function getCustomSpeedData() {
-    let speeds = [];
-    for (let speed of creature.speeds) {
-        if (speed.value !== null) {
+    creature.speeds.forEach((speed) => {
+        if (speed.value) {
             speeds.push(speed);
         }
-    }
+    });
 
-    for (let speed of speeds) {
-        document.getElementById(`speed--${creature.index}`).insertAdjacentHTML('beforeend', `
-            <p>${speed.name} ${speed.value} ft.</p>
+    const text = document.getElementById(`speed--${creature.index}`).appendChild(document.createElement('p'));
+    text.insertAdjacentHTML('beforeend', `<span class="bold">Speed </span>`);
+    speeds.forEach((speed) => {
+        text.insertAdjacentHTML('beforeend', `
+            ${speed.name} ${speed.value} ft.,
         `);
-    }
+    });
 }
 
-function getCustomScoresData() {
+function getCreatureScoresData(creature) {
     let scoreNames = ['Str', 'Dex', 'Con', 'Int', 'Wis', 'Char'];
     let scoreValues = [
         creature.str,
@@ -275,100 +109,237 @@ function getCustomScoresData() {
         let modifier = Math.floor((scoreValues[i] - 10) / 2);
         document.getElementById(`scores--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="creature-scores__box">
-                <p>${scoreNames[i]}</p>
-                <p>${scoreValues[i]}</p>
+                <span class="bold"><p>${scoreNames[i]}</p></span>
+                <p>${modifier < 0 ? '' : '+'}${modifier}</p>
                 <div class="creature-scores__modifier">
-                    <p>${modifier < 0 ? '' : '+'}${modifier}</p>
+                    <p>${scoreValues[i]}</p>
                 </div>
             </div>
         `);
     }
 }
 
-function getCustomProficiencyData() {
-    for (let proficiency of creature.proficiencies) {
-        document.getElementById(`proficiencies--${creature.index}`).insertAdjacentHTML('beforeend', `
-            <p>${proficiency.name} ${proficiency.value}</p>
-        `);
-    }
+function getCreatureProficiencyData(creature) {
+    const text = document.getElementById(`proficiencies--${creature.index}`).appendChild(document.createElement('p'));
+    text.insertAdjacentHTML('beforeend',`<span class="bold">Saving Throws </span>`);
+    let skills = [];
+    let string = '';
+
+    creature.proficiencies.forEach((proficiency) => {
+        const modifiedProf = separateProf(proficiency.name + proficiency.value, proficiency.value);
+        if (proficiency.name.includes('Saving')) {
+            string += ` ${modifiedProf} +${proficiency.value},`;
+        } else {
+            skills.push({name: modifiedProf, value: proficiency.value});
+        }
+    });
+    string = string.replace(/,*$/, '');
+    text.insertAdjacentHTML('beforeend', string);
+    // If there are no saves, remove the section
+    if (string === '') text.remove();
+
+    string = '';
+    const skillsText = document.getElementById(`skills--${creature.index}`).appendChild(document.createElement('p'));
+    skillsText.insertAdjacentHTML('beforeend',`<span class="bold">Skills </span>`);
+    skills.forEach((skill) => {
+        string += ` ${skill.name} +${skill.value},`;
+    });
+    string = string.replace(/,*$/, '');
+    skillsText.insertAdjacentHTML('beforeend', string);
+    // If there are no skills, remove the section
+    if (string === '') skillsText.remove();
 }
 
-function getCustomVulResData() {
+function getCreatureVulResData(creature) {
     // Vulnerabilities
     if (creature.vulnerabilities.length > 0) {
-        document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `<p class="vul-res__title">Vulnerabilities:</p>`);
-        for (let stat of creature.vulnerabilities) {
-            document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `
-                <p>${stat}</p>
-            `);
-        }
+        const text = document.getElementById(`vul-res--${creature.index}`).appendChild(document.createElement('p'));
+        text.insertAdjacentHTML('beforeend',`<span class="bold">Vulnerabilities </span>`);
+        let string = '';
+
+        creature.vulnerabilities.forEach((stat) => {
+            string += ` ${stat},`;
+        });
+        string = string.replace(/,*$/, '');
+        text.insertAdjacentHTML('beforeend', string);
     }
+
     // Resistances
     if (creature.resistances.length > 0) {
-        document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `<p class="vul-res__title">Resistances:</p>`);
-        for (let stat of creature.resistances) {
-            document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `
-                <p>${stat}</p>
-            `);
-        }
+        const text = document.getElementById(`vul-res--${creature.index}`).appendChild(document.createElement('p'));
+        text.insertAdjacentHTML('beforeend',`<span class="bold">Resistances </span>`);
+        let string = '';
+
+        creature.resistances.forEach((stat) => {
+            string += ` ${stat},`;
+        });
+        string = string.replace(/,*$/, '');
+        text.insertAdjacentHTML('beforeend', string);
     }
+
     // Damage immunities
     if (creature.damageImmunities.length > 0) {
-        document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `<p class="vul-res__title">Damage Immunities:</p>`);
-        for (let stat of creature.damageImmunities) {
-            document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `
-                <p>${stat}</p>
-            `);
-        }
+        const text = document.getElementById(`vul-res--${creature.index}`).appendChild(document.createElement('p'));
+        text.insertAdjacentHTML('beforeend',`<span class="bold">Damage Immunities </span>`);
+        let string = '';
+
+        creature.damageImmunities.forEach((stat) => {
+            string += ` ${stat},`;
+        });
+        string = string.replace(/,*$/, '');
+        text.insertAdjacentHTML('beforeend', string);
     }
+
     // Condition immunities
     if (creature.conditionImmunities.length > 0) {
-        document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `<p class="vul-res__title">Condition Immunities:</p>`);
-        for (let stat of creature.conditionImmunities) {
-            document.getElementById(`vul-res--${creature.index}`).insertAdjacentHTML('beforeend', `
-                <p>${stat}</p>
-            `);
+        const text = document.getElementById(`vul-res--${creature.index}`).appendChild(document.createElement('p'));
+        text.insertAdjacentHTML('beforeend',`<span class="bold">Condition Immunities </span>`);
+        let string = '';
+
+        creature.conditionImmunities.forEach((stat) => {
+            string += ` ${stat},`;
+        });
+        string = string.replace(/,*$/, '');
+        text.insertAdjacentHTML('beforeend', string);
+    }
+}
+
+function getCreatureSensesData(creature) {
+    const text = document.getElementById(`senses--${creature.index}`).appendChild(document.createElement('p'));
+    text.insertAdjacentHTML('beforeend',`<span class="bold">Senses </span>`);
+    let string = '';
+
+    creature.senses.forEach((sense) => {
+        if (sense.name.includes('passive') || sense.name.includes('Passive')) {
+            string += ` ${sense.name} ${sense.value},`;
+        } else {
+            string += ` ${sense.name} ${sense.value} ft.,`;
         }
-    }
+    });
+    string = string.replace(/,*$/, '');
+    text.insertAdjacentHTML('beforeend', string);
 }
 
-function getCustomSensesData() {
-    for (let sense of creature.senses) {
-        document.getElementById(`senses--${creature.index}`).insertAdjacentHTML('beforeend', `
-            <p>${sense.name} ${sense.value} ft.</p>
-        `);
-    }
-}
-
-function getCustomSpecialAbilityData() {
-    for (let ability of creature.abilities) {
+function getCreatureSpecialAbilityData(creature) {
+    creature.abilities.forEach((ability) => {
         document.getElementById(`special-abilities--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="special-abilities__box">
-                <p class="special-abilities__name">${ability.name}</p>
-                <p class="special-abilities__desc">${ability.desc}</p>
+                <p class="special-abilities__name"><span class="bold">${ability.name}.</span> ${ability.desc}</p>
             </div>
         `);
-    }
+    });
 }
 
-function getCustomActionsData() {
-    for (let action of creature.actions) {
+function getCreatureActionsData(creature) {
+    let i = 0;
+    creature.actions.forEach((action) => {
         document.getElementById(`actions--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="actions__box">
-                <p class="actions__name">${action.name}</p>
-                <p class="actions__desc">${action.desc}</p>
+                <p class="actions__name"><span class="bold">${action.name}.</span> ${action.desc}</p>
+                ${action.attack_bonus ? `<button class="btn--attack btn--hover"><i class="fa-solid fa-dice-d20"></i> +${action.attack_bonus}</button>` : ''}
+                <span id="${creature.index}-${action.name}-${i}"></span>
             </div>
         `);
+        i++;
+    });
+
+    i = 0;
+    creature.actions.forEach((action) => {
+        let element = document.getElementById(`${creature.index}-${action.name}-${i}`);
+        element.classList.add('actions__box--dmg_dice');
+
+        action.damage.forEach((dmg) => {
+            element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${dmg.damageDice} ${dmg.damageType}</button>`);
+        });
+        i++;
+    });
+}
+
+function getCreatureLegActionsData(creature) {
+    let i = 0;
+    creature.legActions.forEach((action) => {
+        document.getElementById(`legendary-actions--${creature.index}`).insertAdjacentHTML('beforeend', `
+            <div class="actions__box">
+                <p class="actions__name"><span class="bold">${action.name}.</span> ${action.desc}</p>
+                ${action.attack_bonus ? `<button class="btn--attack btn--hover"><i class="fa-solid fa-dice-d20"></i> +${action.attack_bonus}</button>` : ''}
+                <span id="${creature.index}-${action.name}-${i}"></span>
+            </div>
+        `);
+        i++;
+    });
+
+    i = 0;
+    creature.legActions.forEach((action) => {
+        let element = document.getElementById(`${creature.index}-${action.name}-${i}`);
+        element.classList.add('legendary-actions__box--dmg_dice');
+
+        action.damage.forEach((dmg) => {
+            if (dmg.damageDice) {
+                element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${dmg.damageDice} ${dmg.damageType}</button>`);
+            }
+        });
+        i++;
+    });
+}
+
+
+// Remove a specific creature window
+function removeCreatureStatsWindow(index) {
+    creatureIndexList.forEach((listItem) => {
+        if (listItem === index) {
+            document.querySelector(`.creature-stats-window--${index}`).remove();         
+            creatureIndexList.splice(creatureIndexList.indexOf(index), 1);
+            return;
+        }
+    });
+}
+
+// Returns a string without the square brackets, and array with action rolls
+function getActionDesc(_string) {
+    let string = _string
+    let rolls = [];
+    let toHit = '';
+
+    // Checks if there is an attack bonus
+    while (string.includes('{{')) {
+        toHit = string.split('{{')[1].split('}}')[0];
+        string = string.replace('{{', '').replace('}}', '');
+    }
+
+    while(toHit.includes('+')) {
+        toHit = toHit.replace('+', '');
+    }
+
+    // Modifies string to get dmg rolls, and description with the brackets
+    while (string.includes('[[')) {
+        rolls.push(string.split('[[')[1].split(']]')[0]);
+        string = string.replace('[[', '').replace(']]', '');
+    }
+    return {rolls: rolls, desc: string, toHit: toHit};
+}
+
+// Splits and returns an attack damage rolls
+function separateDmgRoll(dmg) {
+    const [ damageDice, damageType ] = dmg.split(' ');
+    return { damageDice, damageType };
+}
+
+// Separates the string for skills/saving throws and splits them into their name and value 
+function separateProf(string, value) {
+    const save = string.split('Saving Throw: ');
+    const skill = string.split('Skill: ');
+    
+    if (save[0] === '') {
+        const name = save[1].split(value);
+        return name[0].toString();
+    } else {
+        const name = skill[1].split(value);
+        return name[0].toString();
     }
 }
 
-function getCustomLegActionsData() {
-    for (let action of creature.legActions) {
-        document.getElementById(`legendary-actions--${creature.index}`).insertAdjacentHTML('beforeend', `
-            <div class="actions__box">
-                <p class="actions__name">${action.name}</p>
-                <p class="actions__desc">${action.desc}</p>
-            </div>
-        `);
-    }
-}
+
+if (typeof module !== 'undefined') module.exports = {
+    getActionDesc,
+    separateDmgRoll
+};

@@ -51,7 +51,7 @@
 .character-sheet__health, .character-sheet__health--temp, .character-sheet__health-tracker {
   box-shadow: rgba(0, 0, 0, 0.24) 0px 1px 3px;
   border-radius: 5px;
-  color: var(--color-red-1);
+  color: var(--color-red-3);
   display: inline-flex;
   padding: 0.3rem;
   margin-top: 0.3rem;

@@ -9,115 +9,287 @@ async function getCreatures() {
     }
 }
 
-async function getSpecificCreature(index, custom) {
+async function getCreatureByIndex(index, custom) {
     try {
         if (custom) {
             const res = await axios.get(`/api/creatures/${index}`);
-            let proficiencies = [];
-            let vulnerabilities = [];
-            let resistances = [];
-            let damageImmunities = [];
-            let conditionImmunities = [];
-            let senses = [];
-            let abilities = [];
-            let actions = [];
-            let legActions = [];
-            
-            // Separate different parts of the response into arrays
-            for (let stat of res.data) {
-                proficiencies.push({name: stat.prof_name, value: stat.prof_value});
-                vulnerabilities.push(stat.vul_name);
-                resistances.push(stat.res_name);
-                senses.push({name: stat.sense_name, value: stat.sense_value});
-                abilities.push({name: stat.ability_name, desc: stat.ability_desc});
-                actions.push({name: stat.action_name, desc: stat.action_desc});
-                legActions.push({name: stat.leg_action_name, desc: stat.leg_action_desc});
-
-                if (stat.immune_type === 'damage') {
-                    damageImmunities.push(stat.immune_name);
-                } else if (stat.immune_type === 'condition') {
-                    conditionImmunities.push(stat.immune_name);
-                }
-            }
-
-            removeExtraCustomData(proficiencies, 'name');
-            removeExtraCustomData(vulnerabilities);
-            removeExtraCustomData(resistances);
-            removeExtraCustomData(damageImmunities);
-            removeExtraCustomData(conditionImmunities);
-            removeExtraCustomData(senses, 'name');
-            removeExtraCustomData(abilities, 'name');
-            removeExtraCustomData(actions, 'name');
-            removeExtraCustomData(legActions, 'name');
-
-            const modifiedRes = {
-                id: res.data[0].id,
-                user_id: res.data[0].user_id,
-                index: res.data[0].index,
-                name: res.data[0].name,
-                size: res.data[0].size,
-                type: res.data[0].type,
-                alignment: res.data[0].alignment,
-                ac: res.data[0].ac,
-                hit_points: res.data[0].hit_points,
-                hit_dice: res.data[0].hit_dice,
-                str: res.data[0].str,
-                dex: res.data[0].dex,
-                con: res.data[0].con,
-                int: res.data[0].int,
-                wis: res.data[0].wis,
-                char: res.data[0].char,
-                cr: res.data[0].cr,
-                xp: res.data[0].xp,
-                languages: res.data[0].list,
-                speeds: [
-                    {name: 'Walk', value: res.data[0].walk_speed},
-                    {name: 'Swim', value: res.data[0].swim_speed},
-                    {name: 'Burrow', value: res.data[0].burrow_speed},
-                    {name: 'Fly', value: res.data[0].fly_speed},
-                    {name: 'Hover', value: res.data[0].hover_speed},
-                    {name: 'Climb', value: res.data[0].climb_speed}
-                ],
-                proficiencies: proficiencies,
-                vulnerabilities: vulnerabilities,
-                resistances: resistances,
-                damageImmunities: damageImmunities,
-                conditionImmunities: conditionImmunities,
-                senses: senses,
-                abilities: abilities,
-                actions: actions,
-                legActions: legActions
-            };
-            console.log(modifiedRes);
-            return modifiedRes;
+            return modifyResponseCreature(res);
         } else {
             const res = await axios.get(`https://www.dnd5eapi.co/api/monsters/${index}`);
-            return res.data;
+            return modifyResponseStandardCreature(res);
         }
     } catch (err) {
         console.log(err);
     }
 }
 
+function modifyResponseStandardCreature(res) {
+    // Gets all the arrays of creature data
+    const { proficiencies, condition_immunities, senses, special_abilities, actions, legendary_actions } = separateStandardCreatureResponse(res.data);
+    const modifiedRes = new Creature(
+        null,
+        null,
+        res.data.index,
+        res.data.name,
+        res.data.size,
+        res.data.type,
+        res.data.alignment,
+        res.data.armor_class,
+        res.data.hit_points,
+        res.data.hit_dice,
+        res.data.strength,
+        res.data.dexterity,
+        res.data.constitution,
+        res.data.intelligence,
+        res.data.wisdom,
+        res.data.charisma,
+        res.data.challenge_rating,
+        res.data.xp,
+        res.data.languages,
+        removeUnitFromString(res.data.speed.walk),
+        removeUnitFromString(res.data.speed.swim),
+        removeUnitFromString(res.data.speed.burrow),
+        removeUnitFromString(res.data.speed.fly),
+        removeUnitFromString(res.data.speed.climb),
+        proficiencies,
+        res.data.damage_vulnerabilities,
+        res.data.damage_resistances,
+        res.data.damage_immunities,
+        condition_immunities,
+        senses,
+        special_abilities,
+        actions,
+        legendary_actions
+    );
+    console.log(modifiedRes);
+    return modifiedRes;
+}
+
+function separateStandardCreatureResponse(res) {
+    const proficiencies = getCreatureProficiencies(res.proficiencies);
+    const condition_immunities = getCreatureConditionImmunities(res.condition_immunities);
+    const senses = getCreatureSenses(res.senses);
+    const special_abilities = getCreatureAbilities(res.special_abilities);
+    const actions = getCreatureActions(res.actions);
+    const legendary_actions = getCreatureLegendaryActions(res.legendary_actions);
+
+    return {proficiencies: proficiencies, condition_immunities: condition_immunities, senses: senses, special_abilities: special_abilities, actions: actions, legendary_actions: legendary_actions};
+}
+
+function getCreatureProficiencies(_proficiencies) {
+    let proficiencies = [];
+    if (_proficiencies.length > 0) {
+        _proficiencies.forEach((prof) => {
+            proficiencies.push({name: prof.proficiency.name, value: prof.value});
+        });
+    }
+    return proficiencies;
+}
+
+function getCreatureConditionImmunities(_condition_immunities) {
+    let condition_immunities = [];
+    if (_condition_immunities.length > 0) {
+        _condition_immunities.forEach((immunity) => {
+            condition_immunities.push(immunity.name);
+        });
+    }
+    return condition_immunities;
+}
+
+function getCreatureSenses(_senses) { 
+    let senses = [];   
+    if (_senses.darkvision) senses.push({name: 'Darkvision', value: removeUnitFromString(_senses.darkvision)});
+    if (_senses.blindsight) senses.push({name: 'Blindsight', value: removeUnitFromString(_senses.blindsight)});
+    if (_senses.tremorsense) senses.push({name: 'Tremorsense', value: removeUnitFromString(_senses.tremorsense)});
+    if (_senses.truesight) senses.push({name: 'Truesight', value: removeUnitFromString(_senses.truesight)});
+    if (_senses.passive_perception) senses.push({name: 'Passive Perception', value: _senses.passive_perception});
+    return senses;
+}
+
+function getCreatureAbilities(_special_abilities) {
+    let special_abilities = [];
+    if (_special_abilities.length > 0) {
+        _special_abilities.forEach((ability) => {
+            special_abilities.push({name: ability.name, desc: ability.desc, damage: standardCreatureDamage(ability.damage)});
+        });
+    }
+    return special_abilities;
+}
+
+function getCreatureActions(_actions) {
+    let actions = [];
+    if (_actions.length > 0) {
+        _actions.forEach((action) => {
+            actions.push({name: action.name, desc: action.desc, attack_bonus: action.attack_bonus, damage: standardCreatureDamage(action.damage)});
+        });
+    }
+
+    return actions;
+}
+
+function getCreatureLegendaryActions(_legendary_actions) {
+    let legendary_actions = [];
+    if (_legendary_actions.length > 0) {
+        _legendary_actions.forEach((action) => {
+            legendary_actions.push({name: action.name, desc: action.desc, attack_bonus: action.attack_bonus, damage: standardCreatureDamage(action.damage)});
+        });
+    }
+    return legendary_actions;
+}
+
+// Gets the damage dice and damage type from a standard creature
+function standardCreatureDamage(damage) {
+    let damages = [];
+    if (damage) {
+        damage.forEach((dmg) => {
+            if (dmg.from) {
+                dmg.from.options.forEach((dmg) => {
+                    damages.push({damageDice: dmg.damage_dice, damageType: dmg.damage_type.index});
+                });
+            } else {
+                damages.push({damageDice: dmg.damage_dice, damageType: dmg.damage_type.index});
+            }
+        });
+    }
+    return damages;
+}
+
+// Removes ft and turns returns a number value
+function removeUnitFromString(string) {
+    let value = '';
+    if (string) {
+        value = parseInt(string.split(' ')[0]);
+        return value;
+    }
+}
+
+function modifyResponseCreature(res) {
+    // Gets all the arrays of creature data
+    const { proficiencies, vulnerabilities, resistances, damageImmunities, conditionImmunities, senses, abilities, actions, legActions } = separateCreatureResponse(res.data);
+
+    const modifiedRes = new Creature(
+        res.data[0].id,
+        res.data[0].user_id,
+        res.data[0].index,
+        res.data[0].name,
+        res.data[0].size,
+        res.data[0].type,
+        res.data[0].alignment,
+        res.data[0].ac,
+        res.data[0].hit_points,
+        res.data[0].hit_dice,
+        res.data[0].str,
+        res.data[0].dex,
+        res.data[0].con,
+        res.data[0].int,
+        res.data[0].wis,
+        res.data[0].char,
+        res.data[0].cr,
+        res.data[0].xp,
+        res.data[0].list,
+        res.data[0].walk_speed,
+        res.data[0].swim_speed,
+        res.data[0].burrow_speed,
+        res.data[0].fly_speed,
+        res.data[0].climb_speed,
+        proficiencies,
+        vulnerabilities,
+        resistances,
+        damageImmunities,
+        conditionImmunities,
+        senses,
+        abilities,
+        actions,
+        legActions
+    );
+    console.log(modifiedRes);
+    return modifiedRes;
+}
+
+// Separate different parts of the response into arrays
+function separateCreatureResponse(res) {
+    let proficiencies = [];
+    let vulnerabilities = [];
+    let resistances = [];
+    let damageImmunities = [];
+    let conditionImmunities = [];
+    let senses = [];
+    let abilities = [];
+    let actions = [];
+    let legActions = [];
+
+    for (let stat of res) {
+        proficiencies.push({name: stat.prof_name, value: stat.prof_value});
+        vulnerabilities.push(stat.vul_name);
+        resistances.push(stat.res_name);
+        senses.push({name: stat.sense_name, value: stat.sense_value});
+        abilities.push({name: stat.ability_name, desc: stat.ability_desc});
+        actions.push({name: stat.action_name, desc: stat.action_desc});
+        legActions.push({name: stat.leg_action_name, desc: stat.leg_action_desc});
+
+        if (stat.immune_type === 'damage') {
+            damageImmunities.push(stat.immune_name);
+        } else if (stat.immune_type === 'condition') {
+            conditionImmunities.push(stat.immune_name);
+        }
+    }
+    
+    proficiencies = removeExtraCustomData(proficiencies, true);
+    vulnerabilities = removeExtraCustomData(vulnerabilities);
+    resistances = removeExtraCustomData(resistances);
+    damageImmunities = removeExtraCustomData(damageImmunities);
+    conditionImmunities = removeExtraCustomData(conditionImmunities);
+    senses = removeExtraCustomData(senses, true);
+    abilities = removeExtraCustomData(abilities, true);
+    actions = removeExtraCustomData(actions, true);
+    legActions = removeExtraCustomData(legActions, true);
+
+    // Get ability rolls
+    let modifiedAbilities = [];
+    abilities.forEach((ability) => {
+        const abilityData = getActionDesc(ability.desc);
+        modifiedAbilities.push({name: ability.name, desc: abilityData.desc, damage: [separateDmgRoll(abilityData.rolls.toString())]});
+    });
+    abilities = modifiedAbilities;
+
+    // Get action rolls
+    let modifiedActions = [];
+    actions.forEach((action) => {
+        const actionData = getActionDesc(action.desc);
+        modifiedActions.push({name: action.name, desc: actionData.desc, attack_bonus: actionData.toHit, damage: [separateDmgRoll(actionData.rolls.toString())]});
+    });
+    actions = modifiedActions;
+
+    // Get legendary action rolls
+    let modifiedLegActions = [];
+    legActions.forEach((action) => {
+        const legActionData = getActionDesc(action.desc);
+        modifiedLegActions.push({name: action.name, desc: legActionData.desc, attack_bonus: legActionData.toHit, damage: [separateDmgRoll(legActionData.rolls.toString())]});
+    });
+    legActions = modifiedLegActions;
+
+    return {proficiencies: proficiencies, vulnerabilities: vulnerabilities, resistances: resistances, damageImmunities: damageImmunities, conditionImmunities: conditionImmunities, senses: senses, abilities: abilities, actions: actions, legActions: legActions};
+}
+
 // Remove duplicate data from the database
 function removeExtraCustomData(array, name) {
+    let result = [];
     if (name) {
         // Loop through array with objects
         for (let i = 0; i < array.length - 1; i++) {
-            if (array[i].name === array[i + 1].name) {
-                array.splice(array[i].indexOf, 1);
-                i--;
+            if (!result.some((item) => array[i].name === item.name)) {
+                result.push(array[i]);
             }
         }
     } else {
         // Loops through array normally
         for (let i = 0; i < array.length - 1; i++) {
-            if (array[i] === array[i + 1]) {
-                array.splice(array[i].indexOf, 1);
-                i--;
+            if (!result.some((item) => array[i] === item)) {
+                result.push(array[i]);
             }
         }
     }
+    return result;
 }
 
 async function getCustomCreatures() {
@@ -166,6 +338,86 @@ async function addCreature(payload) {
         console.log(err);
     }
 }
+
+class Creature {
+    id
+    user_id
+    index
+    name
+    size
+    type
+    alignment
+    ac
+    hit_points
+    hit_dice
+    str
+    dex
+    con
+    int
+    wis
+    char
+    cr
+    xp
+    languages
+    speeds
+    proficiencies
+    vulnerabilities
+    resistances
+    damageImmunities
+    conditionImmunities
+    senses
+    abilities
+    actions
+    legActions
+
+    constructor (id, user_id, index, name, size, type, alignment, ac, hit_points, hit_dice, str, dex, con, int, wis, char, cr, xp, languages, walk_speed, swim_speed, burrow_speed, fly_speed, climb_speed, proficiencies, vulnerabilities, resistances, damageImmunities, conditionImmunities, senses, abilities, actions, legActions) {
+        this.id = id;
+        this.user_id = user_id;
+        this.index = index;
+        this.name = name;
+        this.size = size;
+        this.type = type;
+        this.alignment = alignment;
+        this.ac = ac;
+        this.hit_points = hit_points;
+        this.hit_dice = hit_dice;
+        this.str = str;
+        this.dex = dex;
+        this.con = con;
+        this.int = int;
+        this.wis = wis;
+        this.char = char;
+        this.cr = cr;
+        this.xp = xp;
+        this.languages = languages;
+        this.speeds = [
+            {name: 'Walk', value: walk_speed},
+            {name: 'Swim', value: swim_speed},
+            {name: 'Burrow', value: burrow_speed},
+            {name: 'Fly', value: fly_speed},
+            {name: 'Climb', value: climb_speed}
+        ],
+        this.proficiencies = proficiencies;
+        this.vulnerabilities = vulnerabilities;
+        this.resistances = resistances;
+        this.damageImmunities = damageImmunities;
+        this.conditionImmunities = conditionImmunities;
+        this.senses = senses;
+        this.abilities = abilities;
+        this.actions = actions;
+        this.legActions = legActions;
+    }
+}
+
+if (typeof module !== 'undefined') module.exports = {
+    removeExtraCustomData,
+    getCreatureProficiencies,
+    getCreatureConditionImmunities,
+    getCreatureSenses,
+    getCreatureAbilities,
+    getCreatureActions,
+    getCreatureLegendaryActions
+};
 
 // === DELETE routes === //
 
