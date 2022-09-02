@@ -92,8 +92,8 @@ async function getCreaturesBodyData() {
     }
     for (let creature of creatures) {
         document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
-            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
-                <p>${creature.name}</p>
+            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
+                <p>${creature.name}</p> <i class="fa-solid fa-trash-can" onclick="deleteCreature('${creature.index}')"></i>
             </div>
         `);
     }
@@ -114,7 +114,7 @@ async function getCustomCreaturesData() {
     for (let creature of customCreatures) {
         document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
             <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
-                <p>${creature.name}</p>
+                <p>${creature.name}</p> <i class="fa-solid fa-trash-can" onclick="deleteCreature('${creature.index}')"></i>
             </div>
         `);
     }
@@ -257,58 +257,138 @@ function toggleNewCreatureForm() {
                             </div>
                             <button type="button" onclick="addInputs('sense')" class="creature-form__btn--input">Add sense</button>
                         </div>
-                    </div>
-                    <div class="creatures-window-form__body--box">
-                        <label>Languages
-                            <textarea rows="3" cols="40" onchange="creatureFormLanguages = event.target.value"></textarea>
-                        </label>
-                    </div>
-                    <div class="creatures-window-form__body--box">
-                        <label>CR
-                            <input type="number" class="input--sm" onchange="creatureFormCr = event.target.value">
-                        </label>
-                        <label>XP
-                            <input type="number" class="input--sm" onchange="creatureFormXp = event.target.value">
-                        </label>
-                    </div>
-                    <div class="creatures-window-form__body--box">
-                        <div>
-                            <div class="form__input-add form__input-add--ability">
-                                <label>Special Abilities
-                                    <input placeholder="Ability name" class="input--md creature-inputs__ability-name">
-                                    <textarea rows="3" cols="40" placeholder="description" class="creature-inputs__ability-desc"></textarea>
-                                </label>
-                            </div>
-                            <button type="button" onclick="addDescInputs('ability')" class="creature-form__btn--input">Add ability</button>
+                        <div class="flex-container">
+                            <p>Swim</p>
+                            <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
                         </div>
-                    </div>
-                    <div class="creatures-window-form__body--box">
-                        <div>
-                            <div class="form__input-add form__input-add--action">
-                                <label>Actions
-                                    <input placeholder="Action name" class="input--md creature-inputs__action-name">
-                                    <textarea rows="3" cols="40" placeholder="description" class="creature-inputs__action-desc"></textarea>
-                                </label>
-                            </div>
-                            <button type="button" onclick="addDescInputs('action')" class="creature-form__btn--input">Add action</button>
-                        </div>
-                    </div>
-                    <div class="creatures-window-form__body--box">
-                        <div>
-                            <div class="form__input-add form__input-add--leg-action">
-                                <label>Legendary Actions
-                                    <input placeholder="Action name" class="input--md creature-inputs__leg-action-name">
-                                    <textarea rows="3" cols="40" placeholder="description" class="creature-inputs__leg-action-desc"></textarea>
-                                </label>
-                            </div>
-                            <button type="button" onclick="addDescInputs('leg-action')" class="creature-form__btn--input">Add Legendary action</button>
-                        </div>
-                    </div>
-                    <br/>
-                    <button type="submit">Add Creature</button>
-                </form>
+                    </label>
+                </div>
             </div>
-        `);
+        </div>
+        <div class="creatures-window-form__body--box">
+            <label>Str
+                <input class="input--sm" type="number" onchange="creatureFormStr = event.target.value">
+            </label>
+            <label>Dex
+                <input class="input--sm" type="number" onchange="creatureFormDex = event.target.value">
+            </label>
+            <label>Con
+                <input class="input--sm" type="number" onchange="creatureFormCon = event.target.value">
+            </label>
+            <label>Int
+                <input class="input--sm" type="number" onchange="creatureFormInt = event.target.value">
+            </label>
+            <label>Wis
+                <input class="input--sm" type="number" onchange="creatureFormWis = event.target.value">
+            </label>
+            <label>Char
+                <input class="input--sm" type="number" onchange="creatureFormChar = event.target.value">
+            </label>
+        </div>
+        <div class="creatures-window-form__body--box">
+            <div>
+                <div class="form__input-add form__input-add--proficiency">
+                    <label>Proficiencies
+                        <div class="flex-container">
+                            <input placeholder="Perception" class="input--md creature-inputs__proficiency-name">
+                            <input placeholder="6" type="number" class="input--sm creature-inputs__proficiency-value">
+                        </div>
+                    </label>
+                </div>
+                <button type="button" onclick="addInputs('proficiency')" class="creature-form__btn--input">Add proficiency</button>
+            </div>
+        </div>
+        <div class="creatures-window-form__body--box">
+            <label>Vulnerabilities
+                <textarea rows="3" cols="40" placeholder="fire, thunder" onchange="creatureFormVul = event.target.value"></textarea>
+            </label>
+        </div>
+        <div class="creatures-window-form__body--box">
+            <label>Resistances
+                <textarea rows="3" cols="40" placeholder="poison, bludgeoning" onchange="creatureFormRes = event.target.value"></textarea>
+            </label>
+        </div>
+        <div class="creatures-window-form__body--box">
+            <label>Damage Immunities
+                <textarea rows="3" cols="40" placeholder="nonmagical slashing" onchange="creatureFormDmgImmune = event.target.value"></textarea>
+            </label>
+        </div>
+        <div class="creatures-window-form__body--box">
+            <label>Condition Immunities
+                <textarea rows="3" cols="40" placeholder="prone, restrained" onchange="creatureFormConImmune = event.target.value"></textarea>
+            </label>
+        </div>
+        <div class="creatures-window-form__body--box">
+            <div>
+                <div class="form__input-add form__input-add--sense">
+                    <label>Senses
+                        <div class="flex-container">
+                            <input placeholder="Darkvision" class="input--md creature-inputs__sense-name">
+                            <input placeholder="60" type="number" class="input--sm creature-inputs__sense-value">
+                        </div>
+                    </label>
+                </div>
+                <button type="button" onclick="addInputs('sense')" class="creature-form__btn--input">Add sense</button>
+            </div>
+        </div>
+        <div class="creatures-window-form__body--box">
+            <label>Languages
+                <textarea rows="3" cols="40" onchange="creatureFormLanguages = event.target.value"></textarea>
+            </label>
+        </div>
+        <div class="creatures-window-form__body--box">
+            <label>CR
+                <input type="number" class="input--sm" onchange="creatureFormCr = event.target.value">
+            </label>
+            <label>XP
+                <input type="number" class="input--sm" onchange="creatureFormXp = event.target.value">
+            </label>
+        </div>
+        <div class="creatures-window-form__body--box">
+            <div>
+                <div class="form__input-add form__input-add--ability">
+                    <label>Special Abilities
+                        <input placeholder="Ability name" class="input--md creature-inputs__ability-name">
+                        <textarea rows="3" cols="40" placeholder="description" class="creature-inputs__ability-desc"></textarea>
+                    </label>
+                </div>
+                <button type="button" onclick="addDescInputs('ability')" class="creature-form__btn--input">Add ability</button>
+            </div>
+        </div>
+        <div class="creatures-window-form__body--box">
+            <div>
+                <div class="form__input-add form__input-add--action">
+                    <label>Actions
+                        <input placeholder="Action name" class="input--md creature-inputs__action-name">
+                        <textarea rows="3" cols="40" placeholder="description" class="creature-inputs__action-desc"></textarea>
+                    </label>
+                </div>
+                <button type="button" onclick="addDescInputs('action')" class="creature-form__btn--input">Add action</button>
+            </div>
+        </div>
+        <div class="creatures-window-form__body--box">
+            <div>
+                <div class="form__input-add form__input-add--leg-action">
+                    <label>Legendary Actions
+                        <input placeholder="Action name" class="input--md creature-inputs__leg-action-name">
+                        <textarea rows="3" cols="40" placeholder="description" class="creature-inputs__leg-action-desc"></textarea>
+                    </label>
+                </div>
+                <button type="button" onclick="addDescInputs('leg-action')" class="creature-form__btn--input">Add Legendary action</button>
+            </div>
+        </div>
+        <br/>
+        <button type="submit">Add Creature</button>
+    </form>
+</div>
+`;
+
+function toggleNewCreatureForm() {
+    creatureFormOpen = !creatureFormOpen;
+    if (creatureFormOpen) {
+        const window = document.querySelector('body').appendChild(document.createElement('div'));
+        window.classList.add('creatures-window-form');
+        window.insertAdjacentHTML('beforeend', creatureFormBody);
         
         disableHotkeys();
         dragElement(window, 'creatures-window-form');
@@ -387,8 +467,8 @@ async function submitCreatureForm(e) {
         }
     }
 
-    const newCreature = new CreatureFormData(indexConverter(creatureFormName), 'https://www.dandwiki.com/w/images/3/37/BreadSpawn.jpg', creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, parseInt(creatureFormAc), parseInt(creatureFormHitPoints), creatureFormHitDice, creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb, parseInt(creatureFormStr), parseInt(creatureFormDex), parseInt(creatureFormCon), parseInt(creatureFormInt), parseInt(creatureFormWis), parseInt(creatureFormChar), creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, parseInt(creatureFormCr), parseInt(creatureFormXp), proficiencies, senses, abilities, actions, legActions);
-    addCreature({id: (customCreatures[customCreatures.length - 1].ID) + 1, creature: newCreature});
+    const newCreature = new CreatureFormData(indexConverter(creatureFormName), 'https://www.dandwiki.com/w/images/3/37/BreadSpawn.jpg', creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, parseInt(creatureFormAc), parseInt(creatureFormHitPoints), creatureFormHitDice, parseInt(creatureFormStr), parseInt(creatureFormDex), parseInt(creatureFormCon), parseInt(creatureFormInt), parseInt(creatureFormWis), parseInt(creatureFormChar), creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, parseInt(creatureFormCr), parseInt(creatureFormXp), creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb, proficiencies, senses, abilities, actions, legActions);
+    addCreature(newCreature);
 }
 
 // Holds creature form data
@@ -427,7 +507,7 @@ class CreatureFormData {
     fly;
     climb;
 
-    constructor(index, image, name, size, type, alignment, ac, hp, hitDice, str, dex, con, int, wis, char, vul, res, dmgImmune, conImmune, languages, cr, xp, speeds, proficiencies, senses, abilities, actions, legActions, walk, swim, burrow, fly, climb) {
+    constructor(index, image, name, size, type, alignment, ac, hp, hitDice, str, dex, con, int, wis, char, vul, res, dmgImmune, conImmune, languages, cr, xp, walk, swim, burrow, fly, climb, proficiencies, senses, abilities, actions, legActions) {
         this.index = index;
         this.image = image;        
         this.name = name;
@@ -450,7 +530,11 @@ class CreatureFormData {
         this.languages = languages;
         this.cr = cr;
         this.xp = xp;
-        this.speeds = speeds;
+        this.walk = walk;
+        this.swim = swim;
+        this.fly = fly;
+        this.burrow = burrow;
+        this.climb = climb;
         this.proficiencies = proficiencies;
         this.senses = senses;
         this.abilities = abilities;

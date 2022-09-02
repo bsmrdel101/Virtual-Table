@@ -32,9 +32,6 @@ document.addEventListener('keydown', (e) => {
             case e.which === 51:
                 client.clientType === 'dm' ? toggleMapMenu('maps') : console.log('nothing');
                 break;
-            case e.key === 'Escape':
-                closeAllWindows();
-                break;
             default:
                 break;
         }
