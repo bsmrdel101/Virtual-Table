@@ -9,35 +9,38 @@ let creatureFormName, creatureFormSize = "medium", creatureFormType, creatureFor
 function toggleCreaturesWindow() {
     creaturesOpen = !creaturesOpen;
     if (creaturesOpen) {
-        const window = document.querySelector('body').appendChild(document.createElement('div'));
-        window.classList.add('creatures-window');
-        window.insertAdjacentHTML('beforeend', `
-            <div class="creatures-content">
-                <div class="creatures-window__header">
-                    <h2>Creatures</h2>
-                </div>
-                <div class="creature-window__filters">
-                    <label>
-                        <select onchange="filterCreaturesList(event.target.value)">
-                            <option value="all">All creatures</option>
-                            <option value="standard">Standard</option>
-                            <option value="custom">Custom</option>
-                        </select>
-                    </label>
-                    <label>
-                        <input placeholder="search" onchange="searchCreaturesList(event.target.value)">
-                    </label>
-                    <button class="btn--hover" onclick="toggleNewCreatureForm()">New Creature</button>
-                </div>
-                <div class="creatures-window__body"></div>
-            </div>
-        `);
-        
-        dragElement(window, 'creatures-window');
+        renderCreatureWindow();
         getCreaturesBodyData();
     } else {
         document.querySelector('.creatures-window').remove();
     }
+}
+
+function renderCreatureWindow() {
+    const window = document.querySelector('body').appendChild(document.createElement('div'));
+    window.classList.add('creatures-window');
+    window.insertAdjacentHTML('beforeend', `
+        <div class="creatures-content">
+            <div class="creatures-window__header">
+                <h2>Creatures</h2>
+            </div>
+            <div class="creature-window__filters">
+                <label>
+                    <select id="creature-list-filter" onchange="filterCreaturesList(event.target.value)">
+                        <option value="all">All creatures</option>
+                        <option value="standard">Standard</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </label>
+                <label>
+                    <input placeholder="search" onchange="searchCreaturesList(event.target.value)">
+                </label>
+                <button class="btn--hover" onclick="toggleNewCreatureForm()">New Creature</button>
+            </div>
+            <div class="creatures-window__body"></div>
+        </div>
+    `);
+    dragElement(window, 'creatures-window');
 }
 
 function filterCreaturesList(value) {
@@ -60,68 +63,75 @@ function filterCreaturesList(value) {
 async function searchCreaturesList(value) {
     document.querySelector('.creatures-window__body').innerHTML = '';
     await getCustomCreatures();
+    const selectedFilter = document.getElementById('creature-list-filter').value;
 
-    creatures.forEach((creature) => {
-        if (creature.name.toLowerCase().includes(value.toLowerCase())) {
-            document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
-                <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
-                    <p>${creature.name}</p>
-                </div>
-            `);
-        }
-    });
-    customCreatures.forEach((creature) => {
-        if (creature.name.toLowerCase().includes(value.toLowerCase())) {
-            document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
-                <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
-                    <p>${creature.name}</p>
-                </div>
-            `);
-        }
-    });
+    // Filter all standard creatures
+    if (selectedFilter === 'all' || selectedFilter === 'standard') {
+        creatures.forEach((creature) => {
+            if (creature.name.toLowerCase().includes(value.toLowerCase())) {
+                renderStandardCreatureRow(creature);
+            }
+        });
+    }
+    // Filter all custom creatures
+    if (selectedFilter === 'all' || selectedFilter === 'custom') {
+        customCreatures.forEach((creature) => {
+            if (creature.name.toLowerCase().includes(value.toLowerCase())) {
+                renderCustomCreatureRow(creature);
+            }
+        });
+    }
 }
 
 async function getCreaturesBodyData() {
     await getCustomCreatures();
     for (let creature of customCreatures) {
-        document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
-            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
-                <p>${creature.name}</p>
-            </div>
-        `); 
+        renderCustomCreatureRow(creature);
     }
     for (let creature of creatures) {
-        document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
-            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
-                <p>${creature.name}</p> <i class="fa-solid fa-trash-can" onclick="deleteCreature('${creature.index}')"></i>
-            </div>
-        `);
+        renderStandardCreatureRow(creature);
     }
 }
 
 async function getStandardCreaturesData() {
     for (let creature of creatures) {
-        document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
-            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
-                <p>${creature.name}</p>
-            </div>
-        `);
+        renderStandardCreatureRow(creature);
     }
 }
 
 async function getCustomCreaturesData() {
     await getCustomCreatures();
     for (let creature of customCreatures) {
-        document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
-            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
-                <p>${creature.name}</p> <i class="fa-solid fa-trash-can" onclick="deleteCreature('${creature.index}')"></i>
-            </div>
-        `);
+        renderCustomCreatureRow(creature);
     }
+}
+
+// Displays a standard creature on the creatures list.
+function renderStandardCreatureRow(creature) {
+    document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
+        <div class="creatures-window__standard-creature">
+            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
+                <p>${creature.name}</p>
+            </div>
+        </div>
+    `);
+}
+
+// Displays a custom creature on the creatures list.
+function renderCustomCreatureRow(creature) {
+    document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
+        <div class="creatures-window__custom-creature">
+            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
+                <p>${creature.name}</p>
+            </div>
+            <i class="fa-solid fa-trash-can" onclick="deleteCreature('${creature.index}')"></i>
+        </div>
+    `);
 }
 
 const creatureFormBody = `
 <div class="creatures-content">
+    <button class="btn--window-close" onclick="toggleNewCreatureForm()">X</button>
     <div class="creatures-window-form__header">
         <h2>New Creature</h2>
     </div>
@@ -165,11 +175,23 @@ const creatureFormBody = `
                     <label>Movement
                         <div class="flex-container">
                             <p>Walk</p>
-                            <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value" required>
+                            <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value" onchange="creatureFormWalk = event.target.value">
                         </div>
                         <div class="flex-container">
                             <p>Swim</p>
-                            <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value">
+                            <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value" onchange="creatureFormSwim = event.target.value">
+                        </div>
+                        <div class="flex-container">
+                            <p>Burrow</p>
+                            <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value" onchange="creatureFormBurrow = event.target.value">
+                        </div>
+                        <div class="flex-container">
+                            <p>Fly</p>
+                            <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value" onchange="creatureFormFly = event.target.value">
+                        </div>
+                        <div class="flex-container">
+                            <p>Climb</p>
+                            <input placeholder="30" type="number" class="input--sm creature-inputs__speed-value" onchange="creatureFormClimb = event.target.value">
                         </div>
                     </label>
                 </div>
@@ -177,22 +199,22 @@ const creatureFormBody = `
         </div>
         <div class="creatures-window-form__body--box">
             <label>Str
-                <input class="input--sm" type="number" onchange="creatureFormStr = event.target.value">
+                <input class="input--sm" type="number" onchange="creatureFormStr = event.target.value" placeholder="10">
             </label>
             <label>Dex
-                <input class="input--sm" type="number" onchange="creatureFormDex = event.target.value">
+                <input class="input--sm" type="number" onchange="creatureFormDex = event.target.value" placeholder="10">
             </label>
             <label>Con
-                <input class="input--sm" type="number" onchange="creatureFormCon = event.target.value">
+                <input class="input--sm" type="number" onchange="creatureFormCon = event.target.value" placeholder="10">
             </label>
             <label>Int
-                <input class="input--sm" type="number" onchange="creatureFormInt = event.target.value">
+                <input class="input--sm" type="number" onchange="creatureFormInt = event.target.value" placeholder="10">
             </label>
             <label>Wis
-                <input class="input--sm" type="number" onchange="creatureFormWis = event.target.value">
+                <input class="input--sm" type="number" onchange="creatureFormWis = event.target.value" placeholder="10">
             </label>
             <label>Char
-                <input class="input--sm" type="number" onchange="creatureFormChar = event.target.value">
+                <input class="input--sm" type="number" onchange="creatureFormChar = event.target.value" placeholder="10">
             </label>
         </div>
         <div class="creatures-window-form__body--box">
@@ -377,7 +399,14 @@ async function submitCreatureForm(e) {
         }
     }
 
-    const newCreature = new CreatureFormData(indexConverter(creatureFormName), 'https://www.dandwiki.com/w/images/3/37/BreadSpawn.jpg', creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, parseInt(creatureFormAc), parseInt(creatureFormHitPoints), creatureFormHitDice, parseInt(creatureFormStr), parseInt(creatureFormDex), parseInt(creatureFormCon), parseInt(creatureFormInt), parseInt(creatureFormWis), parseInt(creatureFormChar), creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, parseInt(creatureFormCr), parseInt(creatureFormXp), creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb, proficiencies, senses, abilities, actions, legActions);
+    toggleNewCreatureForm();
+    toggleNewCreatureForm();
+    if (creaturesOpen) {
+        toggleCreaturesWindow();
+        setTimeout(function() { toggleCreaturesWindow(); }, 100);
+    }
+
+    const newCreature = new CreatureFormData(indexConverter(creatureFormName), 'https://www.dandwiki.com/w/images/3/37/BreadSpawn.jpg', creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, parseInt(creatureFormAc), parseInt(creatureFormHitPoints), creatureFormHitDice, parseInt(creatureFormStr), parseInt(creatureFormDex), parseInt(creatureFormCon), parseInt(creatureFormInt), parseInt(creatureFormWis), parseInt(creatureFormChar), creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, parseInt(creatureFormCr), parseInt(creatureFormXp), parseInt(creatureFormWalk), parseInt(creatureFormSwim), parseInt(creatureFormBurrow), parseInt(creatureFormFly), parseInt(creatureFormClimb), proficiencies, senses, abilities, actions, legActions);
     addCreature(newCreature);
 }
 
@@ -424,15 +453,15 @@ class CreatureFormData {
         this.size = size;
         this.type = type;
         this.alignment = alignment;
-        this.ac = ac;
-        this.hp = hp;
+        ac || ac === 0 ? this.ac = ac : this.ac = 0;
+        hp || hp === 0 ? this.hp = hp : this.hp = 0;
         this.hitDice = hitDice;
-        this.str = str;
-        this.dex = dex;
-        this.con = con;
-        this.int = int;
-        this.wis = wis;
-        this.char = char;
+        str || str === 0 ? this.str = str : this.str = 10;
+        dex || dex === 0 ? this.dex = dex : this.dex = 10;
+        con || con === 0 ? this.con = con : this.con = 10;
+        int || int === 0 ? this.int = int : this.int = 10;
+        wis || wis === 0 ? this.wis = wis : this.wis = 10;
+        char || char === 0 ? this.char = char : this.char = 10;
         this.vul = vul;
         this.res = res;
         this.dmgImmune = dmgImmune;
@@ -452,3 +481,7 @@ class CreatureFormData {
         this.legActions = legActions;
     }
 }
+
+if (typeof module !== 'undefined') module.exports = {
+    
+};

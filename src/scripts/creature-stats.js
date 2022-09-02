@@ -22,7 +22,7 @@ const creatureStatsWindow = (creature) => `
         <button class="btn--window-close" onclick="removeCreatureStatsWindow('${creature.index}')">X</button>
         <div class="creature-stats-window__header creature-stats-window--${creature.index}__header">
             <h3>${creature.name}</h3>
-            <p>${creature.size ? `${creature.size} ` : ''}${creature.type ? creature.type : ''}, ${creature.alignment ? creature.alignment: ''}</p>
+            <p>${creature.size ? `${creature.size}` : ''}${creature.type ? ` ${creature.type}` : ''}${creature.alignment ? `, ${creature.alignment}`: ''}</p>
         </div>
         <div class="creature-stats-window__body">
             <p><span class="bold">Armor Class</span> ${creature.ac}</p>
@@ -35,7 +35,7 @@ const creatureStatsWindow = (creature) => `
             <div class="creature-stats-window__vul-res" id="vul-res--${creature.index}"></div>
             <div class="creature-stats-window__senses" id="senses--${creature.index}"></div>
             <div class="creature-stats-window__languages">
-                ${creature.languages.length > 0 ? `<p><span class="bold">Languages</span> ${creature.languages}</p>` : ``}
+                ${creature.languages ? `<p><span class="bold">Languages</span> ${creature.languages}</p>` : ``}
             </div>
             <div class="creature-stats-window__body">
                 <p><span class="bold">Challenge</span> ${creature.cr ? creature.cr : '-'} (${creature.xp ? creature.xp : 0} XP)</p>
@@ -79,11 +79,14 @@ function renderCreatureStatsWindow(creature) {
 
 function getCreatureSpeedData(creature) {
     let speeds = [];
+    let exists = false;
     creature.speeds.forEach((speed) => {
         if (speed.value) {
+            exists = true;
             speeds.push(speed);
         }
     });
+    if (!exists) return;
 
     const text = document.getElementById(`speed--${creature.index}`).appendChild(document.createElement('p'));
     text.insertAdjacentHTML('beforeend', `<span class="bold">Speed </span>`);
@@ -126,7 +129,7 @@ function getCreatureProficiencyData(creature) {
     let string = '';
 
     creature.proficiencies.forEach((proficiency) => {
-        const modifiedProf = separateProf(proficiency.name + proficiency.value, proficiency.value);
+        const modifiedProf = separateProf(proficiency.name + proficiency.value, proficiency.value, proficiency.name);
         if (proficiency.name.includes('Saving')) {
             string += ` ${modifiedProf} +${proficiency.value},`;
         } else {
@@ -205,6 +208,7 @@ function getCreatureVulResData(creature) {
 }
 
 function getCreatureSensesData(creature) {
+    if (creature.senses.length === 0) return;
     const text = document.getElementById(`senses--${creature.index}`).appendChild(document.createElement('p'));
     text.insertAdjacentHTML('beforeend',`<span class="bold">Senses </span>`);
     let string = '';
@@ -325,17 +329,18 @@ function separateDmgRoll(dmg) {
 }
 
 // Separates the string for skills/saving throws and splits them into their name and value 
-function separateProf(string, value) {
+function separateProf(string, value, name) {
     const save = string.split('Saving Throw: ');
     const skill = string.split('Skill: ');
     
     if (save[0] === '') {
         const name = save[1].split(value);
         return name[0].toString();
-    } else {
+    } else if (skill[0] === '') {
         const name = skill[1].split(value);
         return name[0].toString();
-    }
+    } 
+    return name;
 }
 
 
