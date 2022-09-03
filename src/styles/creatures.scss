@@ -54,6 +54,10 @@
     }
 }
 
+.creatures-window-form {
+    right: 27rem;
+}
+
 .creature-scores__box {
     background-color: var(--menu-color-1);
     padding: 0 0.8rem 0.8rem;
@@ -124,11 +128,13 @@
     }
 }
 
-.creatures-window__item {
+.creatures-window__standard-creature,
+.creatures-window__custom-creature {
     background-color: var(--menu-color-1);
     padding: 0.3rem;
     cursor: pointer;
     transition: all ease-in-out 100ms;
+    width: 90%;
 
     &:nth-child(even) {
         background-color: var(--menu-color-2);
@@ -146,23 +152,36 @@
     margin-top: 0.3rem;
 }
 
-.creatures-window__body {
-    &--general-stats {
-        @include red-border(3px);
+.creatures-window {
+    &__body {
+        &--general-stats {
+            @include red-border(3px);
+        }
+    
+        &--other-stats {
+            @include red-border(3px);
+        }
+    
+        &--actions h4 {
+            @include red-border(1px);
+            font-size: 20px;
+            font-weight: 300;
+            color: var(--color-red-2);
+            padding-bottom: 1px;
+            margin-bottom: 0.8rem;
+        }
     }
 
-    &--other-stats {
-        @include red-border(3px);
+    &__custom-creature {
+        position: relative;
     }
+}
 
-    &--actions h4 {
-        @include red-border(1px);
-        font-size: 20px;
-        font-weight: 300;
-        color: var(--color-red-2);
-        padding-bottom: 1px;
-        margin-bottom: 0.8rem;
-    }
+.fa-trash-can {
+    position: absolute;
+    right: -1.55rem;
+    top: 0.55rem;
+    cursor: pointer;
 }
 
 .actions {

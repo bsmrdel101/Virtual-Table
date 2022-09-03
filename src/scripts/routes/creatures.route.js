@@ -208,6 +208,54 @@ function modifyResponseCreature(res) {
 
 // Separate different parts of the response into arrays
 function separateCreatureResponse(res) {
+    let { proficiencies, vulnerabilities, resistances, damageImmunities, conditionImmunities, senses, abilities, actions, legActions } = getInitialCreatureArrays(res);
+    
+    proficiencies = removeExtraCustomData(proficiencies, true);
+    vulnerabilities = removeExtraCustomData(vulnerabilities);
+    resistances = removeExtraCustomData(resistances);
+    damageImmunities = removeExtraCustomData(damageImmunities);
+    conditionImmunities = removeExtraCustomData(conditionImmunities);
+    senses = removeExtraCustomData(senses, true);
+    abilities = removeExtraCustomData(abilities, true);
+    actions = removeExtraCustomData(actions, true);
+    legActions = removeExtraCustomData(legActions, true);
+
+    // Get ability rolls
+    let modifiedAbilities = [];
+    abilities.forEach((ability) => {
+        if (ability.name && ability.desc) {
+            const abilityData = getActionDesc(ability.desc);
+            modifiedAbilities.push({name: ability.name, desc: abilityData.desc, damage: [separateDmgRoll(abilityData.rolls.toString())]});
+        }
+    });
+    abilities = modifiedAbilities;
+
+    // Get action rolls
+    let modifiedActions = [];
+    actions.forEach((action) => {
+        if (action.name && action.desc) {
+            const actionData = getActionDesc(action.desc);
+            modifiedActions.push({name: action.name, desc: actionData.desc, attack_bonus: actionData.toHit, damage: [separateDmgRoll(actionData.rolls.toString())]});
+        }
+    });
+    actions = modifiedActions;
+
+    // Get legendary action rolls
+    let modifiedLegActions = [];
+    legActions.forEach((action) => {
+        if (action.name && action.desc) {
+            const legActionData = getActionDesc(action.desc);
+            modifiedLegActions.push({name: action.name, desc: legActionData.desc, attack_bonus: legActionData.toHit, damage: [separateDmgRoll(legActionData.rolls.toString())]});
+        }
+    });
+    legActions = modifiedLegActions;
+
+    const {_proficiencies, _resistances, _vulnerabilities, _senses} = emptyNullArrays(proficiencies, resistances, vulnerabilities, senses);
+    return {proficiencies: _proficiencies, vulnerabilities: _vulnerabilities, resistances: _resistances, damageImmunities: damageImmunities, conditionImmunities: conditionImmunities, senses: _senses, abilities: abilities, actions: actions, legActions: legActions};
+}
+
+// Pushes all creatures data into their respective arrays and returns them.
+function getInitialCreatureArrays(res) {
     let proficiencies = [];
     let vulnerabilities = [];
     let resistances = [];
@@ -233,42 +281,40 @@ function separateCreatureResponse(res) {
             conditionImmunities.push(stat.immune_name);
         }
     }
-    
-    proficiencies = removeExtraCustomData(proficiencies, true);
-    vulnerabilities = removeExtraCustomData(vulnerabilities);
-    resistances = removeExtraCustomData(resistances);
-    damageImmunities = removeExtraCustomData(damageImmunities);
-    conditionImmunities = removeExtraCustomData(conditionImmunities);
-    senses = removeExtraCustomData(senses, true);
-    abilities = removeExtraCustomData(abilities, true);
-    actions = removeExtraCustomData(actions, true);
-    legActions = removeExtraCustomData(legActions, true);
-
-    // Get ability rolls
-    let modifiedAbilities = [];
-    abilities.forEach((ability) => {
-        const abilityData = getActionDesc(ability.desc);
-        modifiedAbilities.push({name: ability.name, desc: abilityData.desc, damage: [separateDmgRoll(abilityData.rolls.toString())]});
-    });
-    abilities = modifiedAbilities;
-
-    // Get action rolls
-    let modifiedActions = [];
-    actions.forEach((action) => {
-        const actionData = getActionDesc(action.desc);
-        modifiedActions.push({name: action.name, desc: actionData.desc, attack_bonus: actionData.toHit, damage: [separateDmgRoll(actionData.rolls.toString())]});
-    });
-    actions = modifiedActions;
-
-    // Get legendary action rolls
-    let modifiedLegActions = [];
-    legActions.forEach((action) => {
-        const legActionData = getActionDesc(action.desc);
-        modifiedLegActions.push({name: action.name, desc: legActionData.desc, attack_bonus: legActionData.toHit, damage: [separateDmgRoll(legActionData.rolls.toString())]});
-    });
-    legActions = modifiedLegActions;
-
     return {proficiencies: proficiencies, vulnerabilities: vulnerabilities, resistances: resistances, damageImmunities: damageImmunities, conditionImmunities: conditionImmunities, senses: senses, abilities: abilities, actions: actions, legActions: legActions};
+}
+
+// Make sure arrays that have no values are empty, and don't have null values in it.
+function emptyNullArrays(proficiencies, resistances, vulnerabilities, senses) {
+    if (proficiencies.length > 0) {
+        let exists = false;
+        proficiencies.forEach((prof) => {
+            if (prof.name && prof.value) exists = true;
+        });
+        if (!exists) proficiencies = [];
+    }
+    if (resistances.length > 0) {
+        let exists = false;
+        resistances.forEach((resistance) => {
+            if (resistance) exists = true;
+        });
+        if (!exists) resistances = [];
+    }
+    if (vulnerabilities.length > 0) {
+        let exists = false;
+        vulnerabilities.forEach((vul) => {
+            if (vul) exists = true;
+        });
+        if (!exists) vulnerabilities = [];
+    }
+    if (senses.length > 0) {
+        let exists = false;
+        senses.forEach((sense) => {
+            if (sense.name && sense.value) exists = true;
+        });
+        if (!exists) senses = [];
+    }
+    return {_proficiencies: proficiencies, _resistances: resistances, _vulnerabilities: vulnerabilities, _senses: senses};
 }
 
 // Remove duplicate data from the database
@@ -317,6 +363,8 @@ async function addCreature(payload) {
         for (let prof of payload.proficiencies) {
             await axios.post('/api/creatures/prof', {id: creatureId, data: {name: prof.name, value: prof.value}});
         }
+        if (payload.proficiencies.length === 0) await axios.post('/api/creatures/prof', {id: creatureId, data: {name: null, value: null}});
+
         await axios.post('/api/creatures/vul', {id: creatureId, data: {name: payload.vul}});
         await axios.post('/api/creatures/res', {id: creatureId, data: {name: payload.res}});
         await axios.post('/api/creatures/immunities', {id: creatureId, data: {dmgImmune: true, name: payload.dmgImmune}});
@@ -324,16 +372,24 @@ async function addCreature(payload) {
         for (let sense of payload.senses) {
             await axios.post('/api/creatures/senses', {id: creatureId, data: {name: sense.name, value: sense.value}});
         }
+        if (payload.senses.length === 0) await axios.post('/api/creatures/senses', {id: creatureId, data: {name: null, value: null}});
+
         await axios.post('/api/creatures/languages', {id: creatureId, data: {name: payload.languages}});
         for (let ability of payload.abilities) {
             await axios.post('/api/creatures/abilities', {id: creatureId, data: {name: ability.name, desc: ability.desc}});
         }
+        if (payload.abilities.length === 0) await axios.post('/api/creatures/abilities', {id: creatureId, data: {name: null, desc: null}});
+
         for (let action of payload.actions) {
             await axios.post('/api/creatures/actions', {id: creatureId, data: {name: action.name, desc: action.desc}});
         }
+        if (payload.actions.length === 0) await axios.post('/api/creatures/actions', {id: creatureId, data: {name: null, desc: null}});
+
         for (let action of payload.legActions) {
             await axios.post('/api/creatures/leg-actions', {id: creatureId, data: {name: action.name, desc: action.desc}});
         }
+        if (payload.legActions.length === 0) await axios.post('/api/creatures/leg-actions', {id: creatureId, data: {name: null, desc: null}});
+
     } catch (err) {
         console.log(err);
     }
@@ -409,6 +465,21 @@ class Creature {
     }
 }
 
+// === DELETE routes === //
+
+async function deleteCreature(index) {
+    try {
+        await axios.delete(`/api/creatures/${index}`);
+        if (creaturesOpen) {
+            toggleCreaturesWindow();
+            toggleCreaturesWindow();
+        }
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+
 if (typeof module !== 'undefined') module.exports = {
     removeExtraCustomData,
     getCreatureProficiencies,
@@ -418,13 +489,3 @@ if (typeof module !== 'undefined') module.exports = {
     getCreatureActions,
     getCreatureLegendaryActions
 };
-
-// === DELETE routes === //
-
-async function deleteCreature(index) {
-    try {
-        await axios.delete(`/api/creatures/${index}`);
-    } catch (err) {
-        console.log(err);
-    }
-}
