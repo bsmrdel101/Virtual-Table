@@ -1,9 +1,9 @@
-let gamesList = [];
-let gameFormOpen = false;
-let gameNameInput;
-let client;
-let room;
-let prevGame;
+let gamesList: any = [];
+let gameFormOpen: boolean = false;
+let gameNameInput: string;
+export let client: any;
+export let room: any;
+let prevGame: any;
 
 document.addEventListener('DOMContentLoaded', async () => {
     getGames();

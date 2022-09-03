@@ -1,15 +1,24 @@
-let x = 0; 
-let y = 0;
-let root = document.documentElement;
-let zoomMin = 0.5;
-let zoomMax = 10;
-let user;
-let playerList = [];
-let cells = [];
-let currentMap;
-let playersListOpen = false;
-let cellToDelete;
-let canPlace = true;
+import { giveTokenEvents } from './token';
+import { clamp, findCell } from './utils';
+import { room } from './dashboard';
+import { addDefaultTokens, resetTokenBodyData } from './menus/token.menu';
+import { addDefaultMaps } from './menus/map.menu';
+import { changeNewUser, getUser } from './routes/users.route';
+import { toggleCharacterMenu } from './menus/character.menu';
+import { client } from './dashboard';
+import { openCreatureStatsWindow } from './creature-stats';
+import { Token } from '../classes/token.class';
+
+let canOpenStats: boolean = true;
+let x: number = 0, y: number = 0;
+let root: any = document.documentElement;
+let user: any;
+let playerList: any = [];
+export let cells: any = [];
+let currentMap: any;
+let playersListOpen: boolean = false;
+let cellToDelete: any;
+let canPlace: boolean = true;
 
 async function gamePageLoaded() {
     user = await fetchUser();
@@ -31,7 +40,9 @@ async function gamePageLoaded() {
     }
 }
 
-function setupGrid(width, height, clear) {
+function setupGrid(width: number, height: number, clear: boolean) {
+    let hasEvents: boolean = false;
+
     document.getElementById('grid').addEventListener("contextmenu", e => e.preventDefault());
     clear && clearMap();
 
@@ -45,8 +56,8 @@ function setupGrid(width, height, clear) {
             newCell.classList.add('grid__cell');
             if (x > width - 1) x = 0;
 
-            newCell.setAttribute('x', x);
-            newCell.setAttribute('y', y);
+            newCell.setAttribute('x', x.toString());
+            newCell.setAttribute('y', y.toString());
             x++;
 
             // Fires when element is dragged over this grid cell
@@ -71,7 +82,7 @@ function setupGrid(width, height, clear) {
                 }
             });
             newCell.addEventListener("dragend", () => {
-                const token = newCell.firstChild;
+                const token: Element = newCell.firstElementChild;
                 if (token) {
                     let size = token.getAttribute('size');
                     let image = token.getAttribute('src');
@@ -85,7 +96,7 @@ function setupGrid(width, height, clear) {
                         if (relative === 'null' || client.clientType === 'player') return;
 
                         if (canOpenStats) {
-                            openCreatureStatsWindow(relative)
+                            openCreatureStatsWindow(relative);
                             canOpenStats = false;
                         } else {
                             setTimeout(function() { canOpenStats = true; }, 100);
@@ -111,7 +122,7 @@ function setupGrid(width, height, clear) {
 }
 
 // Places token on board
-function createToken(cell, newToken, username) {
+function createToken(cell: any, newToken: any, username: string) {
     if (canPlace) {
         const token = cell.appendChild(document.createElement('img'));
         token.setAttribute('src', newToken.image);
@@ -139,13 +150,15 @@ function createToken(cell, newToken, username) {
     }
 }
 
-function zoomIn() {
+export function zoomIn() {
+    let zoomMin: number = 0.5, zoomMax: number = 10;
     let rs = getComputedStyle(root);
     let zoomValue = parseInt(rs.getPropertyValue('--zoom'));
     root.style.setProperty('--zoom', `${clamp(zoomValue + 1, zoomMin, zoomMax)}rem`);
 }
 
-function zoomOut() {
+export function zoomOut() {
+    let zoomMin: number = 0.5, zoomMax: number = 10;
     let rs = getComputedStyle(root);
     let zoomValue = parseInt(rs.getPropertyValue('--zoom'));
     root.style.setProperty('--zoom', `${clamp(zoomValue - 1, zoomMin, zoomMax)}rem`);
@@ -180,7 +193,7 @@ async function fetchUser() {
     return user;
 }
 
-function setupSidebar(userType) {
+function setupSidebar(userType: string) {
     const sidebar = document.querySelector('.sidebar');
     if (userType === 'dm') {
         sidebar.insertAdjacentHTML('beforeend', `
@@ -209,12 +222,12 @@ socket.on('UPDATE_PLAYER_LIST', ((clientList) => {
     togglePlayerList();
 }));
 
-socket.on('PLACE_TOKEN', ((cell, token, username) => {
+socket.on('PLACE_TOKEN', ((cell: any, token: Element, username: string) => {
     const newCell = findCell(cell.x, cell.y);
     createToken(newCell, token, username);
 }));
 
-socket.on('REMOVE_TOKEN', ((cell) => {
+socket.on('REMOVE_TOKEN', ((cell: any) => {
     const newCell = findCell(cell.x, cell.y);
     newCell.innerHTML = '';
 }));

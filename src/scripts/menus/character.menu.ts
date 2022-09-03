@@ -1,7 +1,7 @@
 let characters = [];
 let character;
 
-function toggleCharacterMenu(menuName) {
+export function toggleCharacterMenu(menuName) {
     menuOpen = !menuOpen;
     if (menuOpen) {
         selectedMenu = 'characters';

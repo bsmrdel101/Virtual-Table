@@ -1,6 +1,6 @@
 let creatureIndexList = [];
 
-async function openCreatureStatsWindow(index, custom) {
+export async function openCreatureStatsWindow(index, custom) {
     // Check if a creature's stats are already open
     // If they are open the close the window instead
     for (let listItem of creatureIndexList) {

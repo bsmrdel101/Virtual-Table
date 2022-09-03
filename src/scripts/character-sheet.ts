@@ -8,7 +8,7 @@ let intMod;
 let wisMod;
 let charMod;
 
-function toggleCharacterSheet() {
+export function toggleCharacterSheet() {
     sheetOpen = !sheetOpen;
     if (sheetOpen) {
         let strMod = Math.floor((character.str - 10) / 2);

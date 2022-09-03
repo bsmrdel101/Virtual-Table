@@ -6,7 +6,7 @@ let creatureFormOpen;
 // Form data
 let creatureFormName, creatureFormSize = "medium", creatureFormType, creatureFormAlignment, creatureFormAc, creatureFormHitPoints, creatureFormHitDice, creatureFormStr, creatureFormDex, creatureFormCon, creatureFormInt, creatureFormWis, creatureFormChar, creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, creatureFormCr, creatureFormXp, creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb;
 
-function toggleCreaturesWindow() {
+export function toggleCreaturesWindow() {
     creaturesOpen = !creaturesOpen;
     if (creaturesOpen) {
         renderCreatureWindow();

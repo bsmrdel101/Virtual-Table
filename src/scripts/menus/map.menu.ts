@@ -4,13 +4,13 @@ let defaultMaps = [
 ];
 // 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwUhS4RzGYSNBN6rAgSzwcdpzoUkYYIg_Cvg&usqp=CAU'
 
-function addDefaultMaps() {
+export function addDefaultMaps() {
     for (let map of defaultMaps) {
         addMap(map);
     }
 }
 
-function toggleMapMenu(menuName) {
+export function toggleMapMenu(menuName) {
     menuOpen = !menuOpen;
     if (menuOpen) {
         selectedMenu = 'maps';

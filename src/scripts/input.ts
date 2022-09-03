@@ -1,13 +1,22 @@
+import { zoomIn, zoomOut } from './grid';
+import { client } from './dashboard';
+import { toggleTokenMenu } from './menus/token.menu';
+import { toggleMapMenu } from './menus/map.menu';
+import { toggleCharacterMenu } from './menus/character.menu';
+import { toggleCreaturesWindow } from './creatures';
+import { toggleCharacterSheet } from './character-sheet';
+
+
 let canScale = false;
-let targetPosX, targetPosY;
+let targetPosX: number, targetPosY: number;
 let dragging = false;
-let canUseHotkey = true; 
+export let canUseHotkey = {value: true};
 
 // === EVENT HANDLERS === //
 
 // Fires when user presses key
 document.addEventListener('keydown', (e) => {
-    if (canUseHotkey) {
+    if (canUseHotkey.value) {
         switch (true) {
             case e.key === 'Meta' || e.key === 'Control':
                 canScale = true;
@@ -77,8 +86,8 @@ document.addEventListener('mouseup', (e) => {
 
 // Fires when user moves mouse
 document.addEventListener('mousemove', (e) => {
-    mousePosX = e.x;
-    mousePosY = e.y;
+    const mousePosX = e.x;
+    const mousePosY = e.y;
     if (dragging) {
         document.querySelector('.grid-container').scrollBy((targetPosX - mousePosX) / 25, (targetPosY - mousePosY) / 25);
         document.querySelector('.game-page-container').classList.add('panning');

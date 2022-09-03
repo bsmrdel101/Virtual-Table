@@ -1,11 +1,17 @@
-let menuOpen = false;
-let selectedMenu;
+import { cells } from './grid';
+import { toggleTokenMenu } from './menus/token.menu';
+import { toggleMapMenu } from './menus/map.menu';
+import { toggleCharacterMenu } from './menus/character.menu';
+import { canUseHotkey } from './input';
+
+let menuOpen: boolean = false;
+export let selectedMenu: string;
 
 // Clamp number between two values
-const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
+export const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
 
 // Will find and return a cell with the parameters given
-function findCell(x, y) {
+export function findCell(x: number, y: number) {
     for (const cell of cells) {
         if (cell.getAttribute('x') === x.toString() && cell.getAttribute('y') === y.toString()) {
             return cell;
@@ -13,8 +19,8 @@ function findCell(x, y) {
     }
 }
 
-function closeMenu(menuName) {
-    if (selectedMenu == menuName) {
+export function closeMenu(menuName: string) {
+    if (selectedMenu === menuName) {
         // Close menu
         document.querySelector('.menu').remove();
         menuOpen = false;
@@ -25,35 +31,35 @@ function closeMenu(menuName) {
 
         switch (menuName) {
             case 'tokens':
-                toggleTokenMenu();
+                toggleTokenMenu('');
                 break;
             case 'maps':
-                toggleMapMenu();
+                toggleMapMenu('');
                 break;
             case 'characters':
-                toggleCharacterMenu();
+                toggleCharacterMenu('');
             default:
                 break;
         }
     }
 }
 
-function changeRoute(route) {
+export function changeRoute(route: string) {
     const wl = window.location;
     window.location.replace(`${wl.protocol}//${wl.host}/${route}`);
 }
 
-function dragElement(elmnt, headerName) {
+export function dragElement(elmnt: any, headerName: string) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     if (document.querySelector(`.${headerName}__header`)) {
       // if present, the header is where you move the DIV from:
-      document.querySelector(`.${headerName}__header`).onmousedown = dragMouseDown;
+      document.querySelector(`.${headerName}__header`).addEventListener("onmousedown", dragMouseDown);
     } else {
       // otherwise, move the DIV from anywhere inside the DIV:
       elmnt.onmousedown = dragMouseDown;
     }
   
-    function dragMouseDown(e) {
+    function dragMouseDown(e: any) {
       e = e || window.event;
       e.preventDefault();
       // get the mouse cursor position at startup:
@@ -64,7 +70,7 @@ function dragElement(elmnt, headerName) {
       document.onmousemove = elementDrag;
     }
   
-    function elementDrag(e) {
+    function elementDrag(e: any) {
       e = e || window.event;
       e.preventDefault();
       // calculate the new cursor position:
@@ -85,18 +91,18 @@ function dragElement(elmnt, headerName) {
 }
 
 // Would turn "Creature Name" into "creature-name"
-function indexConverter(text) {
+export function indexConverter(text: string) {
     return text.replace(/\s+/g, '-').toLowerCase();
 }
 
-function disableHotkeys() {
+export function disableHotkeys() {
     // Detects when input is focused and disabled hotkeys
     for (let input of document.querySelectorAll('input')) {
-        input.addEventListener('focusin', () => { canUseHotkey = false; });
-        input.addEventListener('focusout', () => { canUseHotkey = true; });
+        input.addEventListener('focusin', () => { canUseHotkey.value = false; });
+        input.addEventListener('focusout', () => { canUseHotkey.value = true; });
     }
 }
 
-if (typeof module !== 'undefined') module.exports = {
-    indexConverter
-};
+// if (typeof module !== 'undefined') module.exports = {
+//     indexConverter
+// };

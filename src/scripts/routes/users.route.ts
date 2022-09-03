@@ -1,6 +1,6 @@
 // === GET routes === //
 
-async function getUser() {
+export async function getUser() {
     try {
         const config = {
             headers: { 'Content-Type': 'application/json' },
@@ -46,7 +46,7 @@ async function logout() {
 
 // === PUT routes === //
 
-async function changeNewUser(payload) {
+export async function changeNewUser(payload) {
     try {
         await axios.put('/api/user', {newStatus: payload});
     } catch(err) {

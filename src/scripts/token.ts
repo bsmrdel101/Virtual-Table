@@ -1,20 +1,18 @@
-let tokenDeltaX, tokenDeltaY;
-let hasEvents = false;
-
+let tokenDeltaX: number, tokenDeltaY: number;
 
 // Add event listeners for the token
-function giveTokenEvents(token) {
+export function giveTokenEvents(token: any) {
     // Fires when user begins dragging
-    token.addEventListener("dragstart", (e) => {
+    token.addEventListener("dragstart", (e: any) => {
         e.target.classList.add('token--dragging');
     });
     // Fires when user stops dragging
-    token.addEventListener("dragend", (e) => {
+    token.addEventListener("dragend", (e: any) => {
         e.target.classList.remove('token--dragging');
         document.querySelector('.game-page-container').classList.remove('token--dragging-cursor');
     });
     // Fires when user clicks on token
-    token.addEventListener('mousedown',(e) => {
+    token.addEventListener('mousedown',(e: any) => {
         switch (e.which) {
             case 1:
                 document.querySelector('.game-page-container').classList.add('token--dragging-cursor');
@@ -27,7 +25,7 @@ function giveTokenEvents(token) {
         }
     });
     // Fires when user releases click on token
-    token.addEventListener('mouseup',(e) => {
+    token.addEventListener('mouseup',(e: any) => {
         switch (e.which) {
             case 1:
                 // selectToken(e.target);
@@ -61,7 +59,7 @@ function giveTokenEvents(token) {
 //     }
 // }
 
-function upscaleToken(token) {
+function upscaleToken(token: any) {
     if (token.classList.contains('token--tiny')) {
         token.classList.remove('token--tiny');
         token.classList.add('token--small');
@@ -80,7 +78,7 @@ function upscaleToken(token) {
     }
 }
 
-function descaleToken(token) {
+function descaleToken(token: any) {
     if (token.classList.contains('token--gargantuan')) {
         token.classList.remove('token--gargantuan');
         token.classList.add('token--huge');

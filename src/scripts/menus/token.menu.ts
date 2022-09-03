@@ -1,18 +1,18 @@
 let tokenSelected = false;
 let tokens = [];
-let defaultTokens = [
+const defaultTokens = [
     {image: 'https://i.pinimg.com/236x/88/4a/05/884a056ba7a5a004becacbfd1bfd78fe.jpg', size: 'token--medium'},
     {image: 'https://i.imgur.com/5cibmUw.png', size: 'token--large'},
     {image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlW_xekRD291YBhLdPKYifDnF2HV74Csz0KQ&usqp=CAU', size: 'token--gargantuan'},
 ];
 
-function addDefaultTokens() {
+export function addDefaultTokens() {
     for (let token of defaultTokens) {
         addToken(token);
     }
 }
 
-function toggleTokenMenu(menuName) {
+export function toggleTokenMenu(menuName: string) {
     if (client.clientType === 'dm') {
         menuOpen = !menuOpen;
         if (menuOpen) {
@@ -58,7 +58,7 @@ function placeToken(e, size) {
     token.classList.add(size);
 }
 
-function resetTokenBodyData() {
+export function resetTokenBodyData() {
     let deleteList = [];
     for (let token of document.getElementsByClassName('menu__item')) {
         deleteList.push(token);
