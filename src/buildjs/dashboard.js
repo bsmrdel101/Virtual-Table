@@ -1,74 +1,68 @@
-import { getGames, getPrevGame, addPrevGame } from "./routes/dashboard.route";
-import { getCreatures } from "./routes/creatures.route";
-import { gamePageLoaded } from "./grid";
-import { io, Socket } from "socket.io-client";
-
-const socket: Socket = io();
-export let gamesList: any = {value: []};
-let gameFormOpen: boolean = false;
-let gameNameInput: string;
-export let client: any;
-export let room: any;
-let prevGame: any;
-let roomCode: string;
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.setGamesList = exports.room = exports.client = exports.gamesList = void 0;
+const dashboard_route_1 = require("./routes/dashboard.route");
+const creatures_route_1 = require("./routes/creatures.route");
+const grid_1 = require("./grid");
+const socket_io_client_1 = require("socket.io-client");
+const socket = (0, socket_io_client_1.io)();
+exports.gamesList = { value: [] };
+let gameFormOpen = false;
+let gameNameInput;
+let prevGame;
+let roomCode;
 document.addEventListener('DOMContentLoaded', async () => {
-    getGames();
-    prevGame = await getPrevGame();
+    (0, dashboard_route_1.getGames)();
+    prevGame = await (0, dashboard_route_1.getPrevGame)();
     roomCode = prevGame.code;
-    (<HTMLInputElement>document.getElementById('room-code-input')).value = prevGame.code;
+    document.getElementById('room-code-input').value = prevGame.code;
     // Get D&D api data
-    getCreatures();
+    (0, creatures_route_1.getCreatures)();
 });
-
-function joinPlayer(roomCode: string, e: Event) {
+function joinPlayer(roomCode, e) {
     e.preventDefault();
-    room = roomCode;
-
+    exports.room = roomCode;
     socket.emit('JOIN_ROOM', 'player', roomCode, (roomExists, newClient) => {
         if (roomExists) {
-            client = newClient;
+            exports.client = newClient;
             gameScreen();
-            addPrevGame({game: roomCode});
+            (0, dashboard_route_1.addPrevGame)({ game: roomCode });
             socket.emit('FETCH_BOARD');
-        } else {
+        }
+        else {
             console.log('room doesn\'t exist');
         }
     });
 }
-
-function joinDM(roomCode: string) {
-    room = roomCode;
-    socket.emit('JOIN_ROOM', 'dm', roomCode, (roomExists: boolean, newClient: any) => {
+function joinDM(roomCode) {
+    exports.room = roomCode;
+    socket.emit('JOIN_ROOM', 'dm', roomCode, (roomExists, newClient) => {
         if (roomExists) {
-            client = newClient;
+            exports.client = newClient;
             gameScreen();
-        } else {
+        }
+        else {
             console.log('game already started');
         }
     });
 }
-
-export function setGamesList() {
+function setGamesList() {
     document.querySelector('.games-list__content').remove();
-
     const listContent = document.querySelector('.games-list').appendChild(document.createElement('div'));
     listContent.classList.add('games-list__content');
-
     const gamesListEl = document.querySelector('.games-list__content');
-    for (let game of gamesList.value) {
+    for (let game of exports.gamesList.value) {
         gamesListEl.insertAdjacentHTML('beforeend', `
             <div class="game-list__item" onclick="joinDM('${game.code}')">
                 <p>${game.name}</p>
             </div>
         `);
     }
-
     gamesListEl.insertAdjacentHTML('beforeend', `
         <button class="games-list__button btn--hover" onclick="addGameForm()">Create Campaign</button>
-    `);    
+    `);
 }
-
+exports.setGamesList = setGamesList;
 function addGameForm() {
     gameFormOpen = !gameFormOpen;
     if (gameFormOpen) {
@@ -78,11 +72,11 @@ function addGameForm() {
                 <button class="button--submit btn--hover">Submit</button>
             </form>
         `);
-    } else {
+    }
+    else {
         document.querySelector('.form--add-game').remove();
     }
 }
-
 function gameScreen() {
     document.querySelector('.dashboard-page-container').remove();
     document.querySelector('.page-container').insertAdjacentHTML('beforeend', `
@@ -93,7 +87,7 @@ function gameScreen() {
                     <button class="toolbar__btn" onclick="zoomIn()">+</button>
                     <button class="toolbar__btn" onclick="zoomOut()">-</button>
                     <button class="toolbar__btn" onclick="togglePlayerList()">Show Players</button>
-                    <p class="toolbar__text">Room: ${room}</p>
+                    <p class="toolbar__text">Room: ${exports.room}</p>
                     <a class="toolbar__leave-btn" onclick="leaveRoom()">Leave Game</a>
                 </div>
                 <div class="grid-container">
@@ -102,11 +96,10 @@ function gameScreen() {
             </div>
         </section>
     `);
-    gamePageLoaded();
+    (0, grid_1.gamePageLoaded)();
 }
-
 function leaveRoom() {
-    socket.emit('USER_DISCONNECT', room, socket.id);
+    socket.emit('USER_DISCONNECT', exports.room, socket.id);
     socket.disconnect();
     location.reload();
 }

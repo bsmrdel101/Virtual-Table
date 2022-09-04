@@ -1,6 +1,8 @@
+import { disableHotkeys, dragElement } from './utils';
+
 let newCharacterOpen = false;
 
-function toggleNewCharacterWindow() {
+export function toggleNewCharacterWindow() {
     newCharacterOpen = !newCharacterOpen;
     if (newCharacterOpen) {
         const newCharacterWindow = document.querySelector('body').appendChild(document.createElement('div'));
@@ -41,11 +43,11 @@ function toggleNewCharacterWindow() {
 }
 
 // For new character form
-let newCharacterName, newCharacterImage, newCharacterLevel, newCharacterClass, newCharacterRace;
-const characterNameChange = (e) => newCharacterName = e.target.value;
-const characterImageChange = (e) => newCharacterImage = e.target.files[0];
+let newCharacterName: string, newCharacterImage: string, newCharacterLevel: number, newCharacterClass: string, newCharacterRace: string;
+const characterNameChange = (e: any) => newCharacterName = e.target.value;
+const characterImageChange = (e: any) => newCharacterImage = e.target.files[0];
 
-function submitNewCharacter(e) {
+function submitNewCharacter(e: any) {
     e.preventDefault();
     console.log(newCharacterImage);
     // addCharacter({

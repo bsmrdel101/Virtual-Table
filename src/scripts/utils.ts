@@ -4,8 +4,8 @@ import { toggleMapMenu } from './menus/map.menu';
 import { toggleCharacterMenu } from './menus/character.menu';
 import { canUseHotkey } from './input';
 
-let menuOpen: boolean = false;
-export let selectedMenu: string;
+export let menuOpen: any = {value: false};
+export let selectedMenu: any = {value: ''};
 
 // Clamp number between two values
 export const clamp = (num: number, min: number, max: number) => Math.min(Math.max(num, min), max);
@@ -20,14 +20,14 @@ export function findCell(x: number, y: number) {
 }
 
 export function closeMenu(menuName: string) {
-    if (selectedMenu === menuName) {
+    if (selectedMenu.value === menuName) {
         // Close menu
         document.querySelector('.menu').remove();
-        menuOpen = false;
+        menuOpen.value = false;
     } else {
         // Close menu, then open selected one
         document.querySelector('.menu').remove();
-        menuOpen = false;
+        menuOpen.value = false;
 
         switch (menuName) {
             case 'tokens':

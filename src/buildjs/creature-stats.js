@@ -1,31 +1,32 @@
-import { getCreatureByIndex } from './routes/creatures.route';
-import { dragElement } from './utils';
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.separateProf = exports.separateDmgRoll = exports.getActionDesc = exports.openCreatureStatsWindow = void 0;
+const creatures_route_1 = require("./routes/creatures.route");
+const utils_1 = require("./utils");
 let creatureIndexList = [];
-
-export async function openCreatureStatsWindow(index: string, custom: boolean) {
+async function openCreatureStatsWindow(index, custom) {
     // Check if a creature's stats are already open
     // If they are open the close the window instead
     for (let listItem of creatureIndexList) {
         if (listItem === index) {
-            if (document.querySelector(`.creature-stats-window--${index}`)) document.querySelector(`.creature-stats-window--${index}`).remove();         
+            if (document.querySelector(`.creature-stats-window--${index}`))
+                document.querySelector(`.creature-stats-window--${index}`).remove();
             creatureIndexList.splice(creatureIndexList.indexOf(index), 1);
             return;
         }
     }
     creatureIndexList.push(index);
     // Get data for selected creature
-    let creature = await getCreatureByIndex(index, custom);
-
+    let creature = await (0, creatures_route_1.getCreatureByIndex)(index, custom);
     renderCreatureStatsWindow(creature);
 }
-
+exports.openCreatureStatsWindow = openCreatureStatsWindow;
 const creatureStatsWindow = (creature) => `
     <div class="creature-stats-content">
         <button class="btn--window-close" onclick="removeCreatureStatsWindow('${creature.index}')">X</button>
         <div class="creature-stats-window__header creature-stats-window--${creature.index}__header">
             <h3>${creature.name}</h3>
-            <p>${creature.size ? `${creature.size}` : ''}${creature.type ? ` ${creature.type}` : ''}${creature.alignment ? `, ${creature.alignment}`: ''}</p>
+            <p>${creature.size ? `${creature.size}` : ''}${creature.type ? ` ${creature.type}` : ''}${creature.alignment ? `, ${creature.alignment}` : ''}</p>
         </div>
         <div class="creature-stats-window__body">
             <p><span class="bold">Armor Class</span> ${creature.ac}</p>
@@ -55,14 +56,11 @@ const creatureStatsWindow = (creature) => `
         </div>` : ''}
     </div>
 `;
-
 function renderCreatureStatsWindow(creature) {
     const window = document.querySelector('body').appendChild(document.createElement('div'));
     window.classList.add('creature-stats-window');
     window.classList.add(`creature-stats-window--${creature.index}`);
-
     window.insertAdjacentHTML('beforeend', creatureStatsWindow(creature));
-
     // Populate body data
     getCreatureSpeedData(creature);
     getCreatureScoresData(creature);
@@ -72,25 +70,21 @@ function renderCreatureStatsWindow(creature) {
     getCreatureSpecialAbilityData(creature);
     getCreatureActionsData(creature);
     getCreatureLegActionsData(creature);
-
     // Make this window draggable
-    dragElement(window, `creature-stats-window--${creature.index}`);
+    (0, utils_1.dragElement)(window, `creature-stats-window--${creature.index}`);
 }
-
-
 // === Creature Data === //
-
-function getCreatureSpeedData(creature: any) {
+function getCreatureSpeedData(creature) {
     let speeds = [];
     let exists = false;
-    creature.speeds.forEach((speed: any) => {
+    creature.speeds.forEach((speed) => {
         if (speed.value) {
             exists = true;
             speeds.push(speed);
         }
     });
-    if (!exists) return;
-
+    if (!exists)
+        return;
     const text = document.getElementById(`speed--${creature.index}`).appendChild(document.createElement('p'));
     text.insertAdjacentHTML('beforeend', `<span class="bold">Speed </span>`);
     speeds.forEach((speed) => {
@@ -99,7 +93,6 @@ function getCreatureSpeedData(creature: any) {
         `);
     });
 }
-
 function getCreatureScoresData(creature) {
     let scoreNames = ['Str', 'Dex', 'Con', 'Int', 'Wis', 'Char'];
     let scoreValues = [
@@ -110,7 +103,6 @@ function getCreatureScoresData(creature) {
         creature.wis,
         creature.char
     ];
-    
     for (let i = 0; i < 6; i++) {
         let modifier = Math.floor((scoreValues[i] - 10) / 2);
         document.getElementById(`scores--${creature.index}`).insertAdjacentHTML('beforeend', `
@@ -124,111 +116,102 @@ function getCreatureScoresData(creature) {
         `);
     }
 }
-
-function getCreatureProficiencyData(creature: any) {
+function getCreatureProficiencyData(creature) {
     const text = document.getElementById(`proficiencies--${creature.index}`).appendChild(document.createElement('p'));
-    text.insertAdjacentHTML('beforeend',`<span class="bold">Saving Throws </span>`);
+    text.insertAdjacentHTML('beforeend', `<span class="bold">Saving Throws </span>`);
     let skills = [];
     let string = '';
-
-    creature.proficiencies.forEach((proficiency: any) => {
+    creature.proficiencies.forEach((proficiency) => {
         const modifiedProf = separateProf(proficiency.name + proficiency.value, proficiency.value, proficiency.name);
         if (proficiency.name.includes('Saving')) {
             string += ` ${modifiedProf} +${proficiency.value},`;
-        } else {
-            skills.push({name: modifiedProf, value: proficiency.value});
+        }
+        else {
+            skills.push({ name: modifiedProf, value: proficiency.value });
         }
     });
     string = string.replace(/,*$/, '');
     text.insertAdjacentHTML('beforeend', string);
     // If there are no saves, remove the section
-    if (string === '') text.remove();
-
+    if (string === '')
+        text.remove();
     string = '';
     const skillsText = document.getElementById(`skills--${creature.index}`).appendChild(document.createElement('p'));
-    skillsText.insertAdjacentHTML('beforeend',`<span class="bold">Skills </span>`);
+    skillsText.insertAdjacentHTML('beforeend', `<span class="bold">Skills </span>`);
     skills.forEach((skill) => {
         string += ` ${skill.name} +${skill.value},`;
     });
     string = string.replace(/,*$/, '');
     skillsText.insertAdjacentHTML('beforeend', string);
     // If there are no skills, remove the section
-    if (string === '') skillsText.remove();
+    if (string === '')
+        skillsText.remove();
 }
-
-function getCreatureVulResData(creature: any) {
+function getCreatureVulResData(creature) {
     // Vulnerabilities
     if (creature.vulnerabilities.length > 0) {
         const text = document.getElementById(`vul-res--${creature.index}`).appendChild(document.createElement('p'));
-        text.insertAdjacentHTML('beforeend',`<span class="bold">Vulnerabilities </span>`);
+        text.insertAdjacentHTML('beforeend', `<span class="bold">Vulnerabilities </span>`);
         let string = '';
-
-        creature.vulnerabilities.forEach((stat: any) => {
+        creature.vulnerabilities.forEach((stat) => {
             string += ` ${stat},`;
         });
         string = string.replace(/,*$/, '');
         text.insertAdjacentHTML('beforeend', string);
     }
-
     // Resistances
     if (creature.resistances.length > 0) {
         const text = document.getElementById(`vul-res--${creature.index}`).appendChild(document.createElement('p'));
-        text.insertAdjacentHTML('beforeend',`<span class="bold">Resistances </span>`);
+        text.insertAdjacentHTML('beforeend', `<span class="bold">Resistances </span>`);
         let string = '';
-
-        creature.resistances.forEach((stat: any) => {
+        creature.resistances.forEach((stat) => {
             string += ` ${stat},`;
         });
         string = string.replace(/,*$/, '');
         text.insertAdjacentHTML('beforeend', string);
     }
-
     // Damage immunities
     if (creature.damageImmunities.length > 0) {
         const text = document.getElementById(`vul-res--${creature.index}`).appendChild(document.createElement('p'));
-        text.insertAdjacentHTML('beforeend',`<span class="bold">Damage Immunities </span>`);
+        text.insertAdjacentHTML('beforeend', `<span class="bold">Damage Immunities </span>`);
         let string = '';
-
-        creature.damageImmunities.forEach((stat: any) => {
+        creature.damageImmunities.forEach((stat) => {
             string += ` ${stat},`;
         });
         string = string.replace(/,*$/, '');
         text.insertAdjacentHTML('beforeend', string);
     }
-
     // Condition immunities
     if (creature.conditionImmunities.length > 0) {
         const text = document.getElementById(`vul-res--${creature.index}`).appendChild(document.createElement('p'));
-        text.insertAdjacentHTML('beforeend',`<span class="bold">Condition Immunities </span>`);
+        text.insertAdjacentHTML('beforeend', `<span class="bold">Condition Immunities </span>`);
         let string = '';
-
-        creature.conditionImmunities.forEach((stat: any) => {
+        creature.conditionImmunities.forEach((stat) => {
             string += ` ${stat},`;
         });
         string = string.replace(/,*$/, '');
         text.insertAdjacentHTML('beforeend', string);
     }
 }
-
-function getCreatureSensesData(creature: any) {
-    if (creature.senses.length === 0) return;
+function getCreatureSensesData(creature) {
+    if (creature.senses.length === 0)
+        return;
     const text = document.getElementById(`senses--${creature.index}`).appendChild(document.createElement('p'));
-    text.insertAdjacentHTML('beforeend',`<span class="bold">Senses </span>`);
+    text.insertAdjacentHTML('beforeend', `<span class="bold">Senses </span>`);
     let string = '';
-
     creature.senses.forEach((sense) => {
         if (sense.name.includes('passive') || sense.name.includes('Passive')) {
             string += ` ${sense.name} ${sense.value},`;
-        } else {
+        }
+        else {
             string += ` ${sense.name} ${sense.value} ft.,`;
         }
     });
     string = string.replace(/,*$/, '');
     text.insertAdjacentHTML('beforeend', string);
 }
-
-function getCreatureSpecialAbilityData(creature: any) {
-    creature.abilities.forEach((ability: any) => {
+function getCreatureSpecialAbilityData(creature) {
+    creature.abilities.forEach((ability) => {
         document.getElementById(`special-abilities--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="special-abilities__box">
                 <p class="special-abilities__name"><span class="bold">${ability.name}.</span> ${ability.desc}</p>
@@ -236,8 +219,7 @@ function getCreatureSpecialAbilityData(creature: any) {
         `);
     });
 }
-
-function getCreatureActionsData(creature: any) {
+function getCreatureActionsData(creature) {
     let i = 0;
     creature.actions.forEach((action) => {
         document.getElementById(`actions--${creature.index}`).insertAdjacentHTML('beforeend', `
@@ -249,22 +231,19 @@ function getCreatureActionsData(creature: any) {
         `);
         i++;
     });
-
     i = 0;
-    creature.actions.forEach((action: any) => {
+    creature.actions.forEach((action) => {
         let element = document.getElementById(`${creature.index}-${action.name}-${i}`);
         element.classList.add('actions__box--dmg_dice');
-
-        action.damage.forEach((dmg: any) => {
+        action.damage.forEach((dmg) => {
             element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${dmg.damageDice} ${dmg.damageType}</button>`);
         });
         i++;
     });
 }
-
-function getCreatureLegActionsData(creature: any) {
+function getCreatureLegActionsData(creature) {
     let i = 0;
-    creature.legActions.forEach((action: any) => {
+    creature.legActions.forEach((action) => {
         document.getElementById(`legendary-actions--${creature.index}`).insertAdjacentHTML('beforeend', `
             <div class="actions__box">
                 <p class="actions__name"><span class="bold">${action.name}.</span> ${action.desc}</p>
@@ -274,13 +253,11 @@ function getCreatureLegActionsData(creature: any) {
         `);
         i++;
     });
-
     i = 0;
-    creature.legActions.forEach((action: any) => {
+    creature.legActions.forEach((action) => {
         let element = document.getElementById(`${creature.index}-${action.name}-${i}`);
         element.classList.add('legendary-actions__box--dmg_dice');
-
-        action.damage.forEach((dmg: any) => {
+        action.damage.forEach((dmg) => {
             if (dmg.damageDice) {
                 element.insertAdjacentHTML('beforeend', `<button class="btn--attack btn--hover">${dmg.damageDice} ${dmg.damageType}</button>`);
             }
@@ -288,65 +265,58 @@ function getCreatureLegActionsData(creature: any) {
         i++;
     });
 }
-
-
 // Remove a specific creature window
-function removeCreatureStatsWindow(index: any) {
-    creatureIndexList.forEach((listItem: any) => {
+function removeCreatureStatsWindow(index) {
+    creatureIndexList.forEach((listItem) => {
         if (listItem === index) {
-            document.querySelector(`.creature-stats-window--${index}`).remove();         
+            document.querySelector(`.creature-stats-window--${index}`).remove();
             creatureIndexList.splice(creatureIndexList.indexOf(index), 1);
             return;
         }
     });
 }
-
 // Returns a string without the square brackets, and array with action rolls
-export function getActionDesc(_string: any) {
-    let string = _string
+function getActionDesc(_string) {
+    let string = _string;
     let rolls = [];
     let toHit = '';
-
     // Checks if there is an attack bonus
     while (string.includes('{{')) {
         toHit = string.split('{{')[1].split('}}')[0];
         string = string.replace('{{', '').replace('}}', '');
     }
-
-    while(toHit.includes('+')) {
+    while (toHit.includes('+')) {
         toHit = toHit.replace('+', '');
     }
-
     // Modifies string to get dmg rolls, and description with the brackets
     while (string.includes('[[')) {
         rolls.push(string.split('[[')[1].split(']]')[0]);
         string = string.replace('[[', '').replace(']]', '');
     }
-    return {rolls: rolls, desc: string, toHit: toHit};
+    return { rolls: rolls, desc: string, toHit: toHit };
 }
-
+exports.getActionDesc = getActionDesc;
 // Splits and returns an attack damage rolls
-export function separateDmgRoll(dmg: any) {
-    const [ damageDice, damageType ] = dmg.split(' ');
+function separateDmgRoll(dmg) {
+    const [damageDice, damageType] = dmg.split(' ');
     return { damageDice, damageType };
 }
-
+exports.separateDmgRoll = separateDmgRoll;
 // Separates the string for skills/saving throws and splits them into their name and value 
-export function separateProf(string: string, value: string, name: string) {
+function separateProf(string, value, name) {
     const save = string.split('Saving Throw: ');
     const skill = string.split('Skill: ');
-    
     if (save[0] === '') {
         const name = save[1].split(value);
         return name[0].toString();
-    } else if (skill[0] === '') {
+    }
+    else if (skill[0] === '') {
         const name = skill[1].split(value);
         return name[0].toString();
-    } 
+    }
     return name;
 }
-
-
+exports.separateProf = separateProf;
 // if (typeof module !== 'undefined') module.exports = {
 //     getActionDesc,
 //     separateDmgRoll

@@ -1,15 +1,19 @@
+import axios from 'axios';
+import { customCreatures, creatures, creaturesOpen, toggleCreaturesWindow } from '../creatures';
+import { getActionDesc, separateDmgRoll } from '../creature-stats';
+
 // === GET routes === //
 
-async function getCreatures() {
+export async function getCreatures() {
     try {
         const res = await axios.get('https://www.dnd5eapi.co/api/monsters');
-        creatures = res.data.results;
+        creatures.value = res.data.results;
     } catch (err) {
         console.log(err);
     }
 }
 
-async function getCreatureByIndex(index, custom) {
+export async function getCreatureByIndex(index: string, custom: boolean) {
     try {
         if (custom) {
             const res = await axios.get(`/api/creatures/${index}`);
@@ -23,7 +27,7 @@ async function getCreatureByIndex(index, custom) {
     }
 }
 
-function modifyResponseStandardCreature(res) {
+function modifyResponseStandardCreature(res: any) {
     // Gets all the arrays of creature data
     const { proficiencies, condition_immunities, senses, special_abilities, actions, legendary_actions } = separateStandardCreatureResponse(res.data);
     const modifiedRes = new Creature(
@@ -65,7 +69,7 @@ function modifyResponseStandardCreature(res) {
     return modifiedRes;
 }
 
-function separateStandardCreatureResponse(res) {
+function separateStandardCreatureResponse(res: any) {
     const proficiencies = getCreatureProficiencies(res.proficiencies);
     const condition_immunities = getCreatureConditionImmunities(res.condition_immunities);
     const senses = getCreatureSenses(res.senses);
@@ -76,20 +80,20 @@ function separateStandardCreatureResponse(res) {
     return {proficiencies: proficiencies, condition_immunities: condition_immunities, senses: senses, special_abilities: special_abilities, actions: actions, legendary_actions: legendary_actions};
 }
 
-function getCreatureProficiencies(_proficiencies) {
+function getCreatureProficiencies(_proficiencies: any) {
     let proficiencies = [];
     if (_proficiencies.length > 0) {
-        _proficiencies.forEach((prof) => {
+        _proficiencies.forEach((prof: any) => {
             proficiencies.push({name: prof.proficiency.name, value: prof.value});
         });
     }
     return proficiencies;
 }
 
-function getCreatureConditionImmunities(_condition_immunities) {
+function getCreatureConditionImmunities(_condition_immunities: any) {
     let condition_immunities = [];
     if (_condition_immunities.length > 0) {
-        _condition_immunities.forEach((immunity) => {
+        _condition_immunities.forEach((immunity: any) => {
             condition_immunities.push(immunity.name);
         });
     }
@@ -106,20 +110,20 @@ function getCreatureSenses(_senses) {
     return senses;
 }
 
-function getCreatureAbilities(_special_abilities) {
+function getCreatureAbilities(_special_abilities: any) {
     let special_abilities = [];
     if (_special_abilities.length > 0) {
-        _special_abilities.forEach((ability) => {
+        _special_abilities.forEach((ability: any) => {
             special_abilities.push({name: ability.name, desc: ability.desc, damage: standardCreatureDamage(ability.damage)});
         });
     }
     return special_abilities;
 }
 
-function getCreatureActions(_actions) {
+function getCreatureActions(_actions: any) {
     let actions = [];
     if (_actions.length > 0) {
-        _actions.forEach((action) => {
+        _actions.forEach((action: any) => {
             actions.push({name: action.name, desc: action.desc, attack_bonus: action.attack_bonus, damage: standardCreatureDamage(action.damage)});
         });
     }
@@ -127,10 +131,10 @@ function getCreatureActions(_actions) {
     return actions;
 }
 
-function getCreatureLegendaryActions(_legendary_actions) {
+function getCreatureLegendaryActions(_legendary_actions: any) {
     let legendary_actions = [];
     if (_legendary_actions.length > 0) {
-        _legendary_actions.forEach((action) => {
+        _legendary_actions.forEach((action: any) => {
             legendary_actions.push({name: action.name, desc: action.desc, attack_bonus: action.attack_bonus, damage: standardCreatureDamage(action.damage)});
         });
     }
@@ -138,10 +142,10 @@ function getCreatureLegendaryActions(_legendary_actions) {
 }
 
 // Gets the damage dice and damage type from a standard creature
-function standardCreatureDamage(damage) {
+function standardCreatureDamage(damage: any) {
     let damages = [];
     if (damage) {
-        damage.forEach((dmg) => {
+        damage.forEach((dmg: any) => {
             if (dmg.from) {
                 dmg.from.options.forEach((dmg) => {
                     damages.push({damageDice: dmg.damage_dice, damageType: dmg.damage_type.index});
@@ -155,15 +159,15 @@ function standardCreatureDamage(damage) {
 }
 
 // Removes ft and turns returns a number value
-function removeUnitFromString(string) {
-    let value = '';
+function removeUnitFromString(string: string) {
+    let value: number;
     if (string) {
         value = parseInt(string.split(' ')[0]);
         return value;
     }
 }
 
-function modifyResponseCreature(res) {
+function modifyResponseCreature(res: any) {
     // Gets all the arrays of creature data
     const { proficiencies, vulnerabilities, resistances, damageImmunities, conditionImmunities, senses, abilities, actions, legActions } = separateCreatureResponse(res.data);
 
@@ -207,14 +211,14 @@ function modifyResponseCreature(res) {
 }
 
 // Separate different parts of the response into arrays
-function separateCreatureResponse(res) {
+function separateCreatureResponse(res: any) {
     let { proficiencies, vulnerabilities, resistances, damageImmunities, conditionImmunities, senses, abilities, actions, legActions } = getInitialCreatureArrays(res);
     
     proficiencies = removeExtraCustomData(proficiencies, true);
-    vulnerabilities = removeExtraCustomData(vulnerabilities);
-    resistances = removeExtraCustomData(resistances);
-    damageImmunities = removeExtraCustomData(damageImmunities);
-    conditionImmunities = removeExtraCustomData(conditionImmunities);
+    vulnerabilities = removeExtraCustomData(vulnerabilities, false);
+    resistances = removeExtraCustomData(resistances, false);
+    damageImmunities = removeExtraCustomData(damageImmunities, false);
+    conditionImmunities = removeExtraCustomData(conditionImmunities, false);
     senses = removeExtraCustomData(senses, true);
     abilities = removeExtraCustomData(abilities, true);
     actions = removeExtraCustomData(actions, true);
@@ -255,7 +259,7 @@ function separateCreatureResponse(res) {
 }
 
 // Pushes all creatures data into their respective arrays and returns them.
-function getInitialCreatureArrays(res) {
+function getInitialCreatureArrays(res: any) {
     let proficiencies = [];
     let vulnerabilities = [];
     let resistances = [];
@@ -285,31 +289,31 @@ function getInitialCreatureArrays(res) {
 }
 
 // Make sure arrays that have no values are empty, and don't have null values in it.
-function emptyNullArrays(proficiencies, resistances, vulnerabilities, senses) {
+function emptyNullArrays(proficiencies: any, resistances: any, vulnerabilities: any, senses: any) {
     if (proficiencies.length > 0) {
         let exists = false;
-        proficiencies.forEach((prof) => {
+        proficiencies.forEach((prof: any) => {
             if (prof.name && prof.value) exists = true;
         });
         if (!exists) proficiencies = [];
     }
     if (resistances.length > 0) {
         let exists = false;
-        resistances.forEach((resistance) => {
+        resistances.forEach((resistance: any) => {
             if (resistance) exists = true;
         });
         if (!exists) resistances = [];
     }
     if (vulnerabilities.length > 0) {
         let exists = false;
-        vulnerabilities.forEach((vul) => {
+        vulnerabilities.forEach((vul: any) => {
             if (vul) exists = true;
         });
         if (!exists) vulnerabilities = [];
     }
     if (senses.length > 0) {
         let exists = false;
-        senses.forEach((sense) => {
+        senses.forEach((sense: any) => {
             if (sense.name && sense.value) exists = true;
         });
         if (!exists) senses = [];
@@ -318,7 +322,7 @@ function emptyNullArrays(proficiencies, resistances, vulnerabilities, senses) {
 }
 
 // Remove duplicate data from the database
-function removeExtraCustomData(array, name) {
+function removeExtraCustomData(array: any, name: boolean) {
     let result = [];
     if (name) {
         // Loop through array with objects
@@ -338,10 +342,10 @@ function removeExtraCustomData(array, name) {
     return result;
 }
 
-async function getCustomCreatures() {
+export async function getCustomCreatures() {
     try {
         const res = await axios.get('/api/creatures');
-        customCreatures = res.data;
+        customCreatures.value = res.data;
     } catch (err) {
         console.log(err);
     }
@@ -349,10 +353,10 @@ async function getCustomCreatures() {
 
 // === POST routes === //
 
-async function addCreature(payload) {
+export async function addCreature(payload: any) {
     console.log(payload);
     try {
-        let creatureId;
+        let creatureId: string;
         // Create creature base stats
         await axios.post('/api/creatures', payload);
         // Get id of the creature that was just made
@@ -396,37 +400,37 @@ async function addCreature(payload) {
 }
 
 class Creature {
-    id
-    user_id
-    index
-    name
-    size
-    type
-    alignment
-    ac
-    hit_points
-    hit_dice
-    str
-    dex
-    con
-    int
-    wis
-    char
-    cr
-    xp
-    languages
-    speeds
-    proficiencies
-    vulnerabilities
-    resistances
-    damageImmunities
-    conditionImmunities
-    senses
-    abilities
-    actions
-    legActions
+    id: number
+    user_id: number
+    index: string
+    name: string
+    size: string
+    type: string
+    alignment: string
+    ac: number
+    hit_points: number
+    hit_dice: string
+    str: number
+    dex: number
+    con: number
+    int: number
+    wis: number
+    char: number
+    cr: number
+    xp: number
+    languages: string
+    speeds: any
+    proficiencies: any
+    vulnerabilities: string
+    resistances: string
+    damageImmunities: any
+    conditionImmunities: any
+    senses: any
+    abilities: any
+    actions: any
+    legActions: any
 
-    constructor (id, user_id, index, name, size, type, alignment, ac, hit_points, hit_dice, str, dex, con, int, wis, char, cr, xp, languages, walk_speed, swim_speed, burrow_speed, fly_speed, climb_speed, proficiencies, vulnerabilities, resistances, damageImmunities, conditionImmunities, senses, abilities, actions, legActions) {
+    constructor (id: number, user_id: number, index: string, name: string, size: string, type: string, alignment: string, ac: number, hit_points: number, hit_dice: string, str: number, dex: number, con: number, int: number, wis: number, char: number, cr: number, xp: number, languages: string, walk_speed: number, swim_speed: number, burrow_speed: number, fly_speed: number, climb_speed: number, proficiencies: any, vulnerabilities: string, resistances: string, damageImmunities: any, conditionImmunities: any, senses: any, abilities: any, actions: any, legActions: any) {
         this.id = id;
         this.user_id = user_id;
         this.index = index;
@@ -467,7 +471,7 @@ class Creature {
 
 // === DELETE routes === //
 
-async function deleteCreature(index) {
+export async function deleteCreature(index: string) {
     try {
         await axios.delete(`/api/creatures/${index}`);
         if (creaturesOpen) {
@@ -480,12 +484,12 @@ async function deleteCreature(index) {
 }
 
 
-if (typeof module !== 'undefined') module.exports = {
-    removeExtraCustomData,
-    getCreatureProficiencies,
-    getCreatureConditionImmunities,
-    getCreatureSenses,
-    getCreatureAbilities,
-    getCreatureActions,
-    getCreatureLegendaryActions
-};
+// if (typeof module !== 'undefined') module.exports = {
+//     removeExtraCustomData,
+//     getCreatureProficiencies,
+//     getCreatureConditionImmunities,
+//     getCreatureSenses,
+//     getCreatureAbilities,
+//     getCreatureActions,
+//     getCreatureLegendaryActions
+// };

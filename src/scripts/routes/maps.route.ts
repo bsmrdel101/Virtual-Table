@@ -1,9 +1,12 @@
+import axios from 'axios';
+import { maps } from '../menus/map.menu';
+
 // === GET routes === //
 
-async function getMaps() {
+export async function getMaps() {
     try {
         const res = await axios.get('/api/maps');
-        maps = res.data;
+        maps.value = res.data;
     } catch (err) {
         console.log(err);
     }
@@ -11,7 +14,7 @@ async function getMaps() {
 
 // === POST routes === //
 
-async function addMap(payload) {
+export async function addMap(payload: any) {
     try {
         console.log(payload);
         await axios.post('/api/maps', payload);

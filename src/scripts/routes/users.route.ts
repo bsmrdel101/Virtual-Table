@@ -1,3 +1,6 @@
+import axios from 'axios';
+import { changeRoute } from '../utils';
+
 // === GET routes === //
 
 export async function getUser() {
@@ -15,7 +18,7 @@ export async function getUser() {
 
 // === POST routes === //
 
-async function registerUser(e, payload) {
+async function registerUser(e: Event, payload: any) {
     e.preventDefault();
     try {
         await axios.post('/api/user/register', payload);
@@ -25,7 +28,7 @@ async function registerUser(e, payload) {
     }
 }
 
-async function loginUser(payload, e) {
+async function loginUser(payload: any, e: Event) {
     e.preventDefault();
     try {
         await axios.post('/api/user/login', payload);
@@ -46,7 +49,7 @@ async function logout() {
 
 // === PUT routes === //
 
-export async function changeNewUser(payload) {
+export async function changeNewUser(payload: any) {
     try {
         await axios.put('/api/user', {newStatus: payload});
     } catch(err) {

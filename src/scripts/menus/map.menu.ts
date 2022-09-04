@@ -1,8 +1,13 @@
-let maps = [];
+import { addMap, getMaps } from '../routes/maps.route';
+import { selectedMenu, menuOpen, closeMenu, disableHotkeys } from '../utils';
+import { root, setupGrid } from '../grid';
+import { io, Socket } from "socket.io-client";
+
+const socket: Socket = io();
+export let maps = {value: []};
 let defaultMaps = [
     {name: 'Default Map', image: 'https://images.squarespace-cdn.com/content/v1/5511fc7ce4b0a3782aa9418b/1429139759127-KFHWAFFFVXJWZNWTITKK/learning-the-grid-method.jpg'},
 ];
-// 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwUhS4RzGYSNBN6rAgSzwcdpzoUkYYIg_Cvg&usqp=CAU'
 
 export function addDefaultMaps() {
     for (let map of defaultMaps) {
@@ -10,10 +15,10 @@ export function addDefaultMaps() {
     }
 }
 
-export function toggleMapMenu(menuName) {
-    menuOpen = !menuOpen;
-    if (menuOpen) {
-        selectedMenu = 'maps';
+export function toggleMapMenu(menuName: string) {
+    menuOpen.value = !menuOpen.value;
+    if (menuOpen.value) {
+        selectedMenu.value = 'maps';
         // Create menu
         document.querySelector('.game-page-container').insertAdjacentHTML('beforeend', `
             <div class="menu">
@@ -30,7 +35,7 @@ export function toggleMapMenu(menuName) {
 async function getMapBodyData() {
     await getMaps();
     // Populate menu body
-    for (let map of maps) {
+    for (let map of maps.value) {
         document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
             <div>
                 <img src=${map.image} class="menu__item menu__item--map" ondblclick="selectMap(event)" id=${map.id}>
@@ -47,8 +52,8 @@ async function getMapBodyData() {
     `);
 }
 
-function selectMap(e) {
-    for (let map of maps) {
+function selectMap(e: any) {
+    for (let map of maps.value) {
         if (map.id === parseInt(e.target.getAttribute('id'))) {
             socket.emit('SELECT_MAP', {width: e.target.clientWidth, height: e.target.clientHeight}, map);
         }
@@ -79,11 +84,11 @@ function newMap() {
 }
 
 // For new map form
-let newMapName, newMapImage;
-const mapNameChange = (e) => newMapName = e.target.value;
-const mapImageChange = (e) => newMapImage = e.target.files[0];
+let newMapName: string, newMapImage: string;
+const mapNameChange = (e: any) => newMapName = e.target.value;
+const mapImageChange = (e: any) => newMapImage = e.target.files[0];
 
-function submitNewMap(e) {
+function submitNewMap(e: any) {
     e.preventDefault();
     addMap({ name: newMapName, image: newMapImage });
 }

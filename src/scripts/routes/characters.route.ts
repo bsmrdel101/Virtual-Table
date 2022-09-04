@@ -1,15 +1,18 @@
+import axios from 'axios';
+import { character, characters } from '../menus/character.menu';
+
 // === GET routes === //
 
-async function getCharacters() {
+export async function getCharacters() {
     try {
         const res = await axios.get('/api/characters');
-        characters = res.data;
+        characters.value = res.data;
     } catch (err) {
         console.log(err);
     }
 }
 
-async function getCharacter(id) {
+export async function getCharacter(id: string) {
     try {
         const res = await axios.get(`/api/characters/${parseInt(id)}`);
         return res.data[0];
@@ -20,7 +23,7 @@ async function getCharacter(id) {
 
 // === POST routes === //
 
-async function addCharacter(payload) {
+export async function addCharacter(payload: any) {
     try {
         await axios.post('/api/characters', payload);
     } catch (err) {
@@ -30,19 +33,19 @@ async function addCharacter(payload) {
 
 // === PUT routes === //
 
-async function setHealth(payload) {
+export async function setHealth(payload: any) {
     try {
         await axios.put('/api/characters/health', payload);
-        character = await getCharacter(payload.id);
+        character.value = await getCharacter(payload.id);
     } catch (err) {
         console.log(err);
     }
 }
 
-async function setTempHealth(payload) {
+export async function setTempHealth(payload: any) {
     try {
         await axios.put('/api/characters/temp', payload);
-        character = await getCharacter(payload.id);
+        character.value = await getCharacter(payload.id);
     } catch (err) {
         console.log(err);
     }

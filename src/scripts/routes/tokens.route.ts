@@ -1,9 +1,12 @@
+import axios from 'axios';
+import { tokens } from '../menus/token.menu';
+
 // === GET routes === //
 
-async function getTokens() {
+export async function getTokens() {
     try {
         const res = await axios.get('/api/tokens')
-        tokens = res.data;
+        tokens.value = res.data;
     } catch (err) {
         console.log(err);
     }
@@ -11,7 +14,7 @@ async function getTokens() {
 
 // === POST routes === //
 
-async function addToken(payload) {
+export async function addToken(payload: any) {
     try {
         await axios.post('/api/tokens', payload);
     } catch (err) {
@@ -19,7 +22,7 @@ async function addToken(payload) {
     }
 }
 
-async function addTokenToMap(payload) {
+export async function addTokenToMap(payload: any) {
     try {
         await axios.post('/api/tokens/map', payload);
     } catch (err) {

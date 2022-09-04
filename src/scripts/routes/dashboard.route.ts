@@ -1,16 +1,19 @@
+import axios from 'axios';
+import { gamesList, setGamesList } from '../dashboard';
+
 // === GET routes === //
 
-async function getGames() {
+export async function getGames() {
     try {
         const res = await axios.get('/api/dashboard');
-        gamesList = res.data;
+        gamesList.value = res.data;
         setGamesList();
     } catch (err) {
         console.log(err);
     }
 }
 
-async function getPrevGame() {
+export async function getPrevGame() {
     try {
         const res = await axios.get('/api/dashboard/prev');
         return res.data[0];
@@ -21,7 +24,7 @@ async function getPrevGame() {
 
 // === POST routes === //
 
-async function addGame(payload, e) {
+export async function addGame(payload, e) {
     e.preventDefault();
     try {
         await axios.post('/api/dashboard', payload);
@@ -31,7 +34,7 @@ async function addGame(payload, e) {
     }
 }
 
-async function addPrevGame(payload) {
+export async function addPrevGame(payload) {
     try {
         await axios.delete('/api/dashboard/prev', payload);
         await axios.post('/api/dashboard/prev', payload);

@@ -1,24 +1,25 @@
-import { dragElement, disableHotkeys, indexConverter } from './utils';
-import { getCustomCreatures, addCreature } from './routes/creatures.route';
-
-export let creatures: any = {value: []};
-export let customCreatures: any = {value: []};
-export let creaturesOpen: boolean = false;
-let creatureFormOpen: boolean;
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.toggleCreaturesWindow = exports.creaturesOpen = exports.customCreatures = exports.creatures = void 0;
+const utils_1 = require("./utils");
+const creatures_route_1 = require("./routes/creatures.route");
+exports.creatures = { value: [] };
+exports.customCreatures = { value: [] };
+exports.creaturesOpen = false;
+let creatureFormOpen;
 // Form data
-let creatureFormName: string, creatureFormSize: string = "medium", creatureFormType: string, creatureFormAlignment: string, creatureFormAc: number, creatureFormHitPoints: number, creatureFormHitDice: string, creatureFormStr, creatureFormDex: number, creatureFormCon: number, creatureFormInt: number, creatureFormWis: number, creatureFormChar: number, creatureFormVul: string, creatureFormRes: string, creatureFormDmgImmune: string, creatureFormConImmune: string, creatureFormLanguages: string, creatureFormCr: number, creatureFormXp: number, creatureFormWalk: number, creatureFormSwim: number, creatureFormBurrow: number, creatureFormFly: number, creatureFormClimb: number;
-
-export function toggleCreaturesWindow() {
-    creaturesOpen = !creaturesOpen;
-    if (creaturesOpen) {
+let creatureFormName, creatureFormSize = "medium", creatureFormType, creatureFormAlignment, creatureFormAc, creatureFormHitPoints, creatureFormHitDice, creatureFormStr, creatureFormDex, creatureFormCon, creatureFormInt, creatureFormWis, creatureFormChar, creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, creatureFormCr, creatureFormXp, creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb;
+function toggleCreaturesWindow() {
+    exports.creaturesOpen = !exports.creaturesOpen;
+    if (exports.creaturesOpen) {
         renderCreatureWindow();
         getCreaturesBodyData();
-    } else {
+    }
+    else {
         document.querySelector('.creatures-window').remove();
     }
 }
-
+exports.toggleCreaturesWindow = toggleCreaturesWindow;
 function renderCreatureWindow() {
     const window = document.querySelector('body').appendChild(document.createElement('div'));
     window.classList.add('creatures-window');
@@ -43,10 +44,9 @@ function renderCreatureWindow() {
             <div class="creatures-window__body"></div>
         </div>
     `);
-    dragElement(window, 'creatures-window');
+    (0, utils_1.dragElement)(window, 'creatures-window');
 }
-
-function filterCreaturesList(value: string) {
+function filterCreaturesList(value) {
     document.querySelector('.creatures-window__body').innerHTML = '';
     switch (value) {
         case 'all':
@@ -62,15 +62,13 @@ function filterCreaturesList(value: string) {
             break;
     }
 }
-
-async function searchCreaturesList(value: string) {
+async function searchCreaturesList(value) {
     document.querySelector('.creatures-window__body').innerHTML = '';
-    await getCustomCreatures();
-    const selectedFilter = (<HTMLInputElement>document.getElementById('creature-list-filter')).value;
-
+    await (0, creatures_route_1.getCustomCreatures)();
+    const selectedFilter = document.getElementById('creature-list-filter').value;
     // Filter all standard creatures
     if (selectedFilter === 'all' || selectedFilter === 'standard') {
-        creatures.forEach((creature: any) => {
+        exports.creatures.forEach((creature) => {
             if (creature.name.toLowerCase().includes(value.toLowerCase())) {
                 renderStandardCreatureRow(creature);
             }
@@ -78,39 +76,35 @@ async function searchCreaturesList(value: string) {
     }
     // Filter all custom creatures
     if (selectedFilter === 'all' || selectedFilter === 'custom') {
-        customCreatures.forEach((creature: any) => {
+        exports.customCreatures.forEach((creature) => {
             if (creature.name.toLowerCase().includes(value.toLowerCase())) {
                 renderCustomCreatureRow(creature);
             }
         });
     }
 }
-
 async function getCreaturesBodyData() {
-    await getCustomCreatures();
-    for (let creature of customCreatures) {
+    await (0, creatures_route_1.getCustomCreatures)();
+    for (let creature of exports.customCreatures) {
         renderCustomCreatureRow(creature);
     }
-    for (let creature of creatures) {
+    for (let creature of exports.creatures) {
         renderStandardCreatureRow(creature);
     }
 }
-
 async function getStandardCreaturesData() {
-    for (let creature of creatures) {
+    for (let creature of exports.creatures) {
         renderStandardCreatureRow(creature);
     }
 }
-
 async function getCustomCreaturesData() {
-    await getCustomCreatures();
-    for (let creature of customCreatures) {
+    await (0, creatures_route_1.getCustomCreatures)();
+    for (let creature of exports.customCreatures) {
         renderCustomCreatureRow(creature);
     }
 }
-
 // Displays a standard creature on the creatures list.
-function renderStandardCreatureRow(creature: any) {
+function renderStandardCreatureRow(creature) {
     document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
         <div class="creatures-window__standard-creature">
             <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
@@ -119,9 +113,8 @@ function renderStandardCreatureRow(creature: any) {
         </div>
     `);
 }
-
 // Displays a custom creature on the creatures list.
-function renderCustomCreatureRow(creature: any) {
+function renderCustomCreatureRow(creature) {
     document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
         <div class="creatures-window__custom-creature">
             <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
@@ -131,8 +124,7 @@ function renderCustomCreatureRow(creature: any) {
         </div>
     `);
 }
-
-const creatureFormBody: any = `
+const creatureFormBody = `
 <div class="creatures-content">
     <button class="btn--window-close" onclick="toggleNewCreatureForm()">X</button>
     <div class="creatures-window-form__header">
@@ -317,23 +309,21 @@ const creatureFormBody: any = `
     </form>
 </div>
 `;
-
 function toggleNewCreatureForm() {
     creatureFormOpen = !creatureFormOpen;
     if (creatureFormOpen) {
         const window = document.querySelector('body').appendChild(document.createElement('div'));
         window.classList.add('creatures-window-form');
         window.insertAdjacentHTML('beforeend', creatureFormBody);
-        
-        disableHotkeys();
-        dragElement(window, 'creatures-window-form');
-    } else {
+        (0, utils_1.disableHotkeys)();
+        (0, utils_1.dragElement)(window, 'creatures-window-form');
+    }
+    else {
         document.querySelector('.creatures-window-form').remove();
     }
 }
-
 // Adds two inputs when user clicks a button
-function addInputs(_name: string) {
+function addInputs(_name) {
     document.querySelector(`.form__input-add--${_name}`).insertAdjacentHTML('beforeend', `
         <div class="flex-container">
             <input placeholder="name" class="input--md creature-inputs__${_name}-name">
@@ -342,9 +332,8 @@ function addInputs(_name: string) {
         </div>
     `);
 }
-
 // Adds an input and textarea when user clicks a button
-function addDescInputs(_name: string) {
+function addDescInputs(_name) {
     document.querySelector(`.form__input-add--${_name}`).insertAdjacentHTML('beforeend', `
         <label>
             <br/>
@@ -356,102 +345,95 @@ function addDescInputs(_name: string) {
         </label>
     `);
 }
-
-async function submitCreatureForm(e: Event) {
+async function submitCreatureForm(e) {
     e.preventDefault();
     let proficiencies = [];
     let senses = [];
     let abilities = [];
     let actions = [];
     let legActions = [];
-
-    let proficiencyName: any = document.getElementsByClassName('creature-inputs__proficiency-name');
-    let proficiencyValue: any = document.getElementsByClassName('creature-inputs__proficiency-value');
-    let senseName: any = document.getElementsByClassName('creature-inputs__sense-name');
-    let senseValue: any = document.getElementsByClassName('creature-inputs__sense-value');
-    let abilityName: any = document.getElementsByClassName('creature-inputs__ability-name');
-    let abilityDesc: any = document.getElementsByClassName('creature-inputs__ability-desc');
-    let actionName: any = document.getElementsByClassName('creature-inputs__action-name');
-    let actionDesc: any = document.getElementsByClassName('creature-inputs__action-desc');
-    let legActionName: any = document.getElementsByClassName('creature-inputs__leg-action-name');
-    let legActionDesc: any = document.getElementsByClassName('creature-inputs__leg-action-desc');
-
+    let proficiencyName = document.getElementsByClassName('creature-inputs__proficiency-name');
+    let proficiencyValue = document.getElementsByClassName('creature-inputs__proficiency-value');
+    let senseName = document.getElementsByClassName('creature-inputs__sense-name');
+    let senseValue = document.getElementsByClassName('creature-inputs__sense-value');
+    let abilityName = document.getElementsByClassName('creature-inputs__ability-name');
+    let abilityDesc = document.getElementsByClassName('creature-inputs__ability-desc');
+    let actionName = document.getElementsByClassName('creature-inputs__action-name');
+    let actionDesc = document.getElementsByClassName('creature-inputs__action-desc');
+    let legActionName = document.getElementsByClassName('creature-inputs__leg-action-name');
+    let legActionDesc = document.getElementsByClassName('creature-inputs__leg-action-desc');
     for (let i = 0; i < proficiencyName.length; i++) {
         if (proficiencyName[i].value !== '' || proficiencyValue[i].value !== '') {
-            proficiencies.push({name: proficiencyName[i].value, value: proficiencyValue[i].value});
+            proficiencies.push({ name: proficiencyName[i].value, value: proficiencyValue[i].value });
         }
     }
     for (let i = 0; i < senseName.length; i++) {
         if (senseName[i].value !== '' || senseValue[i].value !== '') {
-            senses.push({name: senseName[i].value, value: senseValue[i].value});
+            senses.push({ name: senseName[i].value, value: senseValue[i].value });
         }
     }
     for (let i = 0; i < abilityName.length; i++) {
         if (abilityName[i].value !== '' || abilityDesc[i].value !== '') {
-            abilities.push({name: abilityName[i].value, desc: abilityDesc[i].value});
+            abilities.push({ name: abilityName[i].value, desc: abilityDesc[i].value });
         }
     }
     for (let i = 0; i < actionName.length; i++) {
         if (actionName[i].value !== '' || actionDesc[i].value !== '') {
-            actions.push({name: actionName[i].value, desc: actionDesc[i].value});
+            actions.push({ name: actionName[i].value, desc: actionDesc[i].value });
         }
     }
     for (let i = 0; i < legActionName.length; i++) {
         if (legActionName[i].value !== '' || legActionDesc[i].value !== '') {
-            legActions.push({name: legActionName[i].value, desc: legActionDesc[i].value});
+            legActions.push({ name: legActionName[i].value, desc: legActionDesc[i].value });
         }
     }
-
     toggleNewCreatureForm();
     toggleNewCreatureForm();
-    if (creaturesOpen) {
+    if (exports.creaturesOpen) {
         toggleCreaturesWindow();
-        setTimeout(function() { toggleCreaturesWindow(); }, 100);
+        setTimeout(function () { toggleCreaturesWindow(); }, 100);
     }
-
-    const newCreature = new CreatureFormData(indexConverter(creatureFormName), 'https://www.dandwiki.com/w/images/3/37/BreadSpawn.jpg', creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, creatureFormAc, creatureFormHitPoints, creatureFormHitDice, creatureFormStr, creatureFormDex, creatureFormCon, creatureFormInt, creatureFormWis, creatureFormChar, creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, creatureFormCr, creatureFormXp, creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb, proficiencies, senses, abilities, actions, legActions);
-    addCreature(newCreature);
+    const newCreature = new CreatureFormData((0, utils_1.indexConverter)(creatureFormName), 'https://www.dandwiki.com/w/images/3/37/BreadSpawn.jpg', creatureFormName, creatureFormSize, creatureFormType, creatureFormAlignment, creatureFormAc, creatureFormHitPoints, creatureFormHitDice, creatureFormStr, creatureFormDex, creatureFormCon, creatureFormInt, creatureFormWis, creatureFormChar, creatureFormVul, creatureFormRes, creatureFormDmgImmune, creatureFormConImmune, creatureFormLanguages, creatureFormCr, creatureFormXp, creatureFormWalk, creatureFormSwim, creatureFormBurrow, creatureFormFly, creatureFormClimb, proficiencies, senses, abilities, actions, legActions);
+    (0, creatures_route_1.addCreature)(newCreature);
 }
-
 // Holds creature form data
 class CreatureFormData {
-    index: string;
-    image: string;
-    name: string;
-    size: string;
-    type: string;
-    alignment: string;
-    ac: number;
-    hp: number;
-    hitDice: string;
-    str: number;
-    dex: number;
-    con: number;
-    int: number;
-    wis: number;
-    char: number;
-    vul: string;
-    res: string;
-    dmgImmune: string;
-    conImmune: string;
-    languages: string;
-    cr: number;
-    xp: number;
-    speeds: any;
-    proficiencies: any;
-    senses: any;
-    abilities: any;
-    actions: any;
-    legActions: any;
-    walk: number;
-    swim: number;
-    burrow: number;
-    fly: number;
-    climb: number;
-
-    constructor(index: string, image: string, name: string, size: string, type: string, alignment: string, ac: number, hp: number, hitDice: string, str: number, dex: number, con: number, int: number, wis: number, char: number, vul: string, res: string, dmgImmune: string, conImmune: string, languages: string, cr: number, xp: number, walk: number, swim: number, burrow: number, fly: number, climb: number, proficiencies: any, senses: any, abilities: any, actions: any, legActions: any) {
+    index;
+    image;
+    name;
+    size;
+    type;
+    alignment;
+    ac;
+    hp;
+    hitDice;
+    str;
+    dex;
+    con;
+    int;
+    wis;
+    char;
+    vul;
+    res;
+    dmgImmune;
+    conImmune;
+    languages;
+    cr;
+    xp;
+    speeds;
+    proficiencies;
+    senses;
+    abilities;
+    actions;
+    legActions;
+    walk;
+    swim;
+    burrow;
+    fly;
+    climb;
+    constructor(index, image, name, size, type, alignment, ac, hp, hitDice, str, dex, con, int, wis, char, vul, res, dmgImmune, conImmune, languages, cr, xp, walk, swim, burrow, fly, climb, proficiencies, senses, abilities, actions, legActions) {
         this.index = index;
-        this.image = image;        
+        this.image = image;
         this.name = name;
         this.size = size;
         this.type = type;

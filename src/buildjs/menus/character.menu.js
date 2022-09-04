@@ -1,13 +1,14 @@
-import { menuOpen, selectedMenu, closeMenu } from '../utils';
-import { getCharacters, getCharacter } from '../routes/characters.route';
-
-export let characters: any = {value: []};
-export let character: any = {value: {}};
-
-export function toggleCharacterMenu(menuName: string) {
-    menuOpen.value = !menuOpen.value;
-    if (menuOpen.value) {
-        selectedMenu.value = 'characters';
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.toggleCharacterMenu = exports.character = exports.characters = void 0;
+const utils_1 = require("../utils");
+const characters_route_1 = require("../routes/characters.route");
+exports.characters = { value: [] };
+exports.character = { value: {} };
+function toggleCharacterMenu(menuName) {
+    utils_1.menuOpen.value = !utils_1.menuOpen.value;
+    if (utils_1.menuOpen.value) {
+        utils_1.selectedMenu.value = 'characters';
         // Create menu
         document.querySelector('.game-page-container').insertAdjacentHTML('beforeend', `
             <div class="menu">
@@ -16,14 +17,15 @@ export function toggleCharacterMenu(menuName: string) {
             </div>
         `);
         getCharacterBodyData();
-    } else {
-        closeMenu(menuName);
+    }
+    else {
+        (0, utils_1.closeMenu)(menuName);
     }
 }
-
+exports.toggleCharacterMenu = toggleCharacterMenu;
 async function getCharacterBodyData() {
-    await getCharacters();
-    for (let character of characters) {
+    await (0, characters_route_1.getCharacters)();
+    for (let character of exports.characters) {
         document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
             <div class="menu__item menu__item--character" onclick="selectCharacter(${character.id})">
                 <img src=${character.image}>
@@ -33,7 +35,6 @@ async function getCharacterBodyData() {
             </div>
         `);
     }
-
     // Add new character button
     document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
         <div class="menu__item menu__item--character-btn">
@@ -41,12 +42,10 @@ async function getCharacterBodyData() {
         </div>
     `);
 }
-
-async function selectCharacter(id: string) {
-    character = await getCharacter(id);
+async function selectCharacter(id) {
+    exports.character = await (0, characters_route_1.getCharacter)(id);
     toggleCharacterMenu('characters');
 }
-
 // function newCharacter() {
 //     document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
 //         <form class="form--menu" onsubmit="submitNewCharacter(event)">
@@ -55,11 +54,9 @@ async function selectCharacter(id: string) {
 //         </form>
 //     `);
 // }
-
 // // For new character form
 // let newCharacterName, newCharacterLevel, newCharacterClass, newCharacterRace;
 // const characterNameChange = (e) => newCharacterName = e.target.value;
-
 // function submitNewCharacter(e) {
 //     e.preventDefault();
 //     addCharacter({name: newMapName, image: newMapImage});
