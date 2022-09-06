@@ -1,10 +1,8 @@
 import { getGames, getPrevGame, addPrevGame } from "./routes/dashboard.route";
 import { getCreatures } from "./routes/creatures.route";
 import { gamePageLoaded } from "./grid";
-import { io, Socket } from "socket.io-client";
 
-const socket: Socket = io();
-export let gamesList: any = {value: []};
+export let gamesList: any = { value: [] };
 let gameFormOpen: boolean = false;
 let gameNameInput: string;
 export let client: any;
@@ -12,14 +10,15 @@ export let room: any;
 let prevGame: any;
 let roomCode: string;
 
-document.addEventListener('DOMContentLoaded', async () => {
+
+export async function setupGame() {
     getGames();
     prevGame = await getPrevGame();
     roomCode = prevGame.code;
     (<HTMLInputElement>document.getElementById('room-code-input')).value = prevGame.code;
     // Get D&D api data
     getCreatures();
-});
+}
 
 function joinPlayer(roomCode: string, e: Event) {
     e.preventDefault();

@@ -5,6 +5,6 @@
       "watch": true,
       "lib": ["dom", "ES2022", "dom.iterable"]
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

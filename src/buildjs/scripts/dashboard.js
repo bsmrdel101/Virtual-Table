@@ -1,24 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setGamesList = exports.room = exports.client = exports.gamesList = void 0;
+exports.setGamesList = exports.setupGame = exports.room = exports.client = exports.gamesList = void 0;
 const dashboard_route_1 = require("./routes/dashboard.route");
 const creatures_route_1 = require("./routes/creatures.route");
 const grid_1 = require("./grid");
-const socket_io_client_1 = require("socket.io-client");
-const socket = (0, socket_io_client_1.io)();
 exports.gamesList = { value: [] };
 let gameFormOpen = false;
 let gameNameInput;
 let prevGame;
 let roomCode;
-document.addEventListener('DOMContentLoaded', async () => {
+async function setupGame() {
     (0, dashboard_route_1.getGames)();
     prevGame = await (0, dashboard_route_1.getPrevGame)();
     roomCode = prevGame.code;
     document.getElementById('room-code-input').value = prevGame.code;
     // Get D&D api data
     (0, creatures_route_1.getCreatures)();
-});
+}
+exports.setupGame = setupGame;
 function joinPlayer(roomCode, e) {
     e.preventDefault();
     exports.room = roomCode;

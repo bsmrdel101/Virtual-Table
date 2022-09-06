@@ -16,38 +16,38 @@ let charMod: number;
 export function toggleCharacterSheet() {
     sheetOpen = !sheetOpen;
     if (sheetOpen) {
-        let strMod = Math.floor((character.str - 10) / 2);
-        let dexMod = Math.floor((character.dex - 10) / 2);
-        let conMod = Math.floor((character.con - 10) / 2);
-        let intMod = Math.floor((character.int - 10) / 2);
-        let wisMod = Math.floor((character.wis - 10) / 2);
-        let charMod = Math.floor((character.char - 10) / 2);
+        let strMod = Math.floor((_character.str - 10) / 2);
+        let dexMod = Math.floor((_character.dex - 10) / 2);
+        let conMod = Math.floor((_character.con - 10) / 2);
+        let intMod = Math.floor((_character.int - 10) / 2);
+        let wisMod = Math.floor((_character.wis - 10) / 2);
+        let charMod = Math.floor((_character.char - 10) / 2);
 
         const sheetWindow = document.querySelector('body').appendChild(document.createElement('div'));
         sheetWindow.classList.add('character-sheet');
         sheetWindow.insertAdjacentHTML('beforeend', `
             <div class="sheet-content">
                 <div class="character-sheet__header">
-                    <img class="character-sheet__image" src=${character.image}>
-                    <h2>${character.name}</h2>
+                    <img class="character-sheet__image" src=${_character.image}>
+                    <h2>${_character.name}</h2>
                 </div>
                 <div class="character-sheet__main">
-                    <p>Level ${character.level}</p>
+                    <p>Level ${_character.level}</p>
                 </div>
                 <div class="character-sheet__main">
-                    <p>${character.race} ${character.class} ${character.background}</p>
+                    <p>${_character.race} ${_character.class} ${_character.background}</p>
                 </div>
                 <div class="character-sheet__main">
-                    <p>Prof bonus: +${character.prof_bonus} Hit dice: ${character.level}d${character.hit_dice}</p>
+                    <p>Prof bonus: +${_character.prof_bonus} Hit dice: ${_character.level}d${_character.hit_dice}</p>
                 </div>
                 <div class="character-sheet__main">
-                    <p>AC: ${character.ac} Initiative: ${character.initiative} Movement: ${character.movement}</p>
+                    <p>AC: ${_character.ac} Initiative: ${_character.initiative} Movement: ${_character.movement}</p>
                 </div>
                 <div class="character-sheet__health--temp">
-                    <p class="temp-hp"><img src="../images/heart-blue.png"> ${character.temp_health}</p>
+                    <p class="temp-hp"><img src="../images/heart-blue.png"> ${_character.temp_health}</p>
                 </div>
                 <div class="character-sheet__health">
-                    <p class="hp"><img src="../images/heart-red.png"> ${character.max_health} / ${character.current_health}</p>
+                    <p class="hp"><img src="../images/heart-red.png"> ${_character.max_health} / ${_character.current_health}</p>
                 </div>
                 <div class="character-sheet__health-tracker">
                     <form onsubmit="damageHp(event)"><p>Damage <button type="submit">-</button><input type="number" onchange="dmgAddInput = event.target.value"></p></form>
@@ -57,42 +57,42 @@ export function toggleCharacterSheet() {
                 <div class="character-sheet__scores">
                     <div class="character-sheet__score-box">
                         <p>Str</p>
-                        <p>${character.str}</p>
+                        <p>${_character.str}</p>
                         <div class="character-sheet__modifier-box">
                             <p>${strMod < 0 ? '' : '+'} ${strMod}</p>
                         </div>
                     </div>
                     <div class="character-sheet__score-box">
                         <p>Dex</p>
-                        <p>${character.dex}</p>
+                        <p>${_character.dex}</p>
                         <div class="character-sheet__modifier-box">
                             <p>${dexMod < 0 ? '' : '+'} ${dexMod}</p>
                         </div>
                     </div>
                     <div class="character-sheet__score-box">
                         <p>Con</p>
-                        <p>${character.con}</p>
+                        <p>${_character.con}</p>
                         <div class="character-sheet__modifier-box">
                             <p>${conMod < 0 ? '' : '+'} ${conMod}</p>
                         </div>
                     </div>
                     <div class="character-sheet__score-box">
                         <p>Int</p>
-                        <p>${character.int}</p>
+                        <p>${_character.int}</p>
                         <div class="character-sheet__modifier-box">
                             <p>${intMod < 0 ? '' : '+'} ${intMod}</p>
                         </div>
                     </div>
                     <div class="character-sheet__score-box">
                         <p>Wis</p>
-                        <p>${character.wis}</p>
+                        <p>${_character.wis}</p>
                         <div class="character-sheet__modifier-box">
                             <p>${wisMod < 0 ? '' : '+'} ${wisMod}</p>
                         </div>
                     </div>
                     <div class="character-sheet__score-box">
                         <p>Char</p>
-                        <p>${character.char}</p>
+                        <p>${_character.char}</p>
                         <div class="character-sheet__modifier-box">
                             <p>${charMod < 0 ? '' : '+'} ${charMod}</p>
                         </div>
