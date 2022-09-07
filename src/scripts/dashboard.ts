@@ -1,7 +1,9 @@
-import { getGames, getPrevGame, addPrevGame } from "./routes/dashboard.route";
-import { getCreatures } from "./routes/creatures.route";
-import { gamePageLoaded } from "./grid";
+import { getGames, getPrevGame, addPrevGame } from "./routes/dashboard.route.js";
+import { getCreatures } from "./routes/creatures.route.js";
+import { gamePageLoaded } from "./grid.js";
+import { io, Socket } from "socket.io-client";
 
+const socket: Socket = io();
 export let gamesList: any = { value: [] };
 let gameFormOpen: boolean = false;
 let gameNameInput: string;
@@ -57,10 +59,15 @@ export function setGamesList() {
     const gamesListEl = document.querySelector('.games-list__content');
     for (let game of gamesList.value) {
         gamesListEl.insertAdjacentHTML('beforeend', `
-            <div class="game-list__item" onclick="joinDM('${game.code}')">
+            <div class="game-list__item" data-room-code='${game.code}'>
                 <p>${game.name}</p>
             </div>
         `);
+        document.addEventListener('click', (e: any) => {
+            if (e.target.matches('.game-list__item')) {
+                console.log(e.target);
+            }
+        });
     }
 
     gamesListEl.insertAdjacentHTML('beforeend', `

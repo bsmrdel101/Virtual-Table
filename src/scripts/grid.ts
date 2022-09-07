@@ -7,7 +7,9 @@ import { changeNewUser, getUser } from './routes/users.route';
 import { toggleCharacterMenu } from './menus/character.menu';
 import { client } from './dashboard';
 import { openCreatureStatsWindow } from './creature-stats';
+import { io, Socket } from "socket.io-client";
 
+const socket: Socket = io();
 let canOpenStats: boolean = true;
 let x: number = 0, y: number = 0;
 export let root: any = document.documentElement;
