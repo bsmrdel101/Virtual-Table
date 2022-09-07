@@ -1,4 +1,4 @@
-import { getGames, getPrevGame, addPrevGame } from "./routes/dashboard.route.js";
+import { getGames, getPrevGame, addPrevGame, addGame } from "./routes/dashboard.route.js";
 import { getCreatures } from "./routes/creatures.route.js";
 import { gamePageLoaded } from "./grid.js";
 import { io, Socket } from "socket.io-client";
@@ -70,15 +70,20 @@ export function setGamesList() {
     }
 
     gamesListEl.insertAdjacentHTML('beforeend', `
-        <button class="games-list__button btn--hover" onclick="addGameForm()">Create Campaign</button>
+        <button class="games-list__button btn--hover" id="create-campaign-btn">Create Campaign</button>
     `);    
 }
 
-// Detects if user has clicked on a campaign, to join as a DM
+// Detects if user has clicked on a button
 document.addEventListener('click', (e: any) => {
-    if (e.target.matches('.game-list__item')) {
-        const target = e.target;
+    e.preventDefault();
+    const target = e.target;
+    if (target.matches('#create-campaign-btn')) {
+        addGameForm();
+    } else if (target.matches('.game-list__item')) {
         joinDM(target.getAttribute('room-code'));
+    } else if (target.matches('#add-game-btn')) {
+        addGame({name: gameNameInput});
     }
 });
 
@@ -86,9 +91,9 @@ function addGameForm() {
     gameFormOpen = !gameFormOpen;
     if (gameFormOpen) {
         document.querySelector('.games-list__content').insertAdjacentHTML('beforeend', `
-            <form class="form--add-game" onsubmit="addGame({name: gameNameInput}, event)">
+            <form class="form--add-game">
                 <input placeholder="name" onchange="gameNameInput = event.target.value" required>
-                <button class="button--submit btn--hover">Submit</button>
+                <button class="button--submit btn--hover" id="add-game-btn" type="submit">Submit</button>
             </form>
         `);
     } else {

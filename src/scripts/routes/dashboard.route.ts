@@ -24,8 +24,7 @@ export async function getPrevGame() {
 
 // === POST routes === //
 
-export async function addGame(payload, e) {
-    e.preventDefault();
+export async function addGame(payload: any) {
     try {
         await axios.post('/api/dashboard', payload);
         getGames();
@@ -34,7 +33,7 @@ export async function addGame(payload, e) {
     }
 }
 
-export async function addPrevGame(payload) {
+export async function addPrevGame(payload: any) {
     try {
         await axios.delete('/api/dashboard/prev', payload);
         await axios.post('/api/dashboard/prev', payload);
