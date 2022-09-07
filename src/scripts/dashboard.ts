@@ -59,13 +59,12 @@ export function setGamesList() {
     const gamesListEl = document.querySelector('.games-list__content');
     for (let game of gamesList.value) {
         gamesListEl.insertAdjacentHTML('beforeend', `
-            <div class="game-list__item" data-room-code='${game.code}'>
-                <p>${game.name}</p>
-            </div>
+            <button class="game-list__item" room-code='${game.code}'>${game.name}</button>
         `);
         document.addEventListener('click', (e: any) => {
             if (e.target.matches('.game-list__item')) {
-                console.log(e.target);
+                const target = e.target;
+                joinDM(target.getAttribute('room-code'));
             }
         });
     }
