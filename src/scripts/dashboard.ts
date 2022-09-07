@@ -38,6 +38,12 @@ function joinPlayer(roomCode: string, e: Event) {
     });
 }
 
+// Detects if user has clicked the join room button, to join as a player
+document.getElementById('join-player-btn').addEventListener('click', (e: any) => {
+    e.preventDefault();
+    joinPlayer(roomCode, e);
+});
+
 function joinDM(roomCode: string) {
     room = roomCode;
     socket.emit('JOIN_ROOM', 'dm', roomCode, (roomExists: boolean, newClient: any) => {
@@ -61,18 +67,20 @@ export function setGamesList() {
         gamesListEl.insertAdjacentHTML('beforeend', `
             <button class="game-list__item" room-code='${game.code}'>${game.name}</button>
         `);
-        document.addEventListener('click', (e: any) => {
-            if (e.target.matches('.game-list__item')) {
-                const target = e.target;
-                joinDM(target.getAttribute('room-code'));
-            }
-        });
     }
 
     gamesListEl.insertAdjacentHTML('beforeend', `
         <button class="games-list__button btn--hover" onclick="addGameForm()">Create Campaign</button>
     `);    
 }
+
+// Detects if user has clicked on a campaign, to join as a DM
+document.addEventListener('click', (e: any) => {
+    if (e.target.matches('.game-list__item')) {
+        const target = e.target;
+        joinDM(target.getAttribute('room-code'));
+    }
+});
 
 function addGameForm() {
     gameFormOpen = !gameFormOpen;

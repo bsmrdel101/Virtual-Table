@@ -55,9 +55,9 @@
         <section class="dashboard-page-container">
             <h1 class="page-title">Dashboard</h1>
             <div class="dashboard-container">
-                <form onsubmit="joinPlayer(roomCode, event)" class="form--join-room">
+                <form class="form--join-room">
                     <input id="room-code-input" placeholder="room code" onchange="roomCode = event.target.value" value="" required>
-                    <button type="submit">Join Room</button>
+                    <button type="submit" id="join-player-btn">Join Room</button>
                 </form>
                 <div class="games-list">
                     <div class="games-list__content"></div>
