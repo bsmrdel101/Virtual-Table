@@ -8,13 +8,9 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="../build/styles.css">
     <!-- Scripts -->
+    <script src="../buildjs/index.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="../scripts/utils.js"></script>
-    <!-- Routes -->
-    <script src="../scripts/routes/users.route.js"></script>
-    <script>
-        let username, password;
-    </script>
+    <!-- <script src="../scripts/utils.js"></script> -->
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,10 +19,10 @@
 <body>
     <center class="login-page-container">
         <h1>Login</h1>
-        <form class="login-form" onsubmit="loginUser({username: username, password: password}, event)">
-            <input placeholder="username" onchange="username = event.target.value" required>
-            <input placeholder="password" type="password" onchange="password = event.target.value" required>
-            <button type="submit">Login</button>
+        <form class="login-form">
+            <input id="login-username" placeholder="username" required>
+            <input id="login-password" placeholder="password" type="password" required>
+            <button type="submit" id="login-btn">Login</button>
         </form>
         <a class="login-link" href="/register">Register</a>
     </center>

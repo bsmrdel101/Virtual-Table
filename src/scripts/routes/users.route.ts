@@ -18,8 +18,7 @@ export async function getUser() {
 
 // === POST routes === //
 
-async function registerUser(e: Event, payload: any) {
-    e.preventDefault();
+export async function registerUser(payload: any) {
     try {
         await axios.post('/api/user/register', payload);
         changeRoute('login');
@@ -28,8 +27,7 @@ async function registerUser(e: Event, payload: any) {
     }
 }
 
-async function loginUser(payload: any, e: Event) {
-    e.preventDefault();
+export async function loginUser(payload: any) {
     try {
         await axios.post('/api/user/login', payload);
         changeRoute('game');
@@ -38,7 +36,7 @@ async function loginUser(payload: any, e: Event) {
     }
 }
 
-async function logout() {
+export async function logout() {
     try {
         await axios.post('/api/user/logout');
         changeRoute('login');

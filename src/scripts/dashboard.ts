@@ -2,6 +2,7 @@ import { getGames, getPrevGame, addPrevGame, addGame } from "./routes/dashboard.
 import { getCreatures } from "./routes/creatures.route.js";
 import { gamePageLoaded } from "./grid.js";
 import { io, Socket } from "socket.io-client";
+import { logout, loginUser } from "./routes/users.route.js";
 
 const socket: Socket = io();
 export let gamesList: any = { value: [] };
@@ -11,6 +12,7 @@ export let client: any;
 export let room: any;
 let prevGame: any;
 let roomCode: string;
+let username: string, password: string;
 
 
 export async function setupGame() {
@@ -84,6 +86,10 @@ document.addEventListener('click', (e: any) => {
         joinDM(target.getAttribute('room-code'));
     } else if (target.matches('#add-game-btn')) {
         addGame({name: gameNameInput});
+    } else if (target.matches('#logout-btn-dashboard')) {
+        logout();
+    } else if (target.matches('#login-btn')) {
+        loginUser({username: (<HTMLInputElement>document.getElementById('login-username')).value, password: (<HTMLInputElement>document.getElementById('login-password')).value});
     }
 });
 
