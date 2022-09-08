@@ -48,22 +48,22 @@ async function getMapBodyData() {
 }
 
 function selectMap(e) {
-    for (let map of maps) {
+    maps.forEach((map) => {
         if (map.id === parseInt(e.target.getAttribute('id'))) {
             socket.emit('SELECT_MAP', {width: e.target.clientWidth, height: e.target.clientHeight}, map);
         }
-    }
+    });
 }
 
 socket.on('SELECT_MAP', ((e, map) => {
     if (map.name === 'Default Map') {
         // Set image to nothing
-        root.style.setProperty('--background-image', `url('')`);
-        setupGrid(25, 25, true);
+        document.querySelector('.grid').style.setProperty('--map-background', `rgb(237 237 237 / 52%)`);
+        setupGrid(25, 25);
     } else {
         // Set new map image
-        root.style.setProperty('--background-image', `url(${map.image})`);
-        setupGrid(e.width / 2, e.height / 2, true);
+        document.querySelector('.grid').style.setProperty('--map-background', `url('${map.image}')`);
+        setupGrid(e.width / 2, e.height / 2);
     }
 }));
 

@@ -6,11 +6,19 @@ const clamp = (num, min, max) => Math.min(Math.max(num, min), max);
 
 // Will find and return a cell with the parameters given
 function findCell(x, y) {
-    for (const cell of cells) {
+    for (const cell of document.querySelectorAll('.grid__cell')) {
         if (cell.getAttribute('x') === x.toString() && cell.getAttribute('y') === y.toString()) {
             return cell;
         }
     }
+}
+
+function findRelativeCell(elmt, offsetX, offsetY) {
+    const cellWidth = elmt.clientWidth;
+    const cellHeight = elmt.clientHeight;
+    const numXCells = Math.ceil(offsetX / cellWidth) - 1;
+    const numYCells = Math.ceil(offsetY / cellHeight) - 1;
+    return findCell(elmt.getAttribute('x') - numXCells, elmt.getAttribute('y') - numYCells);
 }
 
 function closeMenu(menuName) {
@@ -98,5 +106,6 @@ function disableHotkeys() {
 }
 
 if (typeof module !== 'undefined') module.exports = {
-    indexConverter
+    indexConverter,
+    findRelativeCell
 };

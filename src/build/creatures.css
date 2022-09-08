@@ -15,6 +15,7 @@
   min-height: 61%;
   overflow-y: auto;
   border-bottom: 8px solid var(--menu-color-0);
+  z-index: 1;
 }
 
 .creature-stats-window {

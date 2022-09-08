@@ -4,6 +4,7 @@
   height: 90vh;
   margin-top: 0.8rem;
   border: 2px solid var(--grid-border-color);
+  border-top: 2.8px solid var(--grid-border-color);
   background-color: var(--background-color-1);
   -webkit-touch-callout: none;
   -webkit-user-select: none;
@@ -13,22 +14,24 @@
   user-select: none;
 }
 
-#grid {
-  border-collapse: collapse;
-  background-color: var(--grid-color);
+.grid {
+  --grid-x: 25;
+  --grid-y: 25;
+  --size: 30px;
+  --map-background: rgb(237 237 237 / 52%);
+  --grid-color: rgb(0 0 0);
+  height: calc(var(--size) * var(--grid-y));
+  width: calc(var(--size) * var(--grid-x));
+  display: grid;
+  grid-template-columns: repeat(var(--grid-x), var(--size));
+  grid-template-rows: repeat(var(--grid-x), var(--size));
+  box-shadow: 0 -1px var(--grid-color), 1px 0 var(--grid-color), 1px -1px var(--grid-color);
+  background: repeating-linear-gradient(90deg, var(--grid-color) 0, rgba(0, 0, 0, 0) 1px, rgba(0, 0, 0, 0) var(--size)), repeating-linear-gradient(0deg, var(--grid-color) 0, rgba(0, 0, 0, 0) 1px, rgba(0, 0, 0, 0) var(--size)), var(--map-background);
   background-repeat: no-repeat;
-  background-size: contain;
-  background-image: var(--background-image);
-  image-rendering: crisp-edges;
+  background-size: cover;
 }
-
 .grid__cell {
-  border: 1px solid var(--cell-border-color);
-  text-align: center;
   position: relative;
-  padding: var(--zoom);
-  text-align: center;
-  vertical-align: middle;
 }
 
 .panning {

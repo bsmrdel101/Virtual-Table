@@ -11,6 +11,7 @@
   max-width: 25rem;
   min-width: 25rem;
   min-height: 61%;
+  z-index: 1;
   /* HEALTH TRACKER */
   /* ABILITY SCORES */
   /* ABILITY MODIFIERS */

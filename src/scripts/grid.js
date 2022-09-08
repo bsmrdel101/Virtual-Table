@@ -1,8 +1,6 @@
-let x = 0; 
-let y = 0;
+let x = 0, y = 0;
 let root = document.documentElement;
-let zoomMin = 0.5;
-let zoomMax = 10;
+let zoomMin = 12, zoomMax = 64;
 let user;
 let playerList = [];
 let cells = [];
@@ -10,12 +8,15 @@ let currentMap;
 let playersListOpen = false;
 let cellToDelete;
 let canPlace = true;
+let lastPos;
+let mousePos = {};
 
+// This function is called after the DOM is loaded
 async function gamePageLoaded() {
     user = await fetchUser();
     socket.emit('SET_NAME', user.username);
     socket.emit('UPDATE_PLAYER_LIST', room);
-    setupGrid(25, 25, false);
+    setupGrid(25, 25);
 
     if (user.new_user) {
         addDefaultTokens();
@@ -31,131 +32,111 @@ async function gamePageLoaded() {
     }
 }
 
-function setupGrid(width, height, clear) {
-    document.getElementById('grid').addEventListener("contextmenu", e => e.preventDefault());
-    clear && clearMap();
+function setupGrid(width, height) {
+    const grid = document.querySelector('.grid');
+    grid.style.setProperty('--grid-x', width);
+    grid.style.setProperty('--grid-y', height);
 
-    for (let a = 0; a < height - 2; a++) {
-        // Create row
-        let newRow = document.getElementById('grid').appendChild(document.createElement('tr'));
+    // Adding 1 to width and height, because grid starts at (1,1)
+    createGridClickDetection(width + 1, height + 1, grid);
 
-        // Create cell
-        for (let b = 0; b < width; b++) {
-            let newCell = newRow.appendChild(document.createElement('td'));
-            newCell.classList.add('grid__cell');
-            if (x > width - 1) x = 0;
+    let selectedCell;
+    addGridEvents(grid, selectedCell);
+}
 
-            newCell.setAttribute('x', x);
-            newCell.setAttribute('y', y);
-            x++;
+// Add event handlers for the grid
+function addGridEvents(grid, selectedCell) {
+    // Fires whenever token is dragged over the grid
+    // The last cell hovered over is the selected cell
+    grid.addEventListener('dragover', (e) => {
+        selectedCell = e.target;
+    });
 
-            // Fires when element is dragged over this grid cell
-            newCell.addEventListener("dragover", (e) => {
-                const token = document.querySelector('.token--dragging');
-                if (!hasEvents) giveTokenEvents(token);
-                hasEvents = true;
-                newCell.appendChild(token);
-                token.classList.add('token');
-                if (token.classList.contains('menu__item')) cellToDelete = '';
-                token.classList.remove('menu__item');
-                token.classList.remove('menu__item--token');
-                if (token.getAttribute('size')) token.classList.add(token.getAttribute('size'));    
-            });
-            newCell.addEventListener("mousedown", (e) => {
-                if (e.which === 1) {
-                    for (let i = 0; i < 4; i++) {
-                        if (e.path[i].classList.contains('grid__cell')) {
-                            cellToDelete = e.path[i];
-                        }
-                    }
-                }
-            });
-            newCell.addEventListener("dragend", () => {
-                const token = newCell.firstChild;
-                if (token) {
-                    let size = token.getAttribute('size');
-                    let image = token.getAttribute('src');
-                    let relative = token.getAttribute('relative'); 
-                    let id = token.getAttribute('id');
-                    // Set token
-                    token.classList.remove('token--dragging');
-                    token.removeAttribute('onmousedown');
-                    // Open stats menu after double click
-                    token.addEventListener("dblclick", () => {
-                        if (relative === 'null' || client.clientType === 'player') return;
+    document.addEventListener('dragend', () => {
+        const relativeCell = findRelativeCell(selectedCell, mousePos.x, mousePos.y);
+        addTokenToBoard(relativeCell || selectedCell);
+    });
+}
 
-                        if (canOpenStats) {
-                            openCreatureStatsWindow(relative)
-                            canOpenStats = false;
-                        } else {
-                            setTimeout(function() { canOpenStats = true; }, 100);
-                        }
-                    });
-                    // Remove token at previous position
-                    if (cellToDelete) socket.emit('REMOVE_TOKEN', {x: parseInt(cellToDelete.getAttribute('x')), y: parseInt(cellToDelete.getAttribute('y'))}, room);
+function addTokenEvents(token, relative) {
+    // Open stats menu after double click
+    token.addEventListener('dblclick', () => {
+        if (!relative) return;
+        openCreatureStatsWindow(relative);
+    });
+    // Handle dragging token
+    token.addEventListener('dragstart', (e) => {
+        const tokenPos = token.getBoundingClientRect();
+        mousePos = {
+            x: e.x - tokenPos.x,
+            y: e.y - tokenPos.y
+        };
 
-                    // Place new token
-                    const newToken = new Token(id, image, size, relative);
-                    canPlace = false;
-                    socket.emit('PLACE_TOKEN', {x: parseInt(newCell.getAttribute('x')), y: parseInt(newCell.getAttribute('y'))}, newToken, user.username, room);
-                    // Refresh token menu
-                    resetTokenBodyData();
-                    canOpenStats = true;
-                }
-            });
+        placeToken(e, parseInt(token.getAttribute('size')));
+        const cell = token.parentNode;
+        lastPos = {x: parseInt(cell.getAttribute('x')), y: parseInt(cell.getAttribute('y'))};
+    });
+    // Handle token moved
+    token.addEventListener('dragend', () => {
+        socket.emit('REMOVE_TOKEN', lastPos, room);
+        const size = parseInt(token.getAttribute('size'));
+        socket.emit('REMOVE_OCCUPIED_TOKEN_SPACE', lastPos.x, lastPos.y, size, room);
+    });
+}
 
-            cells.push(newCell);
-        }
-        y++;
+function addTokenToBoard(selectedCell) {
+    // Clone token being dragged from menu
+    const menuToken = document.querySelector('.token--dragging');
+    menuToken.classList.remove('token--dragging');
+
+    if (!parseInt(selectedCell.getAttribute('x'))) {
+        menuToken.classList.remove('menu__item');
+        menuToken.classList.remove('menu__item--token');
+        socketPlaceToken({x: lastPos.x, y: lastPos.y}, {img: menuToken.getAttribute('src'), relative: menuToken.getAttribute('relative'), id: parseInt(menuToken.id), size: parseInt(menuToken.getAttribute('size'))}, user.username, room);
+    }
+
+    if (!selectedCell.childNodes.length > 0) {
+        menuToken.classList.remove('menu__item');
+        menuToken.classList.remove('menu__item--token');
+        socketPlaceToken({x: parseInt(selectedCell.getAttribute('x')), y: parseInt(selectedCell.getAttribute('y'))}, {img: menuToken.getAttribute('src'), relative: menuToken.getAttribute('relative'), id: parseInt(menuToken.id), size: parseInt(menuToken.getAttribute('size'))}, user.username, room);
     }
 }
 
-// Places token on board
-function createToken(cell, newToken, username) {
-    if (canPlace) {
-        const token = cell.appendChild(document.createElement('img'));
-        token.setAttribute('src', newToken.image);
-        token.setAttribute('id', newToken.id);
-        token.setAttribute('relative', newToken.relative);
-        token.classList.add('token');
-        token.classList.add(newToken.size);
-        token.setAttribute('size', newToken.size);
-        if (username) token.setAttribute('owner', username);
-        giveTokenEvents(token);
-
-        let relative = token.getAttribute('relative');
-        token.addEventListener("dblclick", () => {
-            if (relative === 'null' || client.clientType === 'player') return;
-
-            if (canOpenStats) {
-                openCreatureStatsWindow(relative)
-                canOpenStats = false;
-            } else {
-                setTimeout(function() { canOpenStats = true; }, 100);
-            }
-        });
-    } else {
-        canPlace = true;
+// Generates div's in each cell, with x and y coordinates
+// The div's will detect where the user drops a token
+function createGridClickDetection(width, height, grid) {
+    resetBoard();
+    for (let y = 1; y < height; y++) {
+        for (let x = 1; x < width; x++) {
+            grid.insertAdjacentHTML('beforeend', `
+                <div class="grid__cell cell" x="${x}" y="${y}"></div>
+            `);
+        }
     }
+}
+
+// Clears the board and resets its click detection
+function resetBoard() {
+    document.querySelectorAll('.grid__cell').forEach((cell) => {
+        cell.remove();
+    });
+    document.querySelectorAll('.token').forEach((token) => {
+        token.remove();
+    });
 }
 
 function zoomIn() {
-    let rs = getComputedStyle(root);
-    let zoomValue = parseInt(rs.getPropertyValue('--zoom'));
-    root.style.setProperty('--zoom', `${clamp(zoomValue + 1, zoomMin, zoomMax)}rem`);
+    const grid = document.querySelector('.grid');
+    let rs = getComputedStyle(grid);
+    let zoomValue = parseInt(rs.getPropertyValue('--size'));
+    grid.style.setProperty('--size', `${clamp(zoomValue + 8, zoomMin, zoomMax)}px`);
 }
 
 function zoomOut() {
-    let rs = getComputedStyle(root);
-    let zoomValue = parseInt(rs.getPropertyValue('--zoom'));
-    root.style.setProperty('--zoom', `${clamp(zoomValue - 1, zoomMin, zoomMax)}rem`);
-}
-
-function clearMap() {
-    x = 0;
-    y = 0;
-    document.getElementById('grid').innerHTML = '';
-    cells = [];
+    const grid = document.querySelector('.grid');
+    let rs = getComputedStyle(grid);
+    let zoomValue = parseInt(rs.getPropertyValue('--size'));
+    grid.style.setProperty('--size', `${clamp(zoomValue - 8, zoomMin, zoomMax)}px`);
 }
 
 function togglePlayerList() {
@@ -196,9 +177,42 @@ function setupSidebar(userType) {
     }
 }
 
+// Occupy tiles that the token fills, if the token is bigger than 1 cell
+function occupyTokenSpace(cellX, cellY, size) {
+    for (let x = 0; x < size; x++) {
+        for (let y = 0; y < size; y++) {
+            const cell = findCell(cellX + x, cellY + y);
+            cell.style.setProperty('background-color', 'var(--enemy-background)');
+        }
+    }
+}
+
+// Don't occupy tiles that the token fills, if the token is bigger than 1 cell
+function removeOccupyTokenSpace(cellX, cellY, size) {
+    for (let x = 0; x < size; x++) {
+        for (let y = 0; y < size; y++) {
+            const cell = findCell(cellX + x, cellY + y);
+            cell.style.removeProperty('background-color');
+        }
+    }
+}
+
+class Token {
+    constructor(id, image, size, relative) {
+        this.id = id;
+        this.image = image;
+        this.size = size;
+        this.relative = relative;
+    }
+}
+
 // =================== //
 //      SOCKET.IO      //
 // =================== //
+
+function socketPlaceToken(coords, tokenData, username, room) {
+    socket.emit('PLACE_TOKEN', coords, tokenData, username, room);
+}
 
 socket.on('UPDATE_PLAYER_LIST', ((clientList) => {
     playerList = [];
@@ -209,10 +223,43 @@ socket.on('UPDATE_PLAYER_LIST', ((clientList) => {
     togglePlayerList();
 }));
 
-socket.on('PLACE_TOKEN', ((cell, token, username) => {
-    const newCell = findCell(cell.x, cell.y);
-    createToken(newCell, token, username);
+// Add a token to the board
+socket.on('PLACE_TOKEN', ((selectedCell, menuToken, username) => {
+    const { x, y } = selectedCell;
+    const { img, relative, size } = menuToken;
+    const token = document.createElement('img');
+    const cell = findCell(x, y);
+    token.classList.add('token');
+    token.setAttribute('src', img);
+    token.setAttribute('relative', relative)
+    token.setAttribute('user', username);
+    token.setAttribute('size', size);
+    cell.appendChild(token);
+    // Set token size
+    token.style.setProperty('height', `calc(var(--size) * ${size})`);
+    token.style.setProperty('width', `calc(var(--size) * ${size})`);
+    // Set token position
+    token.style.setProperty('--row', x);
+    token.style.setProperty('--column', y);
+
+    if (size > 1) {
+        occupyTokenSpace(x, y, size);
+    } else {
+        cell.style.setProperty('background-color', 'var(--enemy-background)');
+    }
+
+    addTokenEvents(token, relative);
+    resetTokenBodyData();
 }));
+
+// Removes the token background for everyone
+socket.on('REMOVE_OCCUPIED_TOKEN_SPACE', (lastPosX, lastPosY, size) => {
+    if (size > 1) {
+        removeOccupyTokenSpace(lastPosX, lastPosY, size);
+    } else {
+        findCell(lastPosX, lastPosY).style.removeProperty('background-color');
+    }
+});
 
 socket.on('REMOVE_TOKEN', ((cell) => {
     const newCell = findCell(cell.x, cell.y);

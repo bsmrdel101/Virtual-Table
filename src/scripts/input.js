@@ -17,12 +17,6 @@ document.addEventListener('keydown', (e) => {
                     if (_token.classList.contains('token--selected')) _token.remove();
                 }
                 break;
-            case e.key === '+' || e.key === '=':
-                zoomIn();
-                break;
-            case e.key === '-' || e.key === '_':
-                zoomOut();
-                break;
             case e.which === 49:
                 client.clientType === 'dm' ? toggleTokenMenu('tokens') : toggleCharacterMenu('characters');
                 break;
@@ -85,3 +79,12 @@ document.addEventListener('mousemove', (e) => {
     }
 });
 
+document.addEventListener('wheel', (e) => {
+    if (!e.target.getAttribute('x')) return;
+
+    if (e.deltaY > 0) {
+        zoomOut();
+    } else {
+        zoomIn();
+    }
+});

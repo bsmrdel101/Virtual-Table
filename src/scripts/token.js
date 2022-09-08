@@ -17,6 +17,7 @@ function giveTokenEvents(token) {
     token.addEventListener('mousedown',(e) => {
         switch (e.which) {
             case 1:
+                console.log('asd');
                 document.querySelector('.game-page-container').classList.add('token--dragging-cursor');
                 break;
             case 3:

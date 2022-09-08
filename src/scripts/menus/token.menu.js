@@ -37,14 +37,14 @@ async function getTokenBodyData() {
         if (token.creature) {
             document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
                 <div class="menu__body--container">
-                    <img src=${token.image} class="menu__item menu__item--token" ondragstart="placeToken(event, '${token.size}')" size=${token.size} relative=${token.creature} id=${token.id}>
+                    <img src=${token.image} class="menu__item menu__item--token" ondragstart="placeToken(event, '${token.size}')" relative=${token.creature} id=${token.id}>
                     <button class="menu__item--circle-btn" onclick="openCreatureStatsWindow('${token.creature}')"><i class="fa-solid fa-arrow-up-right-from-square"></i></button>
                 </div>
             `);
         } else {
             document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
                 <div class="menu__body--container">
-                    <img src=${token.image} class="menu__item menu__item--token" ondragstart="placeToken(event, '${token.size}')" size=${token.size} relative=${token.creature} id=${token.id}>
+                    <img src=${token.image} class="menu__item menu__item--token" ondragstart="placeToken(event, '${token.size}')" size=${token.size} id=${token.id}>
                 </div>
             `);
         }
@@ -55,7 +55,7 @@ function placeToken(e, size) {
     tokenSelected = true;
     const token = e.target;
     token.classList.add('token--dragging');
-    token.classList.add(size);
+    token.setAttribute('size', size);
 }
 
 function resetTokenBodyData() {

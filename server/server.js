@@ -123,9 +123,13 @@ io.on('connection', (socket) => {
     io.to(room).emit('UPDATE_PLAYER_LIST', clientList);
   });
 
-  socket.on('PLACE_TOKEN', (cell, token, username, room) => {
-    tokens.push({cell: cell, token: token, username: username});
-    io.to(room).emit('PLACE_TOKEN', cell, token, username);
+  socket.on('PLACE_TOKEN', (selectedCell, menuToken, username, room) => {
+    tokens.push({cell: selectedCell, token: menuToken, username: username});
+    io.to(room).emit('PLACE_TOKEN', selectedCell, menuToken, username);
+  });
+
+  socket.on('REMOVE_OCCUPIED_TOKEN_SPACE', (lastPosX, lastPosY, size, room) => {
+    io.to(room).emit('REMOVE_OCCUPIED_TOKEN_SPACE', lastPosX, lastPosY, size);
   });
 
   socket.on('REMOVE_TOKEN', (cell, room) => {
@@ -133,7 +137,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('SELECT_MAP', (e, map) => {
-    selectedMap = [{e}, {map}];
+    // selectedMap = [{e}, {map}];
     io.emit('SELECT_MAP', e, map);
   });
 });

@@ -1,48 +1,10 @@
 .token {
-    position: absolute;
-    border: 3px solid rgba(255, 255, 255, 0);
+    height: var(--size);
+	width: var(--size);
+	grid-area: var(--row) / var(--column);
     border-radius: 50%;
-    margin: auto;
-
-    &--tiny {
-        width: 45%;
-        right: 23%;
-        bottom: 23%;
-    }
-    
-    &--small {
-        width: 80%;
-        right: 6%;
-        bottom: 6%;
-    }
-    
-    &--medium {
-        width: 90%;
-        right: 0;
-        bottom: 0;
-        top: 0;
-        left: -2px;
-    }
-    
-    &--large {
-        width: 190%;
-        right: 57%;
-        bottom: 100%;
-        top: 0;
-        right: 0;
-    }
-    
-    &--huge {
-        width: 290%;
-        right: 1%;
-        bottom: 1%;
-    }
-    
-    &--gargantuan {
-        width: 390%;
-        right: 1%;
-        bottom: 1%;
-    }
+    position: absolute;
+    z-index: 1;
 
     &:hover {
         cursor: grab;

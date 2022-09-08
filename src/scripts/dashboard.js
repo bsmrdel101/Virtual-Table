@@ -90,7 +90,7 @@ function gameScreen() {
                     <a class="toolbar__leave-btn" onclick="leaveRoom()">Leave Game</a>
                 </div>
                 <div class="grid-container">
-                    <table id="grid"></table>
+                    <div class="grid"></div>
                 </div>
             </div>
         </section>
