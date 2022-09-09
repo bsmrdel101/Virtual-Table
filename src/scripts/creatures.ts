@@ -88,23 +88,23 @@ async function searchCreaturesList(value: string) {
 
 async function getCreaturesBodyData() {
     await getCustomCreatures();
-    for (let creature of customCreatures) {
+    for (let creature of customCreatures.value) {
         renderCustomCreatureRow(creature);
     }
-    for (let creature of creatures) {
+    for (let creature of creatures.value) {
         renderStandardCreatureRow(creature);
     }
 }
 
 async function getStandardCreaturesData() {
-    for (let creature of creatures) {
+    for (let creature of creatures.value) {
         renderStandardCreatureRow(creature);
     }
 }
 
 async function getCustomCreaturesData() {
     await getCustomCreatures();
-    for (let creature of customCreatures) {
+    for (let creature of customCreatures.value) {
         renderCustomCreatureRow(creature);
     }
 }
