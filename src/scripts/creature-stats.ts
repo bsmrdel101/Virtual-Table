@@ -20,7 +20,7 @@ export async function openCreatureStatsWindow(index: string, custom: boolean) {
     renderCreatureStatsWindow(creature);
 }
 
-const creatureStatsWindow = (creature) => `
+const creatureStatsWindow = (creature: any) => `
     <div class="creature-stats-content">
         <button class="btn--window-close" onclick="removeCreatureStatsWindow('${creature.index}')">X</button>
         <div class="creature-stats-window__header creature-stats-window--${creature.index}__header">
@@ -56,7 +56,7 @@ const creatureStatsWindow = (creature) => `
     </div>
 `;
 
-function renderCreatureStatsWindow(creature) {
+function renderCreatureStatsWindow(creature: any) {
     const window = document.querySelector('body').appendChild(document.createElement('div'));
     window.classList.add('creature-stats-window');
     window.classList.add(`creature-stats-window--${creature.index}`);

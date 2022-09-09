@@ -1,5 +1,6 @@
 import { dragElement, disableHotkeys, indexConverter } from './utils';
 import { getCustomCreatures, addCreature } from './routes/creatures.route';
+import { openCreatureStatsWindow } from './creature-stats';
 
 export let creatures: any = {value: []};
 export let customCreatures: any = {value: []};
@@ -111,9 +112,10 @@ async function getCustomCreaturesData() {
 
 // Displays a standard creature on the creatures list.
 function renderStandardCreatureRow(creature: any) {
+    // openCreatureStatWindow(creature.index, false);
     document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
         <div class="creatures-window__standard-creature">
-            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}')">
+            <div class="creatures-window__item">
                 <p>${creature.name}</p>
             </div>
         </div>
@@ -124,7 +126,7 @@ function renderStandardCreatureRow(creature: any) {
 function renderCustomCreatureRow(creature: any) {
     document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
         <div class="creatures-window__custom-creature">
-            <div class="creatures-window__item" onclick="openCreatureStatsWindow('${creature.index}', true)">
+            <div class="creatures-window__item">
                 <p>${creature.name}</p>
             </div>
             <i class="fa-solid fa-trash-can" onclick="deleteCreature('${creature.index}')"></i>
