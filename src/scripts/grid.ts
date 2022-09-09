@@ -1,13 +1,14 @@
 import { giveTokenEvents } from './token';
 import { clamp, findCell } from './utils';
 import { room } from './dashboard';
-import { addDefaultTokens, resetTokenBodyData } from './menus/token.menu';
+import { addDefaultTokens, resetTokenBodyData, toggleTokenMenu } from './menus/token.menu';
 import { addDefaultMaps } from './menus/map.menu';
 import { changeNewUser, getUser } from './routes/users.route';
 import { toggleCharacterMenu } from './menus/character.menu';
 import { client } from './dashboard';
 import { openCreatureStatsWindow } from './creature-stats';
 import { io, Socket } from "socket.io-client";
+import { toggleCreaturesWindow } from './creatures';
 
 const socket: Socket = io();
 let canOpenStats: boolean = true;
@@ -200,16 +201,22 @@ function setupSidebar(userType: string) {
     const sidebar = document.querySelector('.sidebar');
     if (userType === 'dm') {
         sidebar.insertAdjacentHTML('beforeend', `
-            <button class="sidebar__btn sidebar__tokens btn--hover" onclick="toggleTokenMenu('tokens')">Tokens</button>
-            <button class="sidebar__btn sidebar__maps btn--hover" onclick="toggleCreaturesWindow()">Creatures</button>
-            <button class="sidebar__btn sidebar__maps btn--hover" onclick="toggleMapMenu('maps')">Maps</button>
+            <button class="sidebar__btn sidebar__tokens btn--hover" id="tokens-menu-btn">Tokens</button>
+            <button class="sidebar__btn sidebar__maps btn--hover" id="creatures-window-btn">Creatures</button>
+            <button class="sidebar__btn sidebar__maps btn--hover" onclick="toggleMapMenu('maps')" id="maps-menu-btn">Maps</button>
         `);
     } else {
         sidebar.insertAdjacentHTML('beforeend', `
-            <button class="sidebar__btn sidebar__characters btn--hover" onclick="toggleCharacterMenu('characters')">Characters</button>
-            <button class="sidebar__btn sidebar__character-sheet btn--hover" onclick="toggleCharacterSheet()">Character Sheet</button>
+            <button class="sidebar__btn sidebar__characters btn--hover" onclick="toggleCharacterMenu('characters')" id="characters-menu-btn">Characters</button>
+            <button class="sidebar__btn sidebar__character-sheet btn--hover" onclick="toggleCharacterSheet()" id="character-sheet-menu-btn">Character Sheet</button>
         `);
     }
+
+    document.getElementById('tokens-menu-btn').addEventListener('click', () => toggleTokenMenu('tokens'));
+    document.getElementById('creatures-window-btn').addEventListener('click', () => toggleCreaturesWindow());
+    document.getElementById('tokens-menu-btn').addEventListener('click', () => toggleTokenMenu('tokens'));
+    document.getElementById('tokens-menu-btn').addEventListener('click', () => toggleTokenMenu('tokens'));
+    document.getElementById('tokens-menu-btn').addEventListener('click', () => toggleTokenMenu('tokens'));
 }
 
 class Token {

@@ -19,15 +19,16 @@ export function addDefaultTokens() {
 export function toggleTokenMenu(menuName: string) {
     if (client.clientType === 'dm') {
         menuOpen.value = !menuOpen.value;
-        if (menuOpen) {
+        if (menuOpen.value) {
             selectedMenu.value = 'tokens';
             // Create menu
             document.querySelector('.game-page-container').insertAdjacentHTML('beforeend', `
                 <div class="menu">
-                    <button class="menu__btn menu__btn--close" onclick="closeMenu()">X</button>
+                    <button class="menu__btn menu__btn--close">X</button>
                     <div class="menu__body"></div>
                 </div>
             `);
+            document.querySelector('.menu__btn--close').addEventListener('click', () => closeMenu(menuName));
             getTokenBodyData();
         } else {
             closeMenu(menuName);
