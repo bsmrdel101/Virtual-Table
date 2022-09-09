@@ -22,10 +22,11 @@ export function toggleMapMenu(menuName: string) {
         // Create menu
         document.querySelector('.game-page-container').insertAdjacentHTML('beforeend', `
             <div class="menu">
-                <button class="menu__btn menu__btn--close" onclick="closeMenu()">X</button>
+                <button class="menu__btn menu__btn--close">X</button>
                 <div class="menu__body"></div>
             </div>
         `);
+        document.querySelector('.menu__btn--close').addEventListener('click', () => closeMenu(menuName));
         getMapBodyData();
     } else {
         closeMenu(menuName);

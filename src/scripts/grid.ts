@@ -2,7 +2,7 @@ import { giveTokenEvents } from './token';
 import { clamp, findCell } from './utils';
 import { room } from './dashboard';
 import { addDefaultTokens, resetTokenBodyData, toggleTokenMenu } from './menus/token.menu';
-import { addDefaultMaps } from './menus/map.menu';
+import { addDefaultMaps, toggleMapMenu } from './menus/map.menu';
 import { changeNewUser, getUser } from './routes/users.route';
 import { toggleCharacterMenu } from './menus/character.menu';
 import { client } from './dashboard';
@@ -203,20 +203,18 @@ function setupSidebar(userType: string) {
         sidebar.insertAdjacentHTML('beforeend', `
             <button class="sidebar__btn sidebar__tokens btn--hover" id="tokens-menu-btn">Tokens</button>
             <button class="sidebar__btn sidebar__maps btn--hover" id="creatures-window-btn">Creatures</button>
-            <button class="sidebar__btn sidebar__maps btn--hover" onclick="toggleMapMenu('maps')" id="maps-menu-btn">Maps</button>
+            <button class="sidebar__btn sidebar__maps btn--hover" id="maps-menu-btn">Maps</button>
         `);
     } else {
         sidebar.insertAdjacentHTML('beforeend', `
-            <button class="sidebar__btn sidebar__characters btn--hover" onclick="toggleCharacterMenu('characters')" id="characters-menu-btn">Characters</button>
-            <button class="sidebar__btn sidebar__character-sheet btn--hover" onclick="toggleCharacterSheet()" id="character-sheet-menu-btn">Character Sheet</button>
+            <button class="sidebar__btn sidebar__characters btn--hover" id="characters-menu-btn">Characters</button>
+            <button class="sidebar__btn sidebar__character-sheet btn--hover" id="character-sheet-menu-btn">Character Sheet</button>
         `);
     }
 
     document.getElementById('tokens-menu-btn').addEventListener('click', () => toggleTokenMenu('tokens'));
     document.getElementById('creatures-window-btn').addEventListener('click', () => toggleCreaturesWindow());
-    document.getElementById('tokens-menu-btn').addEventListener('click', () => toggleTokenMenu('tokens'));
-    document.getElementById('tokens-menu-btn').addEventListener('click', () => toggleTokenMenu('tokens'));
-    document.getElementById('tokens-menu-btn').addEventListener('click', () => toggleTokenMenu('tokens'));
+    document.getElementById('maps-menu-btn').addEventListener('click', () => toggleMapMenu('maps'));
 }
 
 class Token {
