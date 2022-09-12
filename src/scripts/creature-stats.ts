@@ -21,7 +21,7 @@ export async function openCreatureStatsWindow(index: string, custom: boolean) {
 
 const creatureStatsWindow = (creature: any) => `
     <div class="creature-stats-content">
-        <button class="btn--window-close creature-stats-close-btn">X</button>
+        <button class="btn--window-close creature-stats-close-btn" index="${creature.index}">X</button>
         <div class="creature-stats-window__header creature-stats-window--${creature.index}__header">
             <h3>${creature.name}</h3>
             <p>${creature.size ? `${creature.size}` : ''}${creature.type ? ` ${creature.type}` : ''}${creature.alignment ? `, ${creature.alignment}`: ''}</p>
@@ -55,15 +55,6 @@ const creatureStatsWindow = (creature: any) => `
     </div>
 `;
 
-function createCreatureCloseBtn() {
-    // <button class="btn--window-close" class="creature-stats-close-btn">X</button>
-    // const btn = document.createElement('button');
-    // btn.insertAdjacentHTML('beforeend', 'X');
-    // btn.classList.add('btn--window-close');
-    // btn.classList.add('creature-stats-close-btn');
-    // return btn;
-}
-
 function renderCreatureStatsWindow(creature: any) {
     const window = document.querySelector('body').appendChild(document.createElement('div'));
     window.classList.add('creature-stats-window');
@@ -90,7 +81,7 @@ function renderCreatureStatsWindow(creature: any) {
 function addCreatureStatsCloseBtnClickEvent(index: string) {
     document.querySelectorAll('.creature-stats-close-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            removeCreatureStatsWindow(index);
+            removeCreatureStatsWindow(btn.getAttribute('index'));
         });
     });
 }
