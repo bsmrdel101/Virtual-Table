@@ -83,9 +83,14 @@ function renderCreatureStatsWindow(creature: any) {
     // Make this window draggable
     dragElement(window, `creature-stats-window--${creature.index}`);
     
+    addCreatureStatsCloseBtnClickEvent(creature.index);
+}
+
+// Adds event listener for close btn
+function addCreatureStatsCloseBtnClickEvent(index: string) {
     document.querySelectorAll('.creature-stats-close-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            removeCreatureStatsWindow(creature.index);
+            removeCreatureStatsWindow(index);
         });
     });
 }
