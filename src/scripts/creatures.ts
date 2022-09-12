@@ -116,8 +116,8 @@ async function getCustomCreaturesData() {
 // Displays a standard creature on the creatures list.
 function renderStandardCreatureRow(creature: any) {
     document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
-        <div class="creatures-window__standard-creature">
-            <div class="creatures-window__item creature-row-click-ev">
+        <div class="creatures-window__standard-creature creature-row-click-ev">
+            <div class="creatures-window__item">
                 <p>${creature.name}</p>
             </div>
         </div>
@@ -128,8 +128,8 @@ function renderStandardCreatureRow(creature: any) {
 // Displays a custom creature on the creatures list.
 function renderCustomCreatureRow(creature: any) {
     document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
-        <div class="creatures-window__custom-creature">
-            <div class="creatures-window__item creature-row-click-ev">
+        <div class="creatures-window__custom-creature creature-row-click-ev">
+            <div class="creatures-window__item">
                 <p>${creature.name}</p>
             </div>
             <i class="fa-solid fa-trash-can" onclick="deleteCreature('${creature.index}')"></i>
