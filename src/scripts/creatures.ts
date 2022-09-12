@@ -112,38 +112,44 @@ async function getCustomCreaturesData() {
 
 // Displays a standard creature on the creatures list.
 function renderStandardCreatureRow(creature: any) {
-    // openCreatureStatWindow(creature.index, false);
     document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
         <div class="creatures-window__standard-creature">
-            <div class="creatures-window__item">
+            <div class="creatures-window__item creature-row-click-ev">
                 <p>${creature.name}</p>
             </div>
         </div>
     `);
-    addCreatureRowEvents('standard');
+    addCreatureRowEvents('standard', creature.index);
 }
 
 // Displays a custom creature on the creatures list.
 function renderCustomCreatureRow(creature: any) {
     document.querySelector('.creatures-window__body').insertAdjacentHTML('beforeend', `
         <div class="creatures-window__custom-creature">
-            <div class="creatures-window__item">
+            <div class="creatures-window__item creature-row-click-ev">
                 <p>${creature.name}</p>
             </div>
             <i class="fa-solid fa-trash-can" onclick="deleteCreature('${creature.index}')"></i>
         </div>
     `);
-    addCreatureRowEvents('custom');
+    addCreatureRowEvents('custom', creature.index);
 }
 
 // Give creature rows on click event listeners, to open creature stats
-function addCreatureRowEvents(rowType: string) {
+function addCreatureRowEvents(rowType: string, index: string) {
+    const row = document.querySelector('.creature-row-click-ev');
     switch (rowType) {
         case 'standard':
-            openCreatureStatsWindow('', false);
+            row.addEventListener('click', () => {
+                openCreatureStatsWindow(index, false);
+            });
+            row.classList.remove('creature-row-click-ev');
             break;
         case 'custom':
-            openCreatureStatsWindow('', true);
+            row.addEventListener('click', () => {
+                openCreatureStatsWindow(index, true);
+            });
+            row.classList.remove('creature-row-click-ev');
             break;
         default:
             break;
