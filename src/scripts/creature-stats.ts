@@ -16,13 +16,12 @@ export async function openCreatureStatsWindow(index: string, custom: boolean) {
     creatureIndexList.push(index);
     // Get data for selected creature
     let creature = await getCreatureByIndex(index, custom);
-
     renderCreatureStatsWindow(creature);
 }
 
 const creatureStatsWindow = (creature: any) => `
     <div class="creature-stats-content">
-        <button class="btn--window-close" onclick="removeCreatureStatsWindow('${creature.index}')">X</button>
+        <button class="btn--window-close" class="creature-stats-close-btn">X</button>
         <div class="creature-stats-window__header creature-stats-window--${creature.index}__header">
             <h3>${creature.name}</h3>
             <p>${creature.size ? `${creature.size}` : ''}${creature.type ? ` ${creature.type}` : ''}${creature.alignment ? `, ${creature.alignment}`: ''}</p>
@@ -60,7 +59,6 @@ function renderCreatureStatsWindow(creature: any) {
     const window = document.querySelector('body').appendChild(document.createElement('div'));
     window.classList.add('creature-stats-window');
     window.classList.add(`creature-stats-window--${creature.index}`);
-
     window.insertAdjacentHTML('beforeend', creatureStatsWindow(creature));
 
     // Populate body data
