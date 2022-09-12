@@ -100,7 +100,7 @@ function getCreatureSpeedData(creature: any) {
     });
 }
 
-function getCreatureScoresData(creature) {
+function getCreatureScoresData(creature: any) {
     let scoreNames = ['Str', 'Dex', 'Con', 'Int', 'Wis', 'Char'];
     let scoreValues = [
         creature.str,

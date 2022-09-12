@@ -120,6 +120,7 @@ function renderStandardCreatureRow(creature: any) {
             </div>
         </div>
     `);
+    addCreatureRowEvents('standard');
 }
 
 // Displays a custom creature on the creatures list.
@@ -132,6 +133,21 @@ function renderCustomCreatureRow(creature: any) {
             <i class="fa-solid fa-trash-can" onclick="deleteCreature('${creature.index}')"></i>
         </div>
     `);
+    addCreatureRowEvents('custom');
+}
+
+// Give creature rows on click event listeners, to open creature stats
+function addCreatureRowEvents(rowType: string) {
+    switch (rowType) {
+        case 'standard':
+            openCreatureStatsWindow('', false);
+            break;
+        case 'custom':
+            openCreatureStatsWindow('', true);
+            break;
+        default:
+            break;
+    }
 }
 
 const creatureFormBody: any = `
