@@ -53,10 +53,10 @@ export function dragElement(elmnt: any, headerName: string) {
     var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
     if (document.querySelector(`.${headerName}__header`)) {
       // if present, the header is where you move the DIV from:
-      document.querySelector(`.${headerName}__header`).addEventListener("onmousedown", dragMouseDown);
+      document.querySelector(`.${headerName}__header`).addEventListener("mousedown", dragMouseDown);
     } else {
       // otherwise, move the DIV from anywhere inside the DIV:
-      elmnt.onmousedown = dragMouseDown;
+      elmnt.addEventListener("mousedown", dragMouseDown);
     }
   
     function dragMouseDown(e: any) {

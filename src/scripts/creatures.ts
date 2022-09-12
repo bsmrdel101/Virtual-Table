@@ -39,11 +39,14 @@ function renderCreatureWindow() {
                 <label>
                     <input placeholder="search" onchange="searchCreaturesList(event.target.value)">
                 </label>
-                <button class="btn--hover" onclick="toggleNewCreatureForm()">New Creature</button>
+                <button class="btn--hover" id="new-creature-form-btn">New Creature</button>
             </div>
             <div class="creatures-window__body"></div>
         </div>
     `);
+    document.getElementById('new-creature-form-btn').addEventListener('click', () => {
+        toggleNewCreatureForm();
+    });
     dragElement(window, 'creatures-window');
 }
 
