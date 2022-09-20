@@ -1,3 +1,10 @@
+@mixin red-border($px) {
+    padding-bottom: 0.6rem;
+    border-bottom: $px solid var(--color-red-1);
+    margin-bottom: 0.6rem;
+    padding-bottom: 0.7rem;
+}
+
 .character-sheet {
     position: absolute;
     top: 0.3rem;
@@ -12,19 +19,38 @@
     min-width: 25rem;
     min-height: 61%;
     z-index: 1;
+    font-weight: 350;
+    overflow-y: auto;
 
     &__header {
-        margin-bottom: 1rem;
+        @include red-border(3px);
+        align-items: center;
         cursor: move;
+        display: flex;
+        gap: 0.8rem;
+
+        &--block {
+            display: block;
+
+            h2 {
+                margin: 0;
+            }
+        }
     }
 
-    &__header,
-    &__main,
-    &__health,
-    &__health-tracker {
+    &__small-stat-blocks {
+        @include red-border(3px);
         display: flex;
-        flex-wrap: wrap;
-        gap: 0.8rem;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+
+        &--block {
+            background-color: var(--menu-color-1);
+            padding: 0.1rem 0.7rem 0.5rem;
+            border-radius: 0.3rem;
+            display: block;
+            text-align: center;
+        }
     }
 
     &__image {
@@ -36,6 +62,7 @@
 
     &__health {
         margin-right: 52%;
+        color: var(--color-red-3);
 
         img,
         &--temp img {
@@ -63,13 +90,11 @@
     &__health-tracker {
         box-shadow: rgb(0 0 0 / 24%) 0px 1px 3px;
         border-radius: 5px;
-        color: var(--color-red-3);
         display: inline-flex;
-        padding: 0.3rem;
+        padding: 0.3rem 0.3rem 0.6rem 1.7rem;
         margin-top: 0.3rem;
         background-color: var(--menu-color-1);
         position: relative;
-        padding-left: 1.7rem;
         transition: all ease-in-out 200ms;
     }
 
@@ -100,7 +125,6 @@
     /* ABILITY SCORES */
     &__scores {
         display: flex;
-        flex-wrap: wrap;
         gap: 0.8rem;
         justify-content: center;
     }
@@ -108,7 +132,7 @@
     &__score-box {
         background-color: var(--menu-color-1);
         padding: 0 0.8rem 0.8rem;
-        margin-top: 1rem;
+        margin: 0.5rem auto;
         border-radius: 5px;
         box-shadow: rgb(0 0 0 / 24%) 0px 1px 3px;
         text-align: center;
@@ -122,6 +146,19 @@
         text-align: center;
         font-size: 0.75em; /* 12px / 16px */
     }
+
+    /* SCROLLBAR */
+    &::-webkit-scrollbar{
+        width: 0.5rem;
+    }
+    
+    &::-webkit-scrollbar-track {
+        background-color: var(--menu-color-3);
+    }
+    
+    &::-webkit-scrollbar-thumb {
+        box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    }
 }
 
 .sheet-content {
@@ -130,4 +167,9 @@
     p {
         margin: 0.3rem 0 0 0;
     }
+}
+
+.inspiration-icon {
+    height: 1rem;
+    cursor: pointer;
 }

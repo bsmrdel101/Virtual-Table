@@ -110,5 +110,23 @@ router.put('/temp', rejectUnauthenticated, (req, res) => {
     })  
 });
 
+router.put('/inspiration', rejectUnauthenticated, (req, res) => {
+    const sqlText = (`
+        UPDATE "characters"
+        SET "inspiration" = $1
+        WHERE "id" = $2;
+    `);
+    const sqlValues = [
+        req.body.newInspiration,
+        req.body.id
+    ];
+    pool.query(sqlText, sqlValues)
+        .then(() => res.sendStatus(201))
+        .catch((dberror) => {
+        console.log('Oops you did a goof: ', dberror);
+        res.sendStatus(500)
+    })  
+});
+
 
 module.exports = router;

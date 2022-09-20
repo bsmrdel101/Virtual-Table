@@ -29,9 +29,6 @@
 
     &__scores {
         @include red-border(3px);
-    }
-
-    &__scores {
         display: flex;
         justify-content: center;
         gap: 0.5rem;

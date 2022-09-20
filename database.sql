@@ -66,20 +66,13 @@ CREATE TABLE "characters" (
 	"con" INTEGER NOT NULL DEFAULT 0,
 	"int" INTEGER NOT NULL DEFAULT 0,
 	"wis" INTEGER NOT NULL DEFAULT 0,
-	"char" INTEGER NOT NULL DEFAULT 0
+	"char" INTEGER NOT NULL DEFAULT 0,
+    "walk_speed" INTEGER,
+    "swim_speed" INTEGER,
+    "burrow_speed" INTEGER,
+    "fly_speed" INTEGER,
+    "climb_speed" INTEGER
 );
-
--- CREATE TABLE "speeds" ( 
---     "id" SERIAL PRIMARY KEY,
---     "character_id" INTEGER REFERENCES "characters" ON DELETE CASCADE,
---     "creature_id" INTEGER REFERENCES "creatures" ON DELETE CASCADE,
---     "walk_speed" INTEGER,
---     "swim_speed" INTEGER,
---     "burrow_speed" INTEGER,
---     "fly_speed" INTEGER,
---     "hover_speed" INTEGER,
---     "climb_speed" INTEGER
--- );
 
 CREATE TABLE "proficiencies" (
     "id" SERIAL PRIMARY KEY,

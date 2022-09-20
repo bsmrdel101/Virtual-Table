@@ -47,3 +47,12 @@ async function setTempHealth(payload) {
         console.log(err);
     }
 }
+
+async function setInspiration(payload) {
+    try {
+        await axios.put('/api/characters/inspiration', payload);
+        character = await getCharacter(payload.id);
+    } catch (err) {
+        console.log(err);
+    }
+}
