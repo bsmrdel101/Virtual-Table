@@ -41,10 +41,13 @@ async function getCharacterBodyData() {
 
 async function selectCharacter(id) {
     character = await getCharacter(id);
+    skills = await getCharacterSkills(id);
     toggleCharacterMenu('characters');
 }
 
 // function newCharacter() {
+    // TODO: Fill character skills with default skills after creating a character 
+//     addCharacterSkill({id: id, name: 'Athletics', type: 'str', bonus: 0, proficient: false});
 //     document.querySelector('.menu__body').insertAdjacentHTML('beforeend', `
 //         <form class="form--menu" onsubmit="submitNewCharacter(event)">
 //             <input placeholder="name" onchange="characterNameChange(event)" required>

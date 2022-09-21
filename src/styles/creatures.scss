@@ -7,8 +7,7 @@
     background-color: var(--menu-color-0);
     color: white;
     padding: 0.5rem;
-    width: var(--character-sheet-width);
-    height: var(--character-sheet-height);
+    max-height: 20rem;
     box-shadow: rgba(0, 0, 0, 0.25) 0px 10px 21px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
     max-width: 25rem;
     min-width: 25rem;
@@ -16,6 +15,7 @@
     overflow-y: auto;
     border-bottom: 8px solid var(--menu-color-0);
     z-index: 1;
+    overflow-y: auto;
 }
 
 @mixin red-border($px) {

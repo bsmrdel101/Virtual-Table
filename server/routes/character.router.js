@@ -22,6 +22,23 @@ router.get('/', rejectUnauthenticated, (req, res) => {
     })  
 });
 
+router.get('/skills/:id', rejectUnauthenticated, (req, res) => {
+    const sqlText = (`
+        SELECT * FROM "skills"
+        WHERE "character_id"=$1
+        ORDER BY "name" ASC;
+    `);
+    const sqlValues = [
+        req.params.id
+    ];
+    pool.query(sqlText, sqlValues)
+        .then((dbres) => res.send(dbres.rows))
+        .catch((dberror) => {
+        console.log('Oops you did a goof: ', dberror);
+        res.sendStatus(500)
+    })  
+});
+
 router.get('/:id', rejectUnauthenticated, (req, res) => {
     const sqlText = (`
         SELECT * FROM "characters"
@@ -65,6 +82,26 @@ router.post('/', rejectUnauthenticated, (req, res) => {
         req.body.int,
         req.body.wis,
         req.body.char
+    ];
+    pool.query(sqlText, sqlValues)
+        .then(() => res.sendStatus(201))
+        .catch((dberror) => {
+        console.log('Oops you did a goof: ', dberror);
+        res.sendStatus(500)
+    });
+});
+
+router.post('/skills', rejectUnauthenticated, (req, res) => {
+    const sqlText =`
+        INSERT INTO "skills" ("character_id", "name", "type", "bonus_mod", "proficient")
+        VALUES ($1, $2, $3, $4, $5);
+    `;
+    const sqlValues = [
+        req.body.id,
+        req.body.name,
+        req.body.type,
+        req.body.bonus_mod,
+        false
     ];
     pool.query(sqlText, sqlValues)
         .then(() => res.sendStatus(201))
@@ -118,6 +155,27 @@ router.put('/inspiration', rejectUnauthenticated, (req, res) => {
     `);
     const sqlValues = [
         req.body.newInspiration,
+        req.body.id
+    ];
+    pool.query(sqlText, sqlValues)
+        .then(() => res.sendStatus(201))
+        .catch((dberror) => {
+        console.log('Oops you did a goof: ', dberror);
+        res.sendStatus(500)
+    })  
+});
+
+router.put('/skills', rejectUnauthenticated, (req, res) => {
+    const sqlText = (`
+        UPDATE "skills"
+        SET "name" = $1, "type" = $2, "bonus_mod" = $3, "proficient" = $4
+        WHERE "id" = $5;
+    `);
+    const sqlValues = [
+        req.body.name,
+        req.body.type,
+        req.body.bonus_mod,
+        req.body.proficient,
         req.body.id
     ];
     pool.query(sqlText, sqlValues)

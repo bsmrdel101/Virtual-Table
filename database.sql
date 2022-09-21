@@ -74,9 +74,17 @@ CREATE TABLE "characters" (
     "climb_speed" INTEGER
 );
 
-CREATE TABLE "proficiencies" (
+CREATE TABLE "skills" (
     "id" SERIAL PRIMARY KEY,
     "character_id" INTEGER REFERENCES "characters" ON DELETE CASCADE,
+    "name" VARCHAR (80),
+    "type" VARCHAR (80),
+    "bonus_mod" INTEGER DEFAULT 0,
+    "proficient" BOOLEAN DEFAULT false
+);
+
+CREATE TABLE "proficiencies" (
+    "id" SERIAL PRIMARY KEY,
     "creature_id" INTEGER REFERENCES "creatures" ON DELETE CASCADE,
     "prof_name" VARCHAR (80),
     "prof_value" INTEGER
@@ -178,3 +186,8 @@ CREATE TABLE "creature_action_rolls" (
     "dmg_type" VARCHAR (80),
     "to_hit" VARCHAR (80)
 );
+
+-- ====================
+-- Insert starting data
+-- ====================
+

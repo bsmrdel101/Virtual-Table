@@ -1,49 +1,11 @@
-let sheetOpen = false;
-let tempHpInput, hpInput;
-let dmgAddInput, healAddInput, tempAddInput;
-let strMod, dexMod, conMod, intMod, wisMod, charMod;
-
-const toggleCharacterSheet = () => {
-    sheetOpen = !sheetOpen;
-    if (sheetOpen) {
-        renderCharacterSheet();
-    } else {
-        document.querySelector('.character-sheet').remove();
-    }
-}
-
-// Returns modifiers for each ability score
-const getAbilityScoreModifiers = () => {
-    let strMod = Math.floor((character.str - 10) / 2);
-    let dexMod = Math.floor((character.dex - 10) / 2);
-    let conMod = Math.floor((character.con - 10) / 2);
-    let intMod = Math.floor((character.int - 10) / 2);
-    let wisMod = Math.floor((character.wis - 10) / 2);
-    let charMod = Math.floor((character.char - 10) / 2);
-    return { strMod, dexMod, conMod, intMod, wisMod, charMod };
-}
-
-// Renders the character sheet
-const renderCharacterSheet = () => {
-    const sheetWindow = document.querySelector('body').appendChild(document.createElement('div'));
+const renderCharacterSheetMainPage = (sheetContent) => {
+    characterSheetPage = 'main';
     const modifiers = getAbilityScoreModifiers();
-    sheetWindow.classList.add('character-sheet');
-    sheetWindow.insertAdjacentHTML('beforeend', characterSheetHtml(character, modifiers));
-    disableHotkeys();
-    dragElement(sheetWindow, 'character-sheet');
+    sheetContent.insertAdjacentHTML('beforeend', characterSheetMainPageHtml(character, modifiers));
 }
 
-const characterSheetHtml = (character, modifiers) => {
-    return `
-        <div class="sheet-content">
-            <button class="btn--window-close" onclick="toggleCharacterSheet()">X</button>
-            ${characterSheetMainPageHtml(character, modifiers)}
-        </div>
-    `;
-}
-
-// Html for character sheet main page
 const characterSheetMainPageHtml = (character, modifiers) => `
+    <button class="btn--window-close" onclick="toggleCharacterSheet()">X</button>
     <div class="character-sheet__header">
         <img class="character-sheet__image" src=${character.image}>
         <div class="character-sheet__header--block">
@@ -67,8 +29,16 @@ const characterSheetMainStatsHtml = () => `
     <p><span class="bold">Level</span> ${character.level}</p>
     <p><span class="bold">Prof bonus</span> +${character.prof_bonus}</p>
     <p><span class="bold">Hit dice</span> 1d${character.hit_dice}</p>
-    <p><span class="bold">Inspiration</span> <img class="inspiration-icon" onclick="toggleInspiration(event)" src=${character.inspiration ? '../images/star-filled.png' : '../images/star-empty.png'}></p>
+    <p class="character-sheet__inspiration"><span class="bold">Inspiration</span> ${characterInspirationIcon(character.inspiration)}</p>
 `;
+
+const characterInspirationIcon = (inspired) => {
+    if (inspired) {
+        return `<img class="inspiration-icon" onclick="toggleInspiration(event)" src="../images/star-filled.png">`;
+    } else {
+        return `<img class="inspiration-icon" onclick="toggleInspiration(event)" src="../images/star-empty.png">`;
+    }
+};
 
 const characterSheetSmStatBlocksHtml = () => `
     <div class="character-sheet__small-stat-blocks--block">
@@ -131,7 +101,7 @@ const characterSheetScoresHtml = (modifiers) => {
             </div>
         </div>
     `;
-}
+};
 
 const characterSheetHealth = () => `
     <div class="character-sheet__health--temp">
@@ -171,7 +141,7 @@ const damageHp = (e) => {
     `);
     document.getElementById('dmg-player-hp-input').value = '';
     dmgAddInput = 0;
-}
+};
 
 const healHp = (e) => {
     e.preventDefault();
@@ -191,7 +161,7 @@ const healHp = (e) => {
     `);
     document.getElementById('heal-player-hp-input').value = '';
     healAddInput = 0;
-}
+};
 
 const addTempHp = (e) => {
     e.preventDefault();
@@ -204,17 +174,12 @@ const addTempHp = (e) => {
     `);
     document.getElementById('add-player-tmp-hp-input').value = '';
     tempAddInput = 0;
-}
+};
 
 const toggleInspiration = (e) => {
     e.preventDefault();
     const { inspiration, id } = character;
     const newInspiration = !inspiration;
     setInspiration({ newInspiration, id });
-    resetSheetData();
-}
-
-const resetSheetData = () => {
-    toggleCharacterSheet();
-    setTimeout(() => { toggleCharacterSheet(); }, 100);
-}
+    document.querySelector('.character-sheet__inspiration').innerHTML = `<span class="bold">Inspiration</span> ${characterInspirationIcon(newInspiration)}`;
+};
