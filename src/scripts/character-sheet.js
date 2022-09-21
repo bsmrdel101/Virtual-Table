@@ -3,7 +3,7 @@ let tempHpInput, hpInput;
 let dmgAddInput, healAddInput, tempAddInput;
 let strMod, dexMod, conMod, intMod, wisMod, charMod;
 
-function toggleCharacterSheet() {
+const toggleCharacterSheet = () => {
     sheetOpen = !sheetOpen;
     if (sheetOpen) {
         renderCharacterSheet();
@@ -60,17 +60,7 @@ const characterSheetMainPageHtml = (character, modifiers) => `
     <div class="character-sheet__scores">
         ${characterSheetScoresHtml(modifiers)}
     </div>
-    <div class="character-sheet__health--temp">
-        <p class="temp-hp"><img src="../images/heart-blue.png"> ${character.temp_health}</p>
-    </div>
-    <div class="character-sheet__health">
-        <p class="hp"><img src="../images/heart-red.png">${character.current_health} / ${character.max_health}</p>
-    </div>
-    <div class="character-sheet__health-tracker">
-        <form onsubmit="damageHp(event)"><p><span class="bold">Damage</span> <button type="submit">-</button><input type="number" onchange="dmgAddInput = event.target.value"></p></form>
-        <form onsubmit="healHp(event)"><p><span class="bold">Heal</span> <button type="submit">+</button><input type="number" onchange="healAddInput = event.target.value"></p></form>
-        <form onsubmit="addTempHp(event)"><p><span class="bold">Temp Hp</span> <button type="submit">+</button><input type="number" onchange="tempAddInput = event.target.value"></p></form>
-    </div>
+        ${characterSheetHealth()}
 `;
 
 const characterSheetMainStatsHtml = () => `
@@ -143,35 +133,77 @@ const characterSheetScoresHtml = (modifiers) => {
     `;
 }
 
+const characterSheetHealth = () => `
+    <div class="character-sheet__health--temp">
+        <p class="temp-hp"><img src="../images/heart-blue.png"> ${character.temp_health}</p>
+    </div>
+    <div class="character-sheet__health">
+        <p class="hp"><img src="../images/heart-red.png">${character.current_health} / ${character.max_health}</p>
+    </div>
+    <div class="character-sheet__health-tracker">
+        <form onsubmit="damageHp(event)"><p><span class="bold">Damage</span> <button type="submit">-</button><input id="dmg-player-hp-input" type="number" onchange="dmgAddInput = event.target.value"></p></form>
+        <form onsubmit="healHp(event)"><p><span class="bold">Heal</span> <button type="submit">+</button><input id="heal-player-hp-input" type="number" onchange="healAddInput = event.target.value"></p></form>
+        <form onsubmit="addTempHp(event)"><p><span class="bold">Temp Hp</span> <button type="submit">+</button><input id="add-player-tmp-hp-input" type="number" onchange="tempAddInput = event.target.value"></p></form>
+    </div>
+`;
+
 const damageHp = (e) => {
     e.preventDefault();
+    const healthContainer = document.querySelector('.character-sheet__health');
+    const tempHealthContainer = document.querySelector('.character-sheet__health--temp');
     let dmgAmount = parseInt(dmgAddInput);
     let tmpHpValue = character.temp_health;
     tmpHpValue -= dmgAmount;
     if (tmpHpValue < 0) tmpHpValue = 0;
     dmgAmount -= character.temp_health;
     if (dmgAmount < 0) dmgAmount = 0;
+    const newHealth = character.current_health - dmgAmount;
     
     setTempHealth({ id: character.id, health: tmpHpValue });
-    setHealth({ id: character.id, health: character.current_health - dmgAmount });
-    resetSheetData();
+    setHealth({ id: character.id, health: newHealth });
+    healthContainer.innerHTML = '';
+    tempHealthContainer.innerHTML = '';
+    healthContainer.insertAdjacentHTML('beforeend', `
+        <p class="hp"><img src="../images/heart-red.png">${newHealth} / ${character.max_health}</p>
+    `);
+    tempHealthContainer.insertAdjacentHTML('beforeend', `
+        <p class="temp-hp"><img src="../images/heart-blue.png"> ${tmpHpValue}</p>
+    `);
+    document.getElementById('dmg-player-hp-input').value = '';
+    dmgAddInput = 0;
 }
 
 const healHp = (e) => {
     e.preventDefault();
-    let healAmount = parseInt(healAddInput);
-    if (character.current_health + healAmount > character.max_health) {
-        setHealth({ id: character.id, health: character.max_health });
+    const elmt = document.querySelector('.character-sheet__health');
+    const healAmount = parseInt(healAddInput);
+    let newHealth = character.current_health + healAmount;
+    if (newHealth > character.max_health) {
+        newHealth = character.max_health;
+        setHealth({ id: character.id, health: newHealth });
     } else {
-        setHealth({ id: character.id, health: character.current_health + healAmount });
+        setHealth({ id: character.id, health: newHealth });
     }
-    resetSheetData();
+
+    elmt.innerHTML = '';
+    elmt.insertAdjacentHTML('beforeend', `
+        <p class="hp"><img src="../images/heart-red.png">${newHealth} / ${character.max_health}</p>
+    `);
+    document.getElementById('heal-player-hp-input').value = '';
+    healAddInput = 0;
 }
 
 const addTempHp = (e) => {
     e.preventDefault();
-    setTempHealth({ id: character.id, health: character.temp_health + parseInt(tempAddInput) });
-    resetSheetData();
+    const elmt = document.querySelector('.character-sheet__health--temp');
+    const newTempHealth = character.temp_health + parseInt(tempAddInput);
+    setTempHealth({ id: character.id, health: newTempHealth });
+    elmt.innerHTML = '';
+    elmt.insertAdjacentHTML('beforeend', `
+        <p class="temp-hp"><img src="../images/heart-blue.png"> ${newTempHealth}</p>
+    `);
+    document.getElementById('add-player-tmp-hp-input').value = '';
+    tempAddInput = 0;
 }
 
 const toggleInspiration = (e) => {
