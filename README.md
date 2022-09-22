@@ -1,5 +1,5 @@
 # Virtual-Table
-A virtual tabletop fop 5e D&amp;D.
+A virtual tabletop for 5e D&amp;D.
 
 ## Installation
 - Clone the repo, and do `npm run i`.
