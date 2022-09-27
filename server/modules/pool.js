@@ -15,9 +15,8 @@ const connectDb = async () => {
         });
   
         await pool.connect();
-        // const res = await pool.query('SELECT * FROM users');
+        // const res = await pool.query('SELECT * FROM "user"');
         // console.log(res.rows);
-        // await pool.end();
     } catch (error) {
         console.log(error);
     }

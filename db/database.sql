@@ -1,10 +1,15 @@
--- Database name: virtual_table
-
 CREATE TABLE "user" (
     "id" SERIAL PRIMARY KEY,
     "username" VARCHAR (80) UNIQUE NOT NULL,
     "password" VARCHAR (1000) NOT NULL,
     "new_user" BOOLEAN DEFAULT true
+);
+
+CREATE TABLE "maps" (
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER REFERENCES "user",
+    "name" TEXT,    
+    "image" TEXT
 );
 
 CREATE TABLE "tokens" (
@@ -13,13 +18,6 @@ CREATE TABLE "tokens" (
     "map_id" INTEGER REFERENCES "maps",
     "image" TEXT,
     "size" TEXT
-);
-
-CREATE TABLE "maps" (
-    "id" SERIAL PRIMARY KEY,
-    "user_id" INTEGER REFERENCES "user",
-    "name" TEXT,    
-    "image" TEXT
 );
 
 CREATE TABLE "map_tokens" (
@@ -51,22 +49,50 @@ CREATE TABLE "characters" (
     "class" VARCHAR (80) NOT NULL,
     "race" VARCHAR (80) NOT NULL,
     "background" VARCHAR (80) NOT NULL,
+    "alignment" VARCHAR (80),
     "level" INTEGER NOT NULL,
     "ac" INTEGER NOT NULL,
-    "alignment" VARCHAR (80),
     "max_health" INTEGER NOT NULL,
     "current_health" INTEGER NOT NULL,
     "temp_health" INTEGER DEFAULT 0,
     "prof_bonus" INTEGER NOT NULL,
     "initiative" INTEGER,
     "inspiration" BOOLEAN DEFAULT false,
-	"hit_dice" INTEGER,
-	"str" INTEGER NOT NULL DEFAULT 0,
-	"dex" INTEGER NOT NULL DEFAULT 0,
-	"con" INTEGER NOT NULL DEFAULT 0,
-	"int" INTEGER NOT NULL DEFAULT 0,
-	"wis" INTEGER NOT NULL DEFAULT 0,
-	"char" INTEGER NOT NULL DEFAULT 0,
+    "hit_dice" INTEGER,
+    "str" INTEGER NOT NULL DEFAULT 0,
+    "dex" INTEGER NOT NULL DEFAULT 0,
+    "con" INTEGER NOT NULL DEFAULT 0,
+    "int" INTEGER NOT NULL DEFAULT 0,
+    "wis" INTEGER NOT NULL DEFAULT 0,
+    "char" INTEGER NOT NULL DEFAULT 0,
+    "image" TEXT,
+    "walk_speed" INTEGER,
+    "swim_speed" INTEGER,
+    "burrow_speed" INTEGER,
+    "fly_speed" INTEGER,
+    "climb_speed" INTEGER
+);
+
+CREATE TABLE "creatures" (
+    "id" SERIAL PRIMARY KEY,
+    "user_id" INTEGER REFERENCES "user" ON DELETE CASCADE,
+    "image" TEXT,
+    "name" VARCHAR (80),
+    "size" VARCHAR (80),
+    "type" VARCHAR (80),
+    "alignment" VARCHAR (80),
+    "ac" INTEGER,
+    "hit_points" INTEGER,
+    "hit_dice" VARCHAR (80),
+    "str" INTEGER,
+    "dex" INTEGER,
+    "con" INTEGER,
+    "int" INTEGER,
+    "wis" INTEGER,
+    "char" INTEGER,
+    "cr" INTEGER,
+    "xp" INTEGER,
+    "index" TEXT,
     "walk_speed" INTEGER,
     "swim_speed" INTEGER,
     "burrow_speed" INTEGER,
@@ -127,33 +153,6 @@ CREATE TABLE "languages" (
     "list" TEXT
 );
 
-CREATE TABLE "creatures" (
-    "id" SERIAL PRIMARY KEY,
-    "user_id" INTEGER REFERENCES "user" ON DELETE CASCADE,
-    "image" TEXT,
-    "name" VARCHAR (80),
-    "size" VARCHAR (80),
-    "type" VARCHAR (80),
-    "alignment" VARCHAR (80),
-    "ac" INTEGER,
-    "hit_points" INTEGER,
-    "hit_dice" VARCHAR (80),
-    "str" INTEGER,
-    "dex" INTEGER,
-    "con" INTEGER,
-    "int" INTEGER,
-    "wis" INTEGER,
-    "char" INTEGER,
-    "cr" INTEGER,
-    "xp" INTEGER,
-    "index" TEXT,
-    "walk_speed" INTEGER,
-    "swim_speed" INTEGER,
-    "burrow_speed" INTEGER,
-    "fly_speed" INTEGER,
-    "climb_speed" INTEGER
-);
-
 CREATE TABLE "creature_abilities" (
     "id" SERIAL PRIMARY KEY,
     "creature_id" INTEGER REFERENCES "creatures" ON DELETE CASCADE,
@@ -187,7 +186,34 @@ CREATE TABLE "creature_action_rolls" (
     "to_hit" VARCHAR (80)
 );
 
--- ====================
--- Insert starting data
--- ====================
+-------------------------
+-- INSERT DEFAULT DATA --
+-------------------------
 
+
+-- INSERT INTO "characters" ("user_id", "name", "class", "race", "background", "alignment", "level", "ac", "max_health", "current_health", "temp_health", "prof_bonus", "initiative", "inspiration", "hit_dice", "str", "dex", "con", "int", "wis", "char", "image", "walk_speed", "swim_speed", "burrow_speed", "fly_speed", "climb_speed")
+-- VALUES
+--     (1, 'Steve', 'Breadbarian', 'Goliath', 'Noble', 'CE', 1, 12, 20, 20, 0, 2, 2, FALSE, 12, 4, 10, 11, 20, 18, 12, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBCAMLHmC6fIfZJYcqEsOAcRue_MI924YtdHo1sCosPh5-BxpeHMW0Se_ewoQBwtNODCQ&usqp=CAU', 30, 0, 0, 0, 0)
+-- ;
+
+-- INSERT INTO "skills" ("character_id", "name", "type", "bonus_mod", "proficient")
+-- VALUES 
+--   (1,'Athletics', 'str', 0, FALSE),
+--   (1,'Acrobatics', 'dex', 0, FALSE),
+--   (1,'Slight of Hand', 'dex', 0, FALSE),
+--   (1,'Stealth', 'dex', 0, FALSE),
+--   (1,'Arcana', 'int', 0, FALSE),
+--   (1,'History', 'int', 0, FALSE),
+--   (1,'Invesigation', 'int', 0, FALSE),
+--   (1,'Nature', 'wis', 0, FALSE),
+--   (1,'Religion', 'wis', 0, FALSE),
+--   (1,'Animal Handling', 'wis', 0, FALSE),
+--   (1,'Insight', 'wis', 0, FALSE),
+--   (1,'Medicine', 'wis', 0, FALSE),
+--   (1,'Perception', 'wis', 0, FALSE),
+--   (1,'Survival', 'wis', 0, FALSE),
+--   (1,'Deception', 'char', 0, FALSE),
+--   (1,'Intimidation', 'char', 0, FALSE),
+--   (1,'Performance', 'char', 0, FALSE),
+--   (1,'Persuasion', 'char', 0, FALSE)
+-- ;
