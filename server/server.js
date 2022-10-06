@@ -46,19 +46,19 @@ app.use(express.static('src'));
 
 // Views
 app.get('/login', (req, res) => {
-  res.sendFile(path.join(__dirname, '../', 'src', 'views', 'login.html'));
+  res.sendFile(path.join(__dirname, '../', 'index.html'));
 });
 
 app.get('/register', (req, res) => {
-  res.sendFile(path.join(__dirname, '../', 'src', 'views', 'register.html'));
+  res.sendFile(path.join(__dirname, '../', 'index.html'));
 });
 
-app.get('/expanded-view', (req, res) => {
-  res.sendFile(path.join(__dirname, '../', 'src', 'views', 'expanded-view.html'));
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, '../', 'index.html'));
 });
 
 app.get('/game', (req, res) => {
-  res.sendFile(path.join(__dirname, '../', 'src', 'views', 'game.html'));
+  res.sendFile(path.join(__dirname, '../', 'index.html'));
 });
 
 let tokens = [];

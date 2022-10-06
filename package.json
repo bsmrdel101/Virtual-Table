@@ -7,7 +7,7 @@
     "test": "jest",
     "test:coverage": "npm run test -- --coverage",
     "lint": "eslint ./ --ignore-path .gitignore",
-    "sass": "sass --watch src/styles:src/build",
+    "sass": "sass --watch src:build",
     "start": "nodemon server/server.js",
     "tsc": "esbuild src/*.ts --format=esm --bundle=true --splitting=true --outdir=src/buildjs --watch --sourcemap=inline"
   },
