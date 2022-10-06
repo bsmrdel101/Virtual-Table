@@ -9,7 +9,7 @@
     "lint": "eslint ./ --ignore-path .gitignore",
     "sass": "sass --watch src/styles:src/build",
     "start": "nodemon server/server.js",
-    "build": "esbuild src/*.ts --format=esm --bundle=true --splitting=true --outdir=src/buildjs --watch --sourcemap=inline"
+    "tsc": "esbuild src/*.ts --format=esm --bundle=true --splitting=true --outdir=src/buildjs --watch --sourcemap=inline"
   },
   "repository": {
     "type": "git",
