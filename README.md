@@ -1,6 +1,8 @@
 # Virtual-Table
 A virtual tabletop for 5e D&amp;D.
 
+This is an old repo, checkout [tabletop-of-many-things](https://github.com/bsmrdel101/tabletop-of-many-things)
+
 ## Installation
 - Clone the repo, and do `npm run i`.
 - Setup database with [docker](https://www.docker.com/).
